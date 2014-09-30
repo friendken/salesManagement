@@ -1,0 +1,47 @@
+<div ng-app="dashboard" ng-controller="productTypeController">
+    <div class="clear"></div>
+    
+    
+    <div class="onecolumn" style="margin-top: 10px">
+        <div class="header">
+            <span>
+                <span class="ico gray window"></span>
+                Product Type
+            </span>
+        </div>
+        <div class="clear"></div>
+        <div class="content">
+            <input type="text"/>
+        </div>
+    </div>
+    <a class="uibutton icon add" ng-click="showCreateType()">Add product type</a>
+    <div class="onecolumn" ng-hide='createType' style='margin-top: 10px'>
+        <div class="header">
+            <span>
+                <span class="ico gray window"></span>
+                Create Product Type
+            </span>
+        </div>
+        <div class="clear"></div>
+        <div class="content">
+            <form ng-submit="saveProductType()">
+            <div class='section'>
+                <label>Tên loại sản phẩm</label>
+                <div><input type="text" ng-model="product_type_name" required class="medium"/></div>
+            </div>
+            <div class='section'>
+                <label>mô tả</label>
+                <div><textarea class='editor' ng-model="product_description" cols="50" rows="5"></textarea></div>
+            </div>
+            <div class='section last'>
+                <div>
+                <input class="uibutton loading"  title="Saving" type="submit" value="save"/>
+                <a class="uibutton special" ng-click="cancelCreate()">cancel</a>
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+    
+    
+</div>
