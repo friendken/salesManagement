@@ -82,6 +82,7 @@ $config['language']	= 'english';
 */
 $config['charset'] = 'UTF-8';
 
+
 /*
 |--------------------------------------------------------------------------
 | Enable/Disable System Hooks

@@ -40,6 +40,7 @@
 
 $route['default_controller'] = "dashboard";
 $route['login'] = "login";
+$route['product_type'] = "product_type";
 $route['404_override'] = '';
 
 
