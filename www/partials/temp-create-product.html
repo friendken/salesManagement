@@ -1,0 +1,67 @@
+<div ng-app="dashboard" ng-controller="createProductController">
+    <div class="onecolumn" style='margin-top: 10px'>
+        <div class="header">
+            <span>
+                <span class="ico gray window"></span>
+                Thêm sản phẩm
+            </span>
+        </div>
+        <div class="clear"></div>
+        <div class="content">
+            <form ng-submit="createProduct()">
+                <div class='section'>
+                    <label>Tên loại sản phẩm</label>
+                    <div><input type="text" ng-model="product.name" required class="medium"/></div>
+                </div>
+                <div class='section'>
+                    <label>Mã sản phẩm</label>
+                    <div><input type="text" ng-model="product.code" required class="medium"/></div>
+                </div>
+                <div class='section'>
+                    <label>mô tả</label>
+                    <div><textarea class='editor' ng-model="product.description" cols="50" rows="5"></textarea></div>
+                </div>
+                <div class='section'>
+                    <label>Loại sản phẩm</label>
+                    <div>
+                        <select data-placeholder="chọn loại sản phẩm" class="chzn-select chzn-done" ng-model="product.product_type" ng-options="item.name for item in product_type track by item.id">
+                            <option selected="">chọn loại sản phẩm</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="section">
+                    <label>giá bán</label>
+                    <div>
+                        <table>
+                            <tr>
+                                <th>Đơn vị</th>
+                                <th>Số lượng</th>
+                                <th>Quy cách</th>
+                                <th>Giá bán</th>
+                            </tr>
+                            <tbody class="list_product_price">
+                                <tr class="product_price" ng-repeat="item in product.sale_price" id="tr_product_price_{{item.id}}">
+                                    <td class="small">{{item.parent_name}}</td>
+                                    <td class="small"><input type="text" value="{{item.quantity}}" /></td>
+                                    <td class="small"><input type="text" value="{{item.name}}"/></td>
+                                    <td class="small"><input type="text" value="{{item.price}}"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="iconBox color">
+                        <a id="btn_more_price" data-id="1" ng-click="morePrice()"  title="thêm giá">
+                            <img src="/www/img/icon/directional_down.png">
+                        </a>
+                        </div>
+                    </div>
+                </div>
+                <div class='section last'>
+                    <div>
+                        <input class="uibutton loading"  title="Saving" type="submit" value="save"/>
+                        <a class="uibutton special" href="#product">cancel</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -16,7 +16,7 @@ config(function($stateProvider, $urlRouterProvider) {
   // Now set up the states
   $stateProvider
     .state('dashboard', {
-      url: "/dashboard",
+      url: "dashboard",
       views: {
         "content": { templateUrl: '/www/partials/temp-dashboard.html'}
       },
@@ -28,5 +28,33 @@ config(function($stateProvider, $urlRouterProvider) {
         "content": { templateUrl: '/www/partials/temp-create-product-type.html'}
       },
       controller: 'productTypeController'
+    })
+    .state('create-product', {
+      url: "/create-product",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-create-product.html'}
+      },
+      controller: 'createProductController'
+    })
+    .state('product', {
+      url: "/product",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-product.html'}
+      },
+      controller: 'productController'
+    })
+    .state('edit-product', {
+      url: "/edit-product/:id",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-create-product.html'}
+      },
+      controller: 'createProductController'
+    })
+    .state('warehouse-wholesale', {
+      url: "/warehouse-wholesale",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-warehouse-wholesale.html'}
+      },
+      controller: 'warehouseWholesaleController'
     })
 });

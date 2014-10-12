@@ -1,0 +1,50 @@
+<div ng-app="dashboard" ng-controller="productController">
+    <div class="onecolumn" style="margin-top: 10px">
+        <div class="header">
+            <span ><span class="ico  gray random"></span> Danh sách sản phẩm </span>
+        </div><!-- End header -->	
+        <div class=" clear"></div>
+        <div class="content"  >
+            <form> 
+                <div class="tableName">
+                    <table id="tabel_product_type" class="display">
+                        <thead>
+                            <tr>
+                                <th><div class="th_wrapp">id</div></th>
+                                <th><div class="th_wrapp">Mã vạch</div></th>
+                                <th><div class="th_wrapp">Tên Sản Phẩm</div></th>
+                                <th><div class="th_wrapp">Loại Sản Phẩm</div></th>
+                                <th><div class="th_wrapp">Ngày tạo</div></th>
+                                <th><div class="th_wrapp">action</div></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in products" class="odd gradeX" data-id="{{item.id}}">
+                                <td>{{item.id}}</td>
+                                <td>{{item.code}}</td>
+                                <td>{{item.name}}</td>
+                                <td>{{item.product_type}}</td>
+                                <td>{{item.created}}</td>
+                                <td>
+                                    <span id="edit_btn_{{item.id}}">
+                                        <span class="tip">
+                                            <a href="#edit-product/{{item.id}}" title="Edit">
+                                                <img src="/www/img/icon/icon_edit.png">
+                                            </a>
+                                        </span> 
+                                        <span class="tip">
+                                            <a id="1" class="Delete" title="Delete">
+                                                <img src="/www/img/icon/icon_delete.png">
+                                            </a>
+                                        </span>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

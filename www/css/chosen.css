@@ -4,7 +4,7 @@
 	zoom: 1;
 *display: inline;
 	width: 100%!important;
-	max-width: 65%;
+	/*max-width: 65%;*/
 	color:#666666;
 }
 .chzn-container .chzn-drop {
@@ -90,7 +90,7 @@
 	/*	margin: 1px 0;*/
 	padding: 0px 20px 0px 7px;
 	width: 100%!important;
-	max-width: 100%;
+	max-width: 87%;
 	outline: 0;
 	border: none;
 	border-top: 1px solid #d9d9d9;

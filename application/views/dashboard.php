@@ -10,11 +10,19 @@
         <link type="text/css" rel='stylesheet' href="/www/css/zice.style.css" />
         <link type="text/css" rel='stylesheet' href="/www/css/icon.css" />
         <link type="text/css" rel='stylesheet' href="/www/css/ui-custom.css" />
+        <link rel="stylesheet" type="text/css" href="/www/css/dataTables.css"  />
+        <link rel="stylesheet" type="text/css" href="/www/css/chosen.css"  />
         
         
         <script type="text/javascript" src="/www/js/jquery.min.js"></script>
         <script type="text/javascript" src="/www/js/jquery.cookie.js"></script>
         <script type="text/javascript" src="/www/js/jquery.ui.min.js"></script>
+        <script type="text/javascript" src="/www/js/dataTables.min.js"></script>
+        <script type="text/javascript" src="/www/js/ColVis.js"></script>
+        <script type="text/javascript" src="/www/js/component/chosen.js"></script>
+        <script type="text/javascript" src="/www/js/component/customInput.jquery.js"></script>
+        <script type="text/javascript" src="/www/js/component/numeral.min.js"></script>
+        
         
         
         <script src="/www/js/angular/angular.js"></script>
@@ -26,6 +34,9 @@
         <script src="/www/js/filters.js"></script>
         <script src="/www/js/directives.js"></script>
         <script src="/www/js/angular/ui-bootstrap.min.js"></script>
+        <script src="/www/js/sale_manager.js"></script>
+        
+        
         <script>
             var config = {base: "<?php echo site_url()?>"};
         </script>

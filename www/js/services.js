@@ -20,18 +20,18 @@
 //        return httpAPI;
 //    });
 
-angular.module('dashboard.services', []).
-    factory('updateLogin', function($http) {
+angular.module('dashboard.services', [])
+    .factory('showAlert', function() {
+        var httpApi = {};
 
-        var httpAPI = {};
-
-        httpAPI.update = function() {
-            return $http({
-                method: 'POST',
-                url: config.base + 'api/onboard/exitOnboard',
-                reponseType: 'json'
-            });
+        httpApi.showSuccess = function(delay,str){
+        if(delay){
+                $('#alertMessage').removeClass('error info warning').addClass('success').html(str).stop(true,true).show().animate({ opacity: 1,right: '10'}, 500,function(){
+                                $(this).delay(delay).animate({ opacity: 0,right: '-20'}, 500,function(){ $(this).hide(); });																														   																											
+                      });
+                return false;
+            }
+            $('#alertMessage').addClass('success').html(str).stop(true,true).show().animate({ opacity: 1,right: '10'}, 500);	
         }
-
-        return httpAPI;
+        return httpApi;
     });
