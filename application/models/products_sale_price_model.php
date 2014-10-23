@@ -15,5 +15,12 @@ class Products_sale_price_model extends MY_model {
                         ->get($this->table_name)
                         ->row();
     }
+    public function get_unit_retail($product_id){
+        return $this->db->where('product_id', $product_id)
+                        ->order_by('id','desc')
+                        ->limit(1)
+                        ->get($this->table_name)
+                        ->row();
+    }
 }
 

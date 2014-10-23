@@ -19,7 +19,7 @@ table.display thead tr th, table.display tfoot tr th {
 
 table.display thead {
 	text-shadow: 1px 1px 1px #fff;
-	background-image: url(../img/inner-shadow.png);
+	background-image: url(../../images/inner-shadow.png);
 	background-color: #f2f2f2;
 	background-repeat: repeat-x;
 	background-position: left top;
@@ -76,16 +76,16 @@ table.display tbody tr:last-child  td {
 	border-bottom : 2px solid #d9d9d9;
 }
 table.display thead tr th.sorting {
-	background-image: url(../img/table-sort.png);
+	background-image: url(images/table-sort.png);
 	background-repeat: no-repeat;
 	background-position: right 15px;
 }
 table.display thead tr th.sorting_asc {
-	background : url(../img/table-sort.png) no-repeat right -13px;
+	background : url(images/table-sort.png) no-repeat right -13px;
 }
 
 table.display thead tr th.sorting_desc {
-	background : url(../img/table-sort.png) no-repeat right -45px;
+	background : url(images/table-sort.png) no-repeat right -45px;
 }
 
 .dataTables_wrapper {
@@ -133,7 +133,7 @@ table.display thead tr th.sorting_desc {
 }
 
 .dataTables_wrapper .dataTables_length .ui-selectmenu-icon {
-	background : url(../img/table-select.gif) no-repeat right top transparent;
+	background : url(images/table-select.gif) no-repeat right top transparent;
 	width : 19px;
 	height : 25px;
 }
@@ -154,7 +154,7 @@ table.display thead tr th.sorting_desc {
 	left:0px;
 }*/
 .dataTables_wrapper  .dataTables_filter input {
-    background: url(../img/search-white.png) no-repeat 10px 5px #f8f8f8;
+    background: url(images/search-white.png) no-repeat 10px 5px #f8f8f8;
 	border : 1px solid #dcdcdc;
 	outline : 0;
 	padding : 2px 5px;
@@ -189,7 +189,7 @@ table.display thead tr th.sorting_desc {
     transition: all 0.4s ease 0s;
 	}
 .tableName .dataTables_wrapper  .dataTables_filter input[type="text"]:focus {
-    background: url(../img/search-dark.png) no-repeat 10px 5px #fcfcfc;
+    background: url(images/search-dark.png) no-repeat 10px 5px #fcfcfc;
     color: #6a6f75;
     width: 170px;
     text-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
@@ -241,25 +241,25 @@ table.display thead tr th.sorting_desc {
 }
 
 .paginate_disabled_previous {
-	background: url('../img/back_disabled.png') no-repeat top left;
+	background: url('images/back_disabled.png') no-repeat top left;
 }
 
 .paginate_enabled_previous {
-	background: url('../img/back_enabled_hover.png') no-repeat top left;
+	background: url('images/back_enabled_hover.png') no-repeat top left;
 }
 .paginate_enabled_previous:hover {
-	background: url('../img/back_enabled.png') no-repeat top left;
+	background: url('images/back_enabled.png') no-repeat top left;
 }
 
 .paginate_disabled_next {
-	background: url('../img/forward_disabled.png') no-repeat top right;
+	background: url('images/forward_disabled.png') no-repeat top right;
 }
 
 .paginate_enabled_next {
-	background: url('../img/forward_enabled_hover.png') no-repeat top right;
+	background: url('images/forward_enabled_hover.png') no-repeat top right;
 }
 .paginate_enabled_next:hover {
-	background: url('../img/forward_enabled.png') no-repeat top right;
+	background: url('images/forward_enabled.png') no-repeat top right;
 }
 
 .paging_full_numbers a.paginate_button,
@@ -348,7 +348,7 @@ table.display thead tr th.sorting_desc {
 	right:0px;
 	height: 28px;
 	line-height: 28px;
-	background-image: url(../img/icon/gray_18/spreadsheet.png);
+	background-image: url(../../images/icon/gray_18/spreadsheet.png);
 	background-repeat: no-repeat;
 	background-position: 10px 4px;
  -webkit-transition: background-color .2s ease-out;

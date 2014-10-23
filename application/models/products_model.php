@@ -9,6 +9,7 @@ class Products_model extends MY_model {
         parent::__construct();
         $this->ci = $ci = get_instance();
         $ci->load->model('products_sale_price_model','product_sale');
+        $ci->load->model('products_buy_price_model','product_buy');
         $ci->load->model('products_type_model','product_type');
     }
     public function get_by_id($id) {
@@ -26,6 +27,15 @@ class Products_model extends MY_model {
             }
             $product->sale_price = $product_sale;
             
+        }
+        $product_buy = $this->ci->product_buy->get_by_product_id($product->id);
+//        var_dump($product_buy);die;
+        if(count($product_buy) > 0){
+            foreach($product_buy as $key => $row){
+                $buy_type = $this->ci->product_sale->get_by_id($row->unit);
+                $product_buy[$key]->unit = $buy_type->name;
+            }
+            $product->buy_price = $product_buy;
         }
         return $product;
     }

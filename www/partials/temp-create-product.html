@@ -10,7 +10,7 @@
         <div class="content">
             <form ng-submit="createProduct()">
                 <div class='section'>
-                    <label>Tên loại sản phẩm</label>
+                    <label>Tên sản phẩm</label>
                     <div><input type="text" ng-model="product.name" required class="medium"/></div>
                 </div>
                 <div class='section'>
@@ -22,7 +22,7 @@
                     <div><textarea class='editor' ng-model="product.description" cols="50" rows="5"></textarea></div>
                 </div>
                 <div class='section'>
-                    <label>Loại sản phẩm</label>
+                    <label>Ngành Hàng</label>
                     <div>
                         <select data-placeholder="chọn loại sản phẩm" class="chzn-select chzn-done" ng-model="product.product_type" ng-options="item.name for item in product_type track by item.id">
                             <option selected="">chọn loại sản phẩm</option>
@@ -53,6 +53,29 @@
                             <img src="/www/img/icon/directional_down.png">
                         </a>
                         </div>
+                    </div>
+                </div>
+                <div class="section">
+                    <label>giá mua</label>
+                    <div>
+                        <table class="display">
+                            <thead>
+                            <tr>
+                                <th><div class="th_wrapp">Số lượng</div></th>
+                                <th><div class="th_wrapp">Số lượng còn lại</div></th>
+                                <th><div class="th_wrapp">Quy cách</div></th>
+                                <th><div class="th_wrapp">Giá mua</div></th>
+                            </tr>
+                            </thead>
+                            <tbody class="list_product_buy_price">
+                                <tr class="product_buy_price" ng-repeat="item in product.buy_price" id="tr_product_price_{{item.id}}">
+                                    <td class="small">{{item.quantity}}</td>
+                                    <td class="small">{{item.remaining_quantity}}</td>
+                                    <td class="small">{{item.unit}}</td>
+                                    <td class="small">{{item.price | number}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
                 <div class='section last'>

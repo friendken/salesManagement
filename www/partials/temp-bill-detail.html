@@ -1,0 +1,55 @@
+<div ng-app="dashboard" ng-controller="billDetailController">
+    <div class="onecolumn" style='margin-top: 10px'>
+        <div class="header">
+            <span>
+                <span class="ico gray window"></span>
+                Chi tiết hóa đơn
+            </span>
+        </div>
+        <div class="clear"></div>
+        <div class="content">
+            <form >
+                <div class='section'>
+                    <h3 style="margin-top: 10px">Thông tin hóa đơn</h3>
+                    <label>Tên khách hàng :</label>
+                    <div>{{bill.customer_id}}</div>
+                    <label>Mã hóa đơn :</label>
+                    <div>{{bill.bill_code}}</div>
+                    <label>Ngày tạo :</label>
+                    <div>{{bill.created}}</div>
+                    <label>Tổng Hóa đơn :</label>
+                    <div>{{bill.price_total | number}}</div>
+                </div>
+                <div class='section'>
+                    <h3 style="margin-top: 10px">chi tiết hóa đơn</h3>
+                    <div style="margin-left: 30px">
+                        <table class="display">
+                            <thead>
+                            <tr>
+                                <th><div class="th_wrapp">stt</div></th>
+                                <th><div class="th_wrapp">tên sản phảm</div></th>
+                                <th><div class="th_wrapp">số lượng</div></th>
+                                <th><div class="th_wrapp">thành tiền</div></th>
+                            </tr>
+                            </thead>
+                            <tbody class="list_product_buy_price">
+                                <tr class="product_buy_price" ng-repeat="item in bill.detail" id="tr_product_price_{{item.id}}">
+                                    <td class="small">{{item.stt}}</td>
+                                    <td class="small">{{item.product_name}}</td>
+                                    <td class="small">{{item.quantity}}</td>
+                                    <td class="small">{{item.price | number}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div class='section last'>
+                    <div>
+                        <input class="uibutton loading" ng-click="backToList()" title="quay lại" value="Quay lại"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

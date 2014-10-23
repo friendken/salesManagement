@@ -1,14 +1,14 @@
-<div ng-app="dashboard" ng-controller="warehouseWholesaleController">
+<div ng-app="dashboard" ng-controller="warehouseSaleController">
     <div class="onecolumn" style='margin-top: 10px'>
         <div class="header">
             <span>
                 <span class="ico gray window"></span>
-                Bán Hàng {{warehouse_type}}
+                Nhập kho {{warehouse_type}}
             </span>
         </div>
         <div class="clear"></div>
         <div class="content">
-            <form ng-submit="addWhole()">
+            <form ng-submit="createBill()">
                 <div class='section'>
                     <label>chọn đối tác</label>
                     <div style="width: 200px">
@@ -41,11 +41,11 @@
                                     </td>
                                     <td>1</td>
                                     <td style="width: 210px">
-                                        <select data-placeholder="sản phẩm" onchange="loadUnitProduct(this)" class="chzn-select load_product"></select>
+                                        <select data-placeholder="sản phẩm" onchange="loadUnitProduct(this,true)" class="chzn-select load_product"></select>
                                     </td>
                                     <td class="small"><input type="text" onkeyup="calculatorMoney(this)"/></td>
-                                    <td class="small load_unit" style="width: 180px"><select data-placeholder="chọn quy cách" class="chzn-select"></select></td>
-                                    <td class="small"><input type="text" onkeyup="calculatorMoney(this)"/></td>
+                                    <td class="small load_unit"  style="width: 180px"><select onchange="selectPrice(this,true)" data-placeholder="chọn quy cách" class="chzn-select"></select></td>
+                                    <td class="small"><input type="text" readonly/></td>
                                     <td class="small">
                                         <span id="show_bill_product_1"></span>
                                         <input class="bill_product" type="hidden" id="txt_hide_1" value="0"/>
@@ -67,11 +67,6 @@
                 <div class='section last'>
                     <div>
                         <input class="uibutton loading"  title="Saving" type="submit" value="Tạo hóa đơn"/>
-                        Tình trạng: 
-                        <b>Nợ &nbsp;</b>
-                        <input type="text" class="xsmall" ng-model="wholesale.debt"/>
-                        <b>&nbsp; Thanh toán &nbsp;</b>
-                        <input type="text" class="xsmall" ng-model="wholesale.actual"/>
                     </div>
                 </div>
             </form>

@@ -1,0 +1,76 @@
+<div ng-app="dashboard" ng-controller="stockTransferController">
+    <div class="column_left" style="margin-top: 10px; width: 62%">
+
+        <div class="onecolumn">
+            <div class="header"><span><span class="ico gray notepad"></span>kho sỉ</span></div>
+            <br class="clear"/>
+            <div class="content tableName">
+                <div class="section">
+                <table>
+                    <tr>
+                        <td>
+                            <div class="iconBox color">
+                                <img src="/www/img/icon/zoom.png">
+                            </div>
+                        </td>
+                        <td>
+                            <input type="text" ng-model="filter_product" class="small"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+                <table class="display data_table" >
+                    <thead>
+                        <tr>
+                            <th><div class="th_wrapp">Tên Sản Phẩm</div></th>
+                            <th><div class="th_wrapp">Số lượng</div></th>
+                            <th><div class="th_wrapp">chuyển kho</div></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in wholesale_products | filter:filter_product">
+                            <td>{{item.name}}</td>
+                            <td>{{item.quantity}} {{item.unit_name}}</td>
+                            <td style="width: 200px">
+                                <div>
+                                    <input type="text" id="quantity_transfer_{{item.product_id}}" style="width: 40px"/>
+                                    <div class="iconBox color">
+                                        <a id="btn_more_price" ng-click="transfer(this)"   title="thêm giá">
+                                            <img src="/www/img/icon/arrow_right2.png">
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="column_right" style="margin-top: 10px; width: 35%">
+
+        <div class="onecolumn">
+            <div class="header"><span><span class="ico gray notepad"></span>Kho lẻ</span></div>
+            <br class="clear"/>
+            <div class="content tableName">
+                <table class="display data_table" >
+                    <thead>
+                        <tr>
+                            <th><div class="th_wrapp">Tên Sản Phẩm</div></th>
+                            <th><div class="th_wrapp">Số lượng</div></th>    
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in retail_products">
+                            <td>{{item.name}}</td>
+                            <td>{{item.quantity}} {{item.unit_name}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
