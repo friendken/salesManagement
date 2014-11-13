@@ -53,6 +53,11 @@ class Warehouse_retail_sale extends CI_Controller {
         if(count($product_buy) > 0){
             if($product_buy->remaining_quantity >= $quantity)
                 $this->product_buy->update(array('remaining_quantity' => ((int)$product_buy->remaining_quantity - (int)$quantity)),array('id' => $product_buy->id));
+            else{
+                $this->product_buy->update(array('remaining_quantity' => 0),array('id' => $product_buy->id));
+                $remaining = (int)$quantity - (int)$product_buy->remaining_quantity;
+                $this->updateQuantityBuy($product_id, $remaining);
+            }
         }
     }
     public function updateQuantityWarehouse($product_id,$quantity){

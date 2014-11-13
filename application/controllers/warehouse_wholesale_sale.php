@@ -49,9 +49,15 @@ class Warehouse_wholesale_sale extends CI_Controller {
     }
     public function updateQuantityBuy($product_id, $quantity){
         $product_buy = $this->product_buy->get_old_product($product_id,'wholesale');
+        
         if(count($product_buy) > 0){
             if($product_buy->remaining_quantity >= $quantity)
                 $this->product_buy->update(array('remaining_quantity' => ((int)$product_buy->remaining_quantity - (int)$quantity)),array('id' => $product_buy->id));
+            else{
+                $this->product_buy->update(array('remaining_quantity' => 0),array('id' => $product_buy->id));
+                $remaining = (int)$quantity - (int)$product_buy->remaining_quantity;
+                $this->updateQuantityBuy($product_id, $remaining);
+            }
         }
     }
     public function updateQuantityWarehouse($product_id,$quantity){

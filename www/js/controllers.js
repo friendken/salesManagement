@@ -177,7 +177,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 $scope.init();
             }
     }])
-    .controller('warehouseWholesaleController', ['$scope','$http','$stateParams','showAlert', function($scope,$http,$stateParams,showAlert) {
+    .controller('warehouseWholesaleController', ['$scope','$http','$stateParams','showAlert','$location', function($scope,$http,$stateParams,showAlert,$location) {
             console.log('load warehouse-wholesale');
             if($stateParams.type == 'wholesale'){
                 $scope.url = config.base + '/warehouse_wholesale/saveAddWholesale';
@@ -257,7 +257,9 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 $('#tr_product_buy_price_' + new_id).children('td:nth-child(7)').children('input').val(0);
                 $scope.initSelect();
             }
-            
+            $scope.checkBill = function(){
+                $scope.wholesale.debt = parseInt($('#txt_hide_total_bill').val()) - parseInt($scope.wholesale.actual);
+            }
             $scope.addWhole = function(){
                 
                 var buy_price = new Array();
@@ -281,9 +283,9 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 $http({method: 'post', url: $scope.url,
                         data: $scope.wholesale, reponseType: 'json'}).
                         success(function(data, status) {
-                            console.log(data)
                             showAlert.showSuccess(3000,'lưu thành công');
-//                            $location.path('product');
+                            if($stateParams.type == 'wholesale')
+                                $location.path('warehouse-divide/' + data);
                         }).
                         error(function(data, status) {
                           console.log(data);
@@ -516,3 +518,131 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 $location.path('bill/' + $stateParams.type);
             }
     }])
+    .controller('warehouseDivideController', ['$scope','$http','$stateParams','$location', function($scope,$http,$stateParams,$location) {
+                console.log('load warehouse divide');
+                $scope.url = config.base + '/warehouse_divide?id=' + $stateParams.warehousing_id;
+                $scope.init = function(){
+                    $http({method: 'GET', url: $scope.url, reponseType: 'json'}).
+                    success(function(data, status) {
+                      //==== get data account profile ========
+                      console.log(data);
+                      $scope.renderTable(data.products, data.warehouses)
+
+                    }).
+                    error(function(data, status) {
+                      console.log(data)
+                    });
+                }
+                $scope.renderTable = function (products, warehouses){
+                    var html = ''
+                    for(var x in products){
+                        html += '<tr>'
+                        html += '<td>' + products[x].stt + '</td>'
+                        html += '<td>' + products[x].detail.name + '</td>'
+                        html += '<td id="product_quantity_' + products[x].id + '">' + products[x].quantity + '</td>'
+                        html += '<td>' + products[x].unit.name + '</td>'
+                        html += '<td align="left">'
+                        html += '<div>'
+                        html += '<span><lable>Kho nhà </label></span>'
+                        html += '<span><input type="text" data-product-id="' + products[x].id + '" data-warehouse-id="0" id="warehouse_' + products[x].id + '" value="' + products[x].quantity + '"/></span>'
+                        html += '</div>'
+                        for(var y in warehouses){
+                            html += '<div>'
+                            html += '<span><lable>' + warehouses[y].name + '</label></span>'
+                            html += '<span><input class="storge_product_' + products[x].id + '" onkeyup="dividedQuantity(this)" data-product-id="' + products[x].id + '" data-warehouse-id="' + warehouses[y].id + ' "type="text" /></span>'
+                            html += '</div>'
+                        }
+                        html += '</td>'
+                        html += '</tr>'
+                    }
+                    $('#list-product-divide').html(html);
+                }
+                $scope.init();
+                $scope.divideWarehouse = function(){
+                    var list = new Array();
+                    $('input').each(function(){
+                        var product_id = $(this).data('product-id'),
+                            warehouse_id = $(this).data('warehouse-id')
+                        if(list[warehouse_id])
+                            list[warehouse_id].push({product_id: product_id,quantity: this.value})
+                        else
+                            list[warehouse_id] = new Array({product_id: product_id,quantity: this.value})
+                    })
+                    $http({method: 'POST', url: config.base + '/warehouse_divide/updateStorge',data: list, reponseType: 'json'}).
+                    success(function(data, status) {
+                      console.log(data)
+                    }).
+                    error(function(data, status) {
+                      console.log(data)
+                    });
+                }
+    }])
+    .controller('warehouseListController', ['$scope', '$http', '$location', '$modal', function($scope, $http, $location, $modal) {
+                console.log('load warehouse list');
+                $scope.openPopup = function(size,$event){
+                    if($event)
+                        var warehouses_id = $($event.currentTarget).data('id');
+                    
+                    var modalInstance = $modal.open({
+                        templateUrl: 'createWarehouse.html',
+                        controller: 'ModalInstanceCtrl',
+                        size: size,
+                        resolve: {
+                          items: function () {
+                            return warehouses_id;
+                          }
+                        }
+                    });
+                    modalInstance.result.then(function () {
+                        $scope.init();
+                    });
+                }
+                $scope.url = config.base + '/warehouses';
+                $scope.init = function(){
+                    $http({method: 'GET', url: $scope.url, reponseType: 'json'}).
+                    success(function(data, status) {
+                      //==== get data account profile ========
+                      console.log(data);
+                      $scope.warehouses = data.warehouses;
+    
+                    }).
+                    error(function(data, status) {
+                      console.log(data)
+                    });
+                }
+                $scope.init();
+//                $scope.backToList = function(){
+//                    $location.path('bill/' + $stateParams.type);
+//                }
+    }])
+    .controller('ModalInstanceCtrl', function ($scope,$http, $modalInstance, items) {
+            $scope.warehouse = {};
+            if(items){
+                $http({method: 'GET', url: config.base + '/warehouses/getWarehouse/' + items, reponseType: 'json'}).
+                    success(function(data, status) {
+                      //==== get data account profile ========
+                      console.log(data);
+                      $scope.warehouse = data.warehouse;
+    
+                    }).
+                    error(function(data, status) {
+                      console.log(data)
+                    });
+            }
+
+    
+        $scope.ok = function () {
+            console.log($scope.warehouse);
+            $http({method: 'POST', url: config.base + '/warehouses/addWarehouse',data: $scope.warehouse, reponseType: 'json'}).
+                    success(function(data, status) {
+                      $modalInstance.close(data);
+                    }).
+                    error(function(data, status) {
+                      console.log(data)
+                    });
+        };
+
+        $scope.cancel = function () {
+          $modalInstance.dismiss('cancel');
+        };
+    });

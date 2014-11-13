@@ -1,0 +1,74 @@
+<div ng-app="dashboard" ng-controller="warehouseListController">
+    <script type="text/ng-template" id="createWarehouse.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Thêm kho</h3>
+        </div>
+        <div class="modal-body">
+        <form>
+            <div class='section'>
+                <label>Tên kho</label>
+                <div><input type='text' ng-model='warehouse.name'/></div>
+            </div>
+            <div class='section'>
+                <label>Địa chỉ</label>
+                <div><input type='text' ng-model='warehouse.address'/></div>
+            </div>
+            <div class='section'>
+                <label>Mô Tả</label>
+                <div><textarea rows="4" cols="50" ng-model='warehouse.description'></textarea></div>
+            </div>
+        </form>
+        </div>
+        <div class="modal-footer">
+            <a class="uibutton " ng-click='ok()'>Lưu</a>
+            <a class="uibutton special" ng-click='cancel()'>Hủy</a>
+        </div>
+    </script>
+    <div class="onecolumn" style="margin-top: 10px">
+        <div class="header">
+            <span ><span class="ico  gray random"></span> Danh sách kho</span>
+        </div><!-- End header -->	
+        <div class=" clear"></div>
+        <div class="content"  >
+            <div class="section">
+                <a class="uibutton icon confirm add" ng-click="openPopup()" >Thêm kho</a> 
+            </div>
+            <form> 
+                <div class="tableName">
+                    <table id="tabel_product_type" class="display">
+                        <thead>
+                            <tr>
+                                <th><div class="th_wrapp">id</div></th>
+                                <th><div class="th_wrapp">Tên Kho</div></th>
+                                <th><div class="th_wrapp">Địa chỉ</div></th>
+                                <th><div class="th_wrapp">Action</div></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="item in warehouses" class="odd gradeX">
+                                <td>{{item.id}}</td>
+                                <td>{{item.name}}</td>
+                                <td>{{item.address}}</td>
+                                <td>
+                                    <span id="edit_btn_{{item.id}}">
+                                        <span class="tip">
+                                            <a data-id="{{item.id}}" ng-click="openPopup(null,$event)" title="Edit">
+                                                <img src="/www/img/icon/icon_edit.png">
+                                            </a>
+                                        </span> 
+                                        <span class="tip">
+                                            <a id="1" class="Delete" title="Delete">
+                                                <img src="/www/img/icon/icon_delete.png">
+                                            </a>
+                                        </span>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

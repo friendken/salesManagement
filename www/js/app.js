@@ -2,6 +2,7 @@
 
 var dashboard = angular.module('dashboard', [
     'ui.router',
+    'ui.bootstrap',
 //  'ngRoute',
 //  'dashboard.filters',
   'dashboard.services',
@@ -91,5 +92,19 @@ config(function($stateProvider, $urlRouterProvider) {
         "content": { templateUrl: '/www/partials/temp-bill-detail.html'}
       },
       controller: 'billDetailController'
+    })
+    .state('warehouse-divide', {
+      url: "/warehouse-divide/:warehousing_id",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-warehouse-divide.html'}
+      },
+      controller: 'warehouseDivideController'
+    })
+    .state('warehouse-list', {
+      url: "/warehouse-list",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-warehouse-list.html'}
+      },
+      controller: 'warehouseListController'
     })
 });

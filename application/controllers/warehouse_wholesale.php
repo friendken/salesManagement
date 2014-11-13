@@ -22,7 +22,12 @@ class Warehouse_wholesale extends CI_Controller {
     }
     public function saveAddWholesale(){
         $wholesale = $this->input->json();
-        //insert product_buy_price
+        
+        #insert warehousing
+        $this->load->model('warehousing_model');
+        $warehousing_id = $this->warehousing_model->insert(array('price' => $wholesale->total_bill,
+                                                                 'debit' => $wholesale->debt));
+        #insert product_buy_price
         $buy_list = array();
         $wholesale_list = array();
         foreach($wholesale->buy_price as $item => $value){
@@ -30,11 +35,12 @@ class Warehouse_wholesale extends CI_Controller {
             $buy_list = array('product_id' => $value->product_id,
                               'price' => $value->price,
                               'unit' => $unit_primary->id,
+                              'warehousing_id' => $warehousing_id,
                               'quantity' => $value->quantity,
                               'remaining_quantity' => $value->quantity,
                               'partner' => $wholesale->partner);
             $this->product_buy->insert($buy_list);
-            //insert or update quantity
+            #insert or update quantity
             
             $wholesale_product = $this->wholesale->get_by_product_id($value->product_id);
             
@@ -50,6 +56,6 @@ class Warehouse_wholesale extends CI_Controller {
                 $this->wholesale->insert($wholesale_list);
             }
         }
-        echo json_encode($wholesale);
+        echo json_encode($warehousing_id);
     }
 }

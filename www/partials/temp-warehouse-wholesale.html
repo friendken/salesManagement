@@ -69,9 +69,9 @@
                         <input class="uibutton loading"  title="Saving" type="submit" value="Tạo hóa đơn"/>
                         Tình trạng: 
                         <b>Nợ &nbsp;</b>
-                        <input type="text" class="xsmall" ng-model="wholesale.debt"/>
+                        <input type="text" class="xsmall" readonly ng-model="wholesale.debt"/>
                         <b>&nbsp; Thanh toán &nbsp;</b>
-                        <input type="text" class="xsmall" ng-model="wholesale.actual"/>
+                        <input type="text" class="xsmall" ng-keyup="checkBill()" ng-model="wholesale.actual"/>
                     </div>
                 </div>
             </form>

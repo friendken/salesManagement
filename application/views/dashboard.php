@@ -83,7 +83,7 @@
                     </div>
 
                 <div class="clear"></div>
-                <div id="footer"> &copy; Copyright 2012 <span class="tip"><a  href="#" title="Zice Admin" >friendken</a> </span> </div>
+                <div id="footer"> &copy; Copyright 2014 <span class="tip"><a  href="#" title="Zice Admin" >friendken</a> </span> </div>
             </div> <!--// End inner -->
         </div> <!--// End content --> 
     </body>

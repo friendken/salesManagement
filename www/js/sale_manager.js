@@ -60,3 +60,21 @@ function selectPrice(el,sale){
         }
     })
 }
+function dividedQuantity(el){
+    var value = (el.value != '') ? parseInt(el.value): 0,
+        product_id = $(el).data('product-id'),
+        warehouse_id = $(el).data('warehouse-id'),
+        warehouse_primary = parseInt($('#product_quantity_' + product_id).text()),
+        total = 0
+   
+    $('.storge_product_' + product_id).each(function(){
+        if(!isNaN(this.value) && this.value != '')
+            total += parseInt(this.value)
+    })
+    if(warehouse_primary - total < 0){
+        alert("hết số lượng nhập kho");
+        el.value = '';
+        return false;
+    }
+    $('#warehouse_' + product_id).val(warehouse_primary - total)
+}

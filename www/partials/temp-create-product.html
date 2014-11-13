@@ -56,22 +56,26 @@
                     </div>
                 </div>
                 <div class="section">
-                    <label>giá mua</label>
-                    <div>
+                    <h5>giá mua</h5>
+                    <div style="margin-left: 30px;">
                         <table class="display">
                             <thead>
                             <tr>
+                                <th><div class="th_wrapp">Ngày Nhập</div></th>
                                 <th><div class="th_wrapp">Số lượng</div></th>
                                 <th><div class="th_wrapp">Số lượng còn lại</div></th>
                                 <th><div class="th_wrapp">Quy cách</div></th>
+                                <th><div class="th_wrapp">kho</div></th>
                                 <th><div class="th_wrapp">Giá mua</div></th>
                             </tr>
                             </thead>
                             <tbody class="list_product_buy_price">
                                 <tr class="product_buy_price" ng-repeat="item in product.buy_price" id="tr_product_price_{{item.id}}">
+                                    <td class="small">{{item.created}}</td>
                                     <td class="small">{{item.quantity}}</td>
                                     <td class="small">{{item.remaining_quantity}}</td>
                                     <td class="small">{{item.unit}}</td>
+                                    <td class="small">{{item.warehouse}}</td>
                                     <td class="small">{{item.price | number}}</td>
                                 </tr>
                             </tbody>
