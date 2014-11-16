@@ -1,0 +1,51 @@
+<div ng-app="dashboard" ng-controller="warehousingHistoryController">
+    <div class="onecolumn" style="margin-top: 10px">
+        <div class="header">
+            <span ><span class="ico  gray random"></span> Lịch sử nhập kho</span>
+        </div><!-- End header -->	
+        <div class=" clear"></div>
+        <div class="content">
+            <div class="section">
+                <table>
+                    <tr>
+                        <td>
+                            <div class="iconBox color">
+                                <img src="/www/img/icon/zoom.png">
+                            </div>
+                        </td>
+                        <td>
+                            <input type="text" ng-model="searchHistory" class="small"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <form> 
+                <div class="tableName">
+                    <table class="display" id="tabel_product">
+                        <thead>
+                            <tr>
+                                <th><div class="th_wrapp">stt</div></th>
+                                <th><div class="th_wrapp">Tên sản phẩm</div></th>
+                                <th><div class="th_wrapp">Kho</div></th>
+                                <th><div class="th_wrapp">Số Lượng</div></th>
+                                <th><div class="th_wrapp">Ngày</div></th>
+                                <th><div class="th_wrapp">số hóa đơn</div></th>
+                            </tr>
+                        </thead>
+                        <tbody id="show_product">
+                            <tr ng-repeat="item in history | filter:searchHistory" class="odd gradeX" data-id="{{item.id}}">
+                                <td>{{item.stt}}</td>
+                                <td>{{item.product_name}}</td>
+                                <td>{{item.warehouse_name}}</td>
+                                <td>{{item.quantity}}</td>
+                                <td>{{item.created}}</td>
+                                <td>{{item.warehousing_id}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

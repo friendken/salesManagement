@@ -26,6 +26,9 @@ class Dashboard extends CI_Controller {
         
         $this->load->view('dashboard', array('data' => 'Hảo đẹp trai'));
     }
+    public function page404(){
+        $this->load->view('404');
+    }
 
 }
 

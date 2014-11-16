@@ -1,0 +1,49 @@
+<div ng-app="dashboard" ng-controller="warehouseOutOfStorgeController">
+    <div class="onecolumn" style="margin-top: 10px">
+        <div class="header">
+            <span ><span class="ico  gray random"></span> Danh sách sản phẩm hết hàng</span>
+        </div><!-- End header -->	
+        <div class=" clear"></div>
+        <div class="content">
+            <div class="section">
+                <table>
+                    <tr>
+                        <td>
+                            <div class="iconBox color">
+                                <img src="/www/img/icon/zoom.png">
+                            </div>
+                        </td>
+                        <td>
+                            <input type="text" ng-model="searchProduct" class="small"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <form> 
+                <div class="tableName">
+                    <table class="display" id="tabel_product">
+                        <thead>
+                            <tr>
+                                <th><div class="th_wrapp">stt</div></th>
+                                <th><div class="th_wrapp">Tên Sản Phẩm</div></th>
+                                <th><div class="th_wrapp">Loại Sản Phẩm</div></th>
+                                <th><div class="th_wrapp">Số lượng</div></th>
+                                <th><div class="th_wrapp">Kho</div></th>
+                            </tr>
+                        </thead>
+                        <tbody id="show_product">
+                            <tr ng-repeat="item in products | filter:searchProduct" class="odd gradeX" data-id="{{item.id}}">
+                                <td>{{item.stt}}</td>
+                                <td>{{item.product_name}}</td>
+                                <td>{{item.product_type_name}}</td>
+                                <td>{{item.quantity}}</td>
+                                <td>{{item.warehouse_name}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

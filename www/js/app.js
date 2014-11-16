@@ -107,4 +107,39 @@ config(function($stateProvider, $urlRouterProvider) {
       },
       controller: 'warehouseListController'
     })
+    .state('warehouse-status', {
+      url: "/warehouse-status",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-warehouse-status.html'}
+      },
+      controller: 'warehouseStatusController'
+    })
+    .state('warehouse-outofstorge', {
+      url: "/warehouse-outofstorge",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-warehouse-outOfStorge.html'}
+      },
+      controller: 'warehouseOutOfStorgeController'
+    })
+    .state('total-liability', {
+      url: "/total-liability",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-total-liability.html'}
+      },
+      controller: 'totalLiabilityController'
+    })
+    .state('total-debit', {
+      url: "/total-debit",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-total-debit.html'}
+      },
+      controller: 'totalDebitController'
+    })
+    .state('warehousing-history', {
+      url: "/warehousing-history",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-warehousing-history.html'}
+      },
+      controller: 'warehousingHistoryController'
+    })
 });

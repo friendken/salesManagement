@@ -1,0 +1,51 @@
+<div ng-app="dashboard" ng-controller="totalDebitController">
+    <div class="onecolumn" style="margin-top: 10px">
+        <div class="header">
+            <span ><span class="ico  gray random"></span> Danh sách Tổng bị nợ</span>
+        </div><!-- End header -->	
+        <div class=" clear"></div>
+        <div class="content">
+            <div class="section">
+                <table>
+                    <tr>
+                        <td>
+                            <div class="iconBox color">
+                                <img src="/www/img/icon/zoom.png">
+                            </div>
+                        </td>
+                        <td>
+                            <input type="text" ng-model="searchBill" class="small"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <form> 
+                <div class="tableName">
+                    <table class="display" id="tabel_product">
+                        <thead>
+                            <tr>
+                                <th><div class="th_wrapp">stt</div></th>
+                                <th><div class="th_wrapp">mã hóa đơn</div></th>
+                                <th><div class="th_wrapp">khách hàng</div></th>
+                                <th><div class="th_wrapp">Thành tiền</div></th>
+                                <th><div class="th_wrapp">Nợ</div></th>
+                                <th><div class="th_wrapp">Ngày</div></th>
+                            </tr>
+                        </thead>
+                        <tbody id="show_product">
+                            <tr ng-repeat="item in bill | filter:searchBill" class="odd gradeX" data-id="{{item.id}}">
+                                <td>{{item.stt}}</td>
+                                <td>{{item.bill_code}}</td>
+                                <td>{{item.customer_id}}</td>
+                                <td>{{item.price_total | number}}</td>
+                                <td>{{item.debit | number}}</td>
+                                <td>{{item.created}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

@@ -3,14 +3,20 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/wamp/www/salesManagement/www/js/app.js</file>
-            <file>file:/C:/wamp/www/salesManagement/application/controllers/warehouse_divide.php</file>
-            <file>file:/C:/wamp/www/salesManagement/www/partials/temp-warehouse-list.html</file>
-            <file>file:/C:/wamp/www/salesManagement/application/controllers/warehouses.php</file>
+            <file>file:/C:/wamp/www/salesManagement/application/models/warehousing_history_model.php</file>
             <file>file:/C:/wamp/www/salesManagement/www/js/controllers.js</file>
-            <file>file:/C:/wamp/www/salesManagement/www/partials/temp-create-product.html</file>
-            <file>file:/C:/wamp/www/salesManagement/www/js/sale_manager.js</file>
+            <file>file:/C:/wamp/www/salesManagement/www/partials/temp-total-debit.html</file>
+            <file>file:/C:/wamp/www/salesManagement/application/controllers/debit.php</file>
+            <file>file:/C:/wamp/www/salesManagement/application/models/bill_model.php</file>
+            <file>file:/C:/wamp/www/salesManagement/application/controllers/history.php</file>
             <file>file:/C:/wamp/www/salesManagement/www/partials/temp-warehouse-divide.html</file>
+            <file>file:/C:/wamp/www/salesManagement/www/partials/temp-total-liability.html</file>
+            <file>file:/C:/wamp/www/salesManagement/www/js/app.js</file>
+            <file>file:/C:/wamp/www/salesManagement/www/partials/temp-warehousing-history.html</file>
+            <file>file:/C:/wamp/www/salesManagement/application/controllers/warehouses.php</file>
+            <file>file:/C:/wamp/www/salesManagement/application/views/include/left_menu.html</file>
+            <file>file:/C:/wamp/www/salesManagement/www/partials/temp-product.html</file>
+            <file>file:/C:/wamp/www/salesManagement/application/models/warehousing_model.php</file>
         </group>
     </open-files>
 </project-private>

@@ -29,6 +29,7 @@ class Warehouse_wholesale_sale extends CI_Controller {
         #create bill
         $data_bill = array('bill_code' => $code_bill,
                            'customer_id' => $bill->partner,
+                           'debit' => $bill->debt,
                            'price_total' => $bill->total_bill);
         $bill_id = $this->bill->insert($data_bill);
         #create bill detail

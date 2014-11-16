@@ -8,10 +8,18 @@ class Bill_detail extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('bill_model','bill');
+        $this->load->model('products_sale_price_model','product_sale');
     }
     public function index() {
         $id = $_GET['id'];
+        $type = $_GET['type'];
         $bill_detail = $this->bill->get_by_id($id);
+        foreach ($bill_detail->detail as $key => $row){
+            if($type == 'wholesale')
+                $bill_detail->detail[$key]->unit = $this->product_sale->get_unit_primary($row->product_id);
+            else
+                $bill_detail->detail[$key]->unit = $this->product_sale->get_unit_retail($row->product_id);
+        }
         echo json_encode(array('bill' => $bill_detail));
     }
 

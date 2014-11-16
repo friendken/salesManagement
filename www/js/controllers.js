@@ -441,7 +441,9 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 $('#tr_product_buy_price_' + new_id).children('td:nth-child(7)').children('input').val(0);
                 $scope.initSelect();
             }
-            
+            $scope.checkBill = function($event){
+                $scope.wholesale.debt = parseInt($('#txt_hide_total_bill').val()) - parseInt($scope.wholesale.actual);
+            }
             $scope.createBill = function(){
                 
                 var buy_price = new Array();
@@ -460,7 +462,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 } 
                 $scope.wholesale.buy_price = buy_price;
                 $scope.wholesale.total_bill = $('#txt_hide_total_bill').val();
-//                console.log($scope.wholesale);return false;
+                
                 //======= send request =======
                 $http({method: 'post', url: $scope.url,
                         data: $scope.wholesale, reponseType: 'json'}).
@@ -501,7 +503,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
     }])
     .controller('billDetailController', ['$scope','$http','$stateParams','$location', function($scope,$http,$stateParams,$location) {
             console.log('load bill detail');
-            $scope.url = config.base + '/bill_detail?id=' + $stateParams.id;
+            $scope.url = config.base + '/bill_detail?id=' + $stateParams.id + '&type=' + $stateParams.type;
             $scope.init = function(){
                 $http({method: 'GET', url: $scope.url, reponseType: 'json'}).
                 success(function(data, status) {
@@ -525,7 +527,10 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                     $http({method: 'GET', url: $scope.url, reponseType: 'json'}).
                     success(function(data, status) {
                       //==== get data account profile ========
-                      console.log(data);
+                      if(data.warehousing.allow == 1){
+                          window.location = config.base + '/dashboard/page404'
+                          return false
+                      }
                       $scope.renderTable(data.products, data.warehouses)
 
                     }).
@@ -539,17 +544,17 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                         html += '<tr>'
                         html += '<td>' + products[x].stt + '</td>'
                         html += '<td>' + products[x].detail.name + '</td>'
-                        html += '<td id="product_quantity_' + products[x].id + '">' + products[x].quantity + '</td>'
+                        html += '<td id="product_quantity_' + products[x].product_id + '">' + products[x].quantity + '</td>'
                         html += '<td>' + products[x].unit.name + '</td>'
                         html += '<td align="left">'
                         html += '<div>'
                         html += '<span><lable>Kho nhà </label></span>'
-                        html += '<span><input type="text" data-product-id="' + products[x].id + '" data-warehouse-id="0" id="warehouse_' + products[x].id + '" value="' + products[x].quantity + '"/></span>'
+                        html += '<span><input type="text" data-product-id="' + products[x].product_id + '" data-warehouse-id="0" id="warehouse_' + products[x].product_id + '" value="' + products[x].quantity + '"/></span>'
                         html += '</div>'
                         for(var y in warehouses){
                             html += '<div>'
                             html += '<span><lable>' + warehouses[y].name + '</label></span>'
-                            html += '<span><input class="storge_product_' + products[x].id + '" onkeyup="dividedQuantity(this)" data-product-id="' + products[x].id + '" data-warehouse-id="' + warehouses[y].id + ' "type="text" /></span>'
+                            html += '<span><input class="storge_product_' + products[x].product_id + '" onkeyup="dividedQuantity(this)" data-product-id="' + products[x].product_id + '" data-warehouse-id="' + warehouses[y].id + ' "type="text" /></span>'
                             html += '</div>'
                         }
                         html += '</td>'
@@ -568,7 +573,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                         else
                             list[warehouse_id] = new Array({product_id: product_id,quantity: this.value})
                     })
-                    $http({method: 'POST', url: config.base + '/warehouse_divide/updateStorge',data: list, reponseType: 'json'}).
+                    $http({method: 'POST', url: config.base + '/warehouse_divide/updateStorge',data: {list: list,warehousing_id: $stateParams.warehousing_id}, reponseType: 'json'}).
                     success(function(data, status) {
                       console.log(data)
                     }).
@@ -645,4 +650,90 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
         $scope.cancel = function () {
           $modalInstance.dismiss('cancel');
         };
-    });
+    })
+    .controller('warehouseStatusController', ['$scope','$http', function($scope,$http) {
+            console.log('load tình trạng kho');
+        $scope.init = function (){
+            $http({method: 'GET', url: config.base + '/warehouses', reponseType: 'json'}).
+                success(function(data, status) {
+                  var html_select = '';
+                    for(var x in data.warehouses){
+                        html_select += '<option value="' + data.warehouses[x].id + '">' + data.warehouses[x].name + '</option>'
+                    }
+                    $('#sl-warehouses-product_type').append(html_select);
+                    $scope.initSelect();
+                }).
+                error(function(data, status) {
+                  console.log(data)
+                });
+        }
+        $scope.init();
+        $scope.initSelect = function (){
+            $('select').not("select.chzn-select,select[multiple],select#box1Storage,select#box2Storage").selectmenu({
+                style: 'dropdown',
+                transferClasses: true,
+                width: null
+            });
+
+            $(".chzn-select").chosen(); 
+        }
+        $scope.selectWarehouse = function (){
+            $scope.warehouseName = $('#sl-warehouses-product_type [value="' + $scope.warehouse + '"]').text(); 
+            $http({method: 'GET', url: config.base + '/warehouses/getWarehouseStorge?id=' + $scope.warehouse, reponseType: 'json'}).
+                success(function(data, status) {
+                    $scope.warehouses = data.warehouses;
+                }).
+                error(function(data, status) {
+                  console.log(data)
+                });
+        } 
+    }])
+    .controller('warehouseOutOfStorgeController', ['$scope','$http', function($scope,$http) {
+            console.log('load tình trạng kho');
+        $scope.init = function (){
+            $http({method: 'GET', url: config.base + '/warehouses/getProductOutOfStorge', reponseType: 'json'}).
+                success(function(data, status) {
+                  $scope.products = data.products
+                }).
+                error(function(data, status) {
+                  console.log(data)
+                });
+        }
+        $scope.init(); 
+    }])
+    .controller('totalLiabilityController', ['$scope','$http', function($scope,$http) {
+        $scope.init = function (){
+            $http({method: 'GET', url: config.base + '/debit/totalLiability', reponseType: 'json'}).
+                success(function(data, status) {
+                  $scope.bill = data.bill
+                }).
+                error(function(data, status) {
+                  console.log(data)
+                });
+        }
+        $scope.init(); 
+    }])
+    .controller('totalDebitController', ['$scope','$http', function($scope,$http) {
+        $scope.init = function (){
+            $http({method: 'GET', url: config.base + '/debit/totalDebit', reponseType: 'json'}).
+                success(function(data, status) {
+                  $scope.bill = data.bill
+                }).
+                error(function(data, status) {
+                  console.log(data)
+                });
+        }
+        $scope.init(); 
+    }])
+    .controller('warehousingHistoryController', ['$scope','$http', function($scope,$http) {
+        $scope.init = function (){
+            $http({method: 'GET', url: config.base + '/history/warehousingHistory', reponseType: 'json'}).
+                success(function(data, status) {
+                  $scope.history = data.history
+                }).
+                error(function(data, status) {
+                  console.log(data)
+                });
+        }
+        $scope.init(); 
+    }])

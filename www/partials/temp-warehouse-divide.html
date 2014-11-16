@@ -21,18 +21,7 @@
                             </tr>
                         </thead>
                         <tbody id="list-product-divide">
-                            <tr ng-repeat="item in products" class="odd gradeX">
-                                <td>{{item.stt}}</td>
-                                <td>{{item.detail.name}}</td>
-                                <td>{{item.quantity}}</td>
-                                <td>{{item.unit.name}}</td>
-                                <td>
-                                    <div ng-repeat="row in warehouses"/>
-                                    <label>{{row.name}}</label>
-                                    <input class="warehouse_{{item.id}}_{{row.id}}"/>
-                                    </div>
-                                </td>
-                            </tr>
+                            
                         </tbody>
                     </table>
                 </div>
