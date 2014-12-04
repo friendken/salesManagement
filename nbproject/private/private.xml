@@ -3,20 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/wamp/www/salesManagement/application/models/warehouse_wholesale_model.php</file>
-            <file>file:/C:/wamp/www/salesManagement/www/partials/temp-export-detail.html</file>
-            <file>file:/C:/wamp/www/salesManagement/www/js/controllers.js</file>
-            <file>file:/C:/wamp/www/salesManagement/application/models/export_detail_model.php</file>
-            <file>file:/C:/wamp/www/salesManagement/application/models/export_bill_model.php</file>
-            <file>file:/C:/wamp/www/salesManagement/www/partials/temp-warehouses-export.html</file>
             <file>file:/C:/wamp/www/salesManagement/www/js/app.js</file>
-            <file>file:/C:/wamp/www/salesManagement/application/controllers/stock_transfer.php</file>
-            <file>file:/C:/wamp/www/salesManagement/www/partials/temp-warehouses-transfer.html</file>
-            <file>file:/C:/wamp/www/salesManagement/application/controllers/warehouses.php</file>
+            <file>file:/C:/wamp/www/salesManagement/www/partials/temp-customers.html</file>
+            <file>file:/C:/wamp/www/salesManagement/application/controllers/customers.php</file>
+            <file>file:/C:/wamp/www/salesManagement/www/js/controllers.js</file>
             <file>file:/C:/wamp/www/salesManagement/application/views/include/left_menu.html</file>
-            <file>file:/C:/wamp/www/salesManagement/www/partials/temp-warehouse-status.html</file>
             <file>file:/C:/wamp/www/salesManagement/www/partials/temp-product.html</file>
-            <file>file:/C:/wamp/www/salesManagement/application/models/warehouses_detail_model.php</file>
+            <file>file:/C:/wamp/www/salesManagement/application/models/customers_model.php</file>
+            <file>file:/C:/wamp/www/salesManagement/application/models/bill_model.php</file>
         </group>
     </open-files>
 </project-private>

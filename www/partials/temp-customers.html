@@ -1,13 +1,49 @@
 <div ng-app="dashboard" ng-controller="customersController">
+    <script type="text/ng-template" id="create_customer">
+        <div class="modal-header">
+            <h3 class="modal-title">Thêm {{customer_name}}</h3>
+        </div>
+        <div class="modal-body">
+        <form>
+            <div class='section'>
+                <label>Tên Khách hàng</label>
+                <div><input type='text' ng-model='customer.name'/></div>
+            </div>
+            <div class='section' ng-if="customer.type == 'partner'">
+                <label>Tên cửa hàng</label>
+                <div><input type='text' ng-model='customer.store_name'/></div>
+            </div>
+            <div class='section'>
+                <label>Địa chỉ</label>
+                <div><input type='text' ng-model='customer.address'/></div>
+            </div>
+            <div class='section'>
+                <label>Điện thoại bàn</label>
+                <div><input type='text' ng-model='customer.phone_home'/></div>
+            </div>
+            <div class='section'>
+                <label>Điện thoại di động</label>
+                <div><input type='text' ng-model='customer.phone_mobile'/></div>
+            </div>
+        </form>
+        </div>
+        <div class="modal-footer">
+            <a class="uibutton " ng-click='ok()'>Lưu</a>
+            <a class="uibutton special" ng-click='cancel()'>Hủy</a>
+        </div>
+    </script>
     <div class="onecolumn" style="margin-top: 10px">
         <div class="header">
-            <span ><span class="ico  gray random"></span> Danh sách {{type_customer}}</span>
+            <span ><span class="ico  gray random"></span> Danh sách {{customer_name}}</span>
         </div><!-- End header -->	
         <div class=" clear"></div>
         <div class="content"  >
             <div class="section">
                 <table>
                     <tr>
+                        <td>
+                            <a class="uibutton icon confirm add" ng-click="openPopup()" >Thêm {{customer_name}}</a> 
+                        </td>
                         <td>
                             <div class="iconBox color">
                                 <img src="/www/img/icon/zoom.png">
@@ -25,8 +61,8 @@
                         <thead>
                             <tr>
                                 <th><div class="th_wrapp">stt</div></th>
-                                <th><div class="th_wrapp">Khách Hàng</div></th>
-                                <th><div class="th_wrapp">Cửa Hàng</div></th>
+                                <th><div class="th_wrapp">{{customer_name}}</div></th>
+                                <th ng-if="customer_type == 'partner'"><div class="th_wrapp">Cửa Hàng</div></th>
                                 <th><div class="th_wrapp">Địa Chỉ</div></th>
                                 <th><div class="th_wrapp">ĐT nhà</div></th>
                                 <th><div class="th_wrapp">Di động</div></th>
@@ -34,15 +70,17 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr ng-repeat="item in products | filter:filter_product" class="odd gradeX">
-                                <td>{{item.id}}</td>
+                            <tr ng-repeat="(key,item) in customers | filter:searchCustomer" class="odd gradeX">
+                                <td>{{item.key + 1}}</td>
                                 <td>{{item.name}}</td>
-                                <td>{{item.quantity}}</td>
-                                <td>{{item.unit_name}}</td>
+                                <td ng-if="customer_type == 'partner'">{{item.store_name}}</td>
+                                <td>{{item.address}}</td>
+                                <td>{{item.phone_home}}</td>
+                                <td>{{item.phone_mobile}}</td>
                                 <td>
-                                    <span id="edit_btn_{{item.product_id}}">
+                                    <span id="edit_btn_{{item.id}}">
                                         <span class="tip">
-                                            <a href="#edit-product/{{item.product_id}}" title="Edit">
+                                            <a href="#edit-product/{{item.id}}" title="Edit">
                                                 <img src="/www/img/icon/icon_edit.png">
                                             </a>
                                         </span> 

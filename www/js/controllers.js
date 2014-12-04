@@ -856,7 +856,12 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             $location.path('warehouses-export');
         }
     }])
-    .controller('customersController', ['$scope','$http','$stateParams', function($scope, $http, $stateParams) {
+    .controller('customersController', ['$scope','$http','$stateParams','$modal', function($scope, $http, $stateParams, $modal) {
+        $scope.customer_type = $stateParams.type;
+            if($stateParams.type == 'partner')
+                $scope.customer_name = 'Đối tác';
+            else
+                $scope.customer_name = 'Khách hàng';
         $scope.init = function (){
             $http({method: 'GET', url: config.base + '/customers?type=' + $stateParams.type, reponseType: 'json'}).
                 success(function(data, status) {
@@ -866,5 +871,53 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                   console.log(data);
                 });
         }
-        $scope.init(); 
+        $scope.init();
+        $scope.openPopup = function(size,$event){
+            var modalInstance = $modal.open({
+                templateUrl: 'create_customer',
+                controller: 'createCustomerController',
+                size: size,
+                resolve: {
+                  items: function () {
+                    return {type: $stateParams.type}
+                  }
+                }
+            });
+            modalInstance.result.then(function () {
+                $scope.init();
+            });
+        }
     }])
+    .controller('createCustomerController', function ($scope,$http, $modalInstance, items) {
+            $scope.customer = {};
+            $scope.customer.type = items.type;
+            if(items.type == 'partner')
+                $scope.customer_name = 'Đối tác';
+            else
+                $scope.customer_name = 'Khách hàng';
+//            if(data){
+//                $http({method: 'GET', url: config.base + '/warehouses/getWarehouse/' + items, reponseType: 'json'}).
+//                    success(function(data, status) {
+//                      console.log(data);
+//    
+//                    }).
+//                    error(function(data, status) {
+//                      console.log(data)
+//                    });
+//            }
+
+    
+        $scope.ok = function () {
+            $http({method: 'POST', url: config.base + '/customers/createCustomer',data: $scope.customer, reponseType: 'json'}).
+                    success(function(data, status) {
+//                      $modalInstance.close(data);
+                    }).
+                    error(function(data, status) {
+                      console.log(data)
+                    });
+        };
+
+        $scope.cancel = function () {
+          $modalInstance.dismiss('cancel');
+        };
+    })
