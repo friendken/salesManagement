@@ -1,12 +1,19 @@
 function calculatorMoney(el) {
-    var id = $(el).closest('tr').data('id');
-    var target = $(el).closest('tr');
-    var quantity = target.children('td:nth-child(4)').children().val().trim();
-    var price = target.children('td:nth-child(6)').children().val().trim();
+    var id = $(el).closest('tr').data('id'),
+        target = $(el).closest('tr'),
+        quantity = target.children('td:nth-child(4)').children().val().trim(),
+        price = target.children('td:nth-child(6)').children().val().trim(),
+        storge = target.children('td:nth-child(4)').children().data('storge-in-house')
+    
     if (quantity == '' || isNaN(quantity))
         return false;
     if (price == '' || isNaN(price))
         return false;
+    if (quantity > storge){
+        alert('kho trong nhà đã hết, vui lòng nhập thêm sản phẩm để có thê bán hàng')
+        target.children('td:nth-child(4)').children().val('')
+        return false;
+    }
 
     var bill = parseInt(quantity) * parseInt(price);
     $('#show_bill_product_' + id).html('<h4>' + numeral(bill).format('0,0') + '</h4>');
@@ -25,17 +32,16 @@ function loadUnitProduct(el,sale) {
     var id = $(el).closest('tr').data('id');
     var target = $(el).closest('tr');
     var product_id = target.children('td:nth-child(3)').children().val();
+    var type = $('#type_sale_product').val();
     $.ajax({
         type: 'POST',
         dataType: 'json',
-        url: config.base + '/product_sale_price?product_id=' + product_id,
+        url: config.base + '/product_sale_price?product_id=' + product_id + '&type=' + type,
         success: function (respone) {
             var html_select = '';
-            for (var x in respone) {
-                html_select += '<option value="' + respone[x].id + '">' + respone[x].name + '</option>'
+            for (var x in respone.unit) {
+                html_select += '<option value="' + respone.unit[x].id + '">' + respone.unit[x].name + '</option>'
             }
-            if(sale)
-                target.children('td:nth-child(6)').children().val(respone[0].price);
             $('#tr_product_buy_price_' + id + ' td.load_unit').html('<select onchange="selectPrice(this,true)" data-placeholder="chọn quy cách" class="chzn-select">' + html_select + '</select>');
             $(' select').not("select.chzn-select,select[multiple],select#box1Storage,select#box2Storage").selectmenu({
                 style: 'dropdown',
@@ -44,6 +50,17 @@ function loadUnitProduct(el,sale) {
             });
 
             $(".chzn-select").chosen();
+            if(sale){
+                if(type == 'wholesale')
+                    target.children('td:nth-child(6)').children().val(respone.unit[0].price);
+                else{
+                    target.children('td:nth-child(6)').children().val(respone.unit[respone.unit.length - 1].price);
+                
+                }
+                target.children('td:nth-child(4)').children().attr('placeholder',respone.storge);
+                target.children('td:nth-child(4)').children().attr('data-storge-in-house', respone.storge_in_house);
+            }
+            
         }
     })
 }

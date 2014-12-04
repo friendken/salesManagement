@@ -686,8 +686,10 @@ Copyright (c) 2011 by Harvest
         var patt = /product_type/ig;
         if(patt.test(high_id)){
             for(var x in this.form_field.options){
-                if(this.form_field.options[x].value == item.options_index)
+                if(this.form_field.options[x].value == item.options_index){
                     this.form_field.options[x].selected = true;
+                    break;
+                }
             }
         }else
             this.form_field.options[item.options_index].selected = true;

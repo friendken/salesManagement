@@ -8,10 +8,15 @@ class Warehouses extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('warehouses_model','warehouses');
+        $this->load->model('products_model','products');
     }
     public function index() {
-        $warehouses = $this->warehouses->get_all();
-        echo json_encode(array('warehouses' => $warehouses));
+        $type = $this->input->get('type');
+        if ($type == 'warehouse')
+            $data = $this->warehouses->get_all();
+        else
+            $data = $this->products->get_all();
+        echo json_encode(array('warehouses' => $data));
     }
     public function getWarehouse($warehouses_id){
         $warehouse = $this->warehouses->get_by_id($warehouses_id);
@@ -45,6 +50,13 @@ class Warehouses extends CI_Controller {
             $i++;
         }
         echo json_encode(array('products' => $products));
+    }
+    public function getAllWarehouses(){
+        $this->load->model('warehouses_detail_model','warehouse_detail');
+        $this->load->model('products_model','products');
+        $warehouses = $this->warehouse_detail->get_warehouse_status();
+        $products = $this->products->get_all();
+        echo json_encode(array('warehouses' => $warehouses, 'products' => $products));
     }
 }
 

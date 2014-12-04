@@ -30,6 +30,7 @@
                                 <th><div class="th_wrapp">Thành tiền</div></th>
                                 <th><div class="th_wrapp">Nợ</div></th>
                                 <th><div class="th_wrapp">Ngày</div></th>
+                                <th><div class="th_wrapp">Chi tiết</div></th>
                             </tr>
                         </thead>
                         <tbody id="show_product">
@@ -40,6 +41,15 @@
                                 <td>{{item.price_total | number}}</td>
                                 <td>{{item.debit | number}}</td>
                                 <td>{{item.created}}</td>
+                                <td>
+                                    <span id="edit_btn_{{item.id}}">
+                                        <span class="tip">
+                                            <a href="#bill-detail/wholesale/{{item.id}}" title="Edit">
+                                                <img src="/www/img/icon/icon_edit.png">
+                                            </a>
+                                        </span> 
+                                    </span>
+                                </td>
                             </tr>
                         </tbody>
                     </table>

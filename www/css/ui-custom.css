@@ -1027,7 +1027,7 @@ padding: 0;
 
 }
 .ui-dialog .ui-dialog-titlebar-close .ui-icon-closethick{
-	background-image: url(../img/icon/closeme.png);!important;
+	background-image: url(../img/icon/closeme.png) !important;
 	background-position:0 0!important;
 	}
 

@@ -142,4 +142,39 @@ config(function($stateProvider, $urlRouterProvider) {
       },
       controller: 'warehousingHistoryController'
     })
+    .state('warehousing-detail', {
+      url: "/warehousing-detail/:id",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-warehousing-detail.html'}
+      },
+      controller: 'warehousingDetailController'
+    })
+    .state('warehouses-transfer', {
+      url: "/warehouses-transfer",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-warehouses-transfer.html'}
+      },
+      controller: 'warehousesTransferController'
+    })
+    .state('warehouses-export', {
+      url: "/warehouses-export",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-warehouses-export.html'}
+      },
+      controller: 'warehousesExportController'
+    })
+    .state('export-detail', {
+      url: "/export-detail/:id",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-export-detail.html'}
+      },
+      controller: 'exportDetailController'
+    })
+    .state('customers', {
+      url: "/customers/:type",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-customers.html'}
+      },
+      controller: 'customersController'
+    })
 });

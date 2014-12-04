@@ -365,11 +365,13 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 $scope.url = config.base + '/warehouse_wholesale_sale/createBill';
                 $scope.load_product = config.base + '/warehouse_wholesale';
                 $scope.warehouse_type = 'Sỉ';
+                $scope.warehouse_type_en = 'wholesale';
             }
             else{
                 $scope.url = config.base + '/warehouse_retail_sale/createBill';
                 $scope.load_product = config.base + '/warehouse_retail';
                 $scope.warehouse_type = 'Lẻ';
+                $scope.warehouse_type_en = 'retail';
             }
             $scope.wholesale = {}
             $scope.wholesale.partner = 1;
@@ -654,14 +656,15 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
     .controller('warehouseStatusController', ['$scope','$http', function($scope,$http) {
             console.log('load tình trạng kho');
         $scope.init = function (){
-            $http({method: 'GET', url: config.base + '/warehouses', reponseType: 'json'}).
+            $http({method: 'GET', url: config.base + '/warehouses/getAllWarehouses', reponseType: 'json'}).
                 success(function(data, status) {
-                  var html_select = '';
-                    for(var x in data.warehouses){
-                        html_select += '<option value="' + data.warehouses[x].id + '">' + data.warehouses[x].name + '</option>'
+                    var html_select = ''
+                    for(var x in data.products){
+                        html_select += '<option value="' + data.products[x].id + '">' + data.products[x].name + '</option>'
                     }
-                    $('#sl-warehouses-product_type').append(html_select);
+                    $('#filter_product_type').append(html_select);
                     $scope.initSelect();
+                    $scope.warehouses = data.warehouses;
                 }).
                 error(function(data, status) {
                   console.log(data)
@@ -677,16 +680,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
 
             $(".chzn-select").chosen(); 
         }
-        $scope.selectWarehouse = function (){
-            $scope.warehouseName = $('#sl-warehouses-product_type [value="' + $scope.warehouse + '"]').text(); 
-            $http({method: 'GET', url: config.base + '/warehouses/getWarehouseStorge?id=' + $scope.warehouse, reponseType: 'json'}).
-                success(function(data, status) {
-                    $scope.warehouses = data.warehouses;
-                }).
-                error(function(data, status) {
-                  console.log(data)
-                });
-        } 
+         
     }])
     .controller('warehouseOutOfStorgeController', ['$scope','$http', function($scope,$http) {
             console.log('load tình trạng kho');
@@ -733,6 +727,143 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 }).
                 error(function(data, status) {
                   console.log(data)
+                });
+        }
+        $scope.init(); 
+    }])
+    .controller('warehousingDetailController', ['$scope','$http','$stateParams', function($scope, $http, $stateParams) {
+        $scope.init = function (){
+            $http({method: 'GET', url: config.base + '/debit/warehousingDetail?id=' + $stateParams.id, reponseType: 'json'}).
+                success(function(data, status) {
+                  $scope.bill = data.bill
+                }).
+                error(function(data, status) {
+                  console.log(data)
+                });
+        }
+        $scope.init(); 
+    }])
+    .controller('warehousesTransferController', ['$scope','$http', function($scope, $http) {
+        $scope.transferList = new Array();
+        $scope.init = function (){
+            $http({method: 'GET', url: config.base + '/stock_transfer/initWarehousesTransfer' , reponseType: 'json'}).
+                success(function(data, status) {
+                    var html_select = ''
+                    for(var x in data.warehouses){
+                        html_select += '<option value="' + data.warehouses[x].id + '">' + data.warehouses[x].name + '</option>'
+                    }
+                    $('.warehouses_list').html(html_select)
+                    $scope.initSelect();
+                }).
+                error(function(data, status) {
+                  console.log(data)
+                });
+        }
+        $scope.init(); 
+        $scope.initSelect = function (){
+            $('select').not("select.chzn-select,select[multiple],select#box1Storage,select#box2Storage").selectmenu({
+                style: 'dropdown',
+                transferClasses: true,
+                width: null
+            });
+
+            $(".chzn-select").chosen(); 
+        }
+        $scope.selectWarehouseFrom = function(){
+            $http({method: 'GET', url: config.base + '/warehouses/getWarehouseStorge?id=' + $scope.warehouse_from, reponseType: 'json'}).
+                success(function(data, status) {
+                  $scope.data_from = data.warehouses
+                }).
+                error(function(data, status) {
+                  console.log(data)
+                });
+        }
+        $scope.selectWarehouseTo = function(){
+            $http({method: 'GET', url: config.base + '/warehouses/getWarehouseStorge?id=' + $scope.warehouse_to, reponseType: 'json'}).
+                success(function(data, status) {
+                  $scope.data_to = data.warehouses
+                }).
+                error(function(data, status) {
+                  console.log(data)
+                });
+        }
+        $scope.doTransfer = function($event){
+            var product_id = $($event.currentTarget).data('product-id'),
+                quantity = parseInt($('#quanity_product_' + product_id).text()),
+                value = parseInt($('#quantity_transfer_' + product_id).val().trim()),
+                product_name = $($event.currentTarget).data('product-name'),
+                unit = $($event.currentTarget).data('unit')
+            
+            if(value > quantity){
+                alert("không đủ số lượng");
+                return false;
+            }
+            if(isNaN(value)){
+                alert("số lượng phải là số");
+                return false;
+            }
+            $scope.transferList.push({remaining: (quantity - value),product_id: product_id, quantity: value, product_name: product_name, unit: unit});
+            $('#quanity_product_' + product_id).text(quantity - value)
+        }
+        $scope.saveTransfer = function(){
+            if(!$scope.warehouse_to){
+                alert('vui lòng chọn kho muốn chuyển');
+                return false;
+            }
+            if($scope.transferList.length == 0){
+                alert('vui lòng chọn sản phẩm')
+                return false;
+            }
+            if($scope.warehouse_from == $scope.warehouse_to){
+                alert('bạn không thể chuyển sản phẩm trong cùng một kho')
+                return false;
+            }
+            $http({method: 'POST', url: config.base + '/stock_transfer/saveWarehouseTransfer' , data: {warehouse_from: $scope.warehouse_from, warehouse_to: $scope.warehouse_to, transfer: $scope.transferList},reponseType: 'json'}).
+                success(function(data, status) {
+                    $scope.selectWarehouseTo();
+                    $scope.selectWarehouseFrom();
+                    $scope.transferList = new Array();
+                }).
+                error(function(data, status) {
+                  console.log(data)
+                });
+        }
+    }])
+    .controller('warehousesExportController', ['$scope','$http', function($scope, $http) {
+        $scope.init = function (){
+            $http({method: 'GET', url: config.base + '/stock_transfer/getExport', reponseType: 'json'}).
+                success(function(data, status) {
+                  $scope.exports = data.export
+                }).
+                error(function(data, status) {
+                  console.log(data)
+                });
+        }
+        $scope.init(); 
+    }])
+    .controller('exportDetailController', ['$scope','$http','$stateParams','$location', function($scope, $http, $stateParams, $location) {
+        $scope.init = function (){
+            $http({method: 'GET', url: config.base + '/stock_transfer/getExportDetail?id=' + $stateParams.id, reponseType: 'json'}).
+                success(function(data, status) {
+                  $scope.exports = data.exports
+                }).
+                error(function(data, status) {
+                  console.log(data)
+                });
+        }
+        $scope.init(); 
+        $scope.backToList = function(){
+            $location.path('warehouses-export');
+        }
+    }])
+    .controller('customersController', ['$scope','$http','$stateParams', function($scope, $http, $stateParams) {
+        $scope.init = function (){
+            $http({method: 'GET', url: config.base + '/customers?type=' + $stateParams.type, reponseType: 'json'}).
+                success(function(data, status) {
+                  $scope.customers = data.customers;
+                }).
+                error(function(data, status) {
+                  console.log(data);
                 });
         }
         $scope.init(); 

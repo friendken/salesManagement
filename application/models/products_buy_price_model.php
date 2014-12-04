@@ -22,5 +22,14 @@ class Products_buy_price_model extends MY_model {
                         ->get($this->table_name)
                         ->result();
     }
+    public function get_by_warehousing_id($warehousing_id){
+        return $this->db->query('select *,
+                                (select `name` from products where id = pb.product_id) as product_name,
+                                (select `name` from products_sale_price where id = pb.unit) as unit_name 
+                                from products_buy_price as pb
+                                where warehousing_id = '.$warehousing_id)
+                        ->result();
+    }
+    
 }
 

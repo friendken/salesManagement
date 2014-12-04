@@ -17,4 +17,4 @@ class History extends CI_Controller {
     }
     
 }
-
+?>

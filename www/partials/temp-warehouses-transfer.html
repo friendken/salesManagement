@@ -1,0 +1,141 @@
+<div ng-app="dashboard" ng-controller="warehousesTransferController">
+    <div class="column_left" style="margin-top: 10px; width: 58%">
+
+        <div class="onecolumn">
+            <div class="header"><span><span class="ico gray notepad"></span>from</span></div>
+            <br class="clear"/>
+            <div class="content tableName">
+                <div class="section">
+                <table>
+                    <tr>
+                        <td>
+                            <div class="iconBox color">
+                                <img src="/www/img/icon/zoom.png">
+                            </div>
+                        </td>
+                        <td>
+                            <select data-placeholder="chọn kho" id="sl-warehouses-from" ng-model='warehouse_from' ng-change='selectWarehouseFrom()' class="chzn-select warehouses_list"></select>
+                        </td>
+                        <td>
+                            <input type="text" ng-model="filter_product_from" class="small"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+                <div style="overflow-y: scroll; height: 350px">
+                <table class="display data_table" >
+                    <thead>
+                        <tr>
+                            <th><div class="th_wrapp">Tên Sản Phẩm</div></th>
+                            <th><div class="th_wrapp">Số lượng</div></th>
+                            <th><div class="th_wrapp">chuyển kho</div></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in data_from | filter:filter_product_from">
+                            <td>{{item.product_name}}</td>
+                            <td><span id="quanity_product_{{item.product_id}}">{{item.quantity}}</span> {{item.unit.name}}</td>
+                            <td style="width: 200px">
+                                <div>
+                                    <input type="text" id="quantity_transfer_{{item.product_id}}" style="width: 40px"/>
+                                    <div class="iconBox color">
+                                        <a id="btn_more_price" ng-click="doTransfer($event)" data-unit="{{item.unit.name}}" data-product-name="{{item.product_name}}" data-product-id="{{item.product_id}}" title="thêm giá">
+                                            <img src="/www/img/icon/arrow_right2.png">
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="column_right" style="margin-top: 10px; width: 40%">
+
+        <div class="onecolumn">
+            <div class="header"><span><span class="ico gray notepad"></span>to</span></div>
+            <br class="clear"/>
+            <div class="content tableName">
+                <div class="section">
+                <table>
+                    <tr>
+                        <td>
+                            <div class="iconBox color">
+                                <img src="/www/img/icon/zoom.png">
+                            </div>
+                        </td>
+                        <td>
+                            <select data-placeholder="chọn kho" id="sl-warehouses-to" ng-model='warehouse_to' ng-change='selectWarehouseTo()' class="chzn-select warehouses_list"></select>
+                        </td>
+                        <td>
+                            <input type="text" ng-model="filter_product_to" class="small"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+                <div style="overflow-y: scroll; height: 350px">
+                <table class="display data_table" >
+                    <thead>
+                        <tr>
+                            <th><div class="th_wrapp">Tên Sản Phẩm</div></th>
+                            <th><div class="th_wrapp">Số lượng</div></th>    
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="item in data_to | filter:filter_product_to">
+                            <td>{{item.product_name}}</td>
+                            <td>{{item.quantity}} {{item.unit.name}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="onecolumn" style="margin-top: 10px">
+        <div class="header">
+            <span ><span class="ico  gray random"></span> Danh sách chuyển kho </span>
+        </div><!-- End header -->	
+        <div class=" clear"></div>
+        <div class="content">
+            <form> 
+                <div class="tableName">
+                    <table class="display" id="tabel_product">
+                        <thead>
+                            <tr>
+                                <th><div class="th_wrapp">id</div></th>
+                                <th><div class="th_wrapp">Tên Sản Phẩm</div></th>
+                                <th><div class="th_wrapp">số lượng</div></th>
+                                <th><div class="th_wrapp">action</div></th>
+                            </tr>
+                        </thead>
+                        <tbody id="show_product">
+                            <tr ng-repeat="item in transferList" class="odd gradeX" >
+                                <td>{{item.product_id}}</td>
+                                <td>{{item.product_name}}</td>
+                                <td>{{item.quantity}} {{item.unit}}</td>
+                                <td>
+                                    <span id="edit_btn_{{item.product_id}}"> 
+                                        <span class="tip">
+                                            <a id="1" class="Delete" title="Delete">
+                                                <img src="/www/img/icon/icon_delete.png">
+                                            </a>
+                                        </span>
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+            <div class="section last">
+                <a class="uibutton icon add" ng-click="saveTransfer()">Chuyển kho</a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,48 +1,40 @@
-<div ng-app="dashboard" ng-controller="warehouseStatusController">
+<div ng-app="dashboard" ng-controller="exportDetailController">
     <div class="onecolumn" style='margin-top: 10px'>
         <div class="header">
             <span>
                 <span class="ico gray window"></span>
-                Hiện trạng kho
+                Chi tiết hóa đơn xuất kho
             </span>
         </div>
         <div class="clear"></div>
         <div class="content">
-            <form>
+            <form >
                 <div class='section'>
-                    <table>
-                    <tr>
-                        <td style="width: 250px">
-                            <select id="filter_product_type" ng-model="searchProduct.product_id" data-placeholder="chọn sản phẩm" class="chzn-select">
-                                
-                            </select>
-                        </td>
-                        <td>
-                            <div class="iconBox color">
-                                <img src="/www/img/icon/zoom.png">
-                            </div>
-                        </td>
-                        <td>
-                            <input type="text" ng-model="searchProduct.$" class="large"/>
-                        </td>
-                    </tr>
-                </table>
+                    <h3 style="margin-top: 10px">Thông tin hóa đơn</h3>
+                    <label>Kho xuất :</label>
+                    <div>{{exports.warehouse_name_from}}</div>
+                    <label>Kho nhập :</label>
+                    <div>{{exports.warehouse_name_to}}</div>
+                    <label>Ngày tạo :</label>
+                    <div>{{exports.created}}</div>
+                </div>
+                <div class='section'>
+                    <h3 style="margin-top: 10px">chi tiết hóa đơn</h3>
                     <div style="margin-left: 30px">
                         <table class="display">
                             <thead>
                             <tr>
                                 <th><div class="th_wrapp">stt</div></th>
                                 <th><div class="th_wrapp">tên sản phảm</div></th>
-                                <th><div class="th_wrapp">tên kho</div></th>
                                 <th><div class="th_wrapp">số lượng</div></th>
                                 <th><div class="th_wrapp">Quy cách</div></th>
+                                
                             </tr>
                             </thead>
-                            <tbody class="">
-                                <tr class="" ng-repeat="(key,item) in warehouses| filter:searchProduct">
+                            <tbody class="list_product_buy_price">
+                                <tr class="product_buy_price" ng-repeat="(key,item) in exports.detail" id="tr_product_price_{{item.id}}">
                                     <td class="small">{{key + 1}}</td>
                                     <td class="small">{{item.product_name}}</td>
-                                    <td class="small">{{item.warehouses_name}}</td>
                                     <td class="small">{{item.quantity}}</td>
                                     <td class="small">{{item.unit_name}}</td>
                                 </tr>
@@ -50,6 +42,11 @@
                         </table>
                     </div>
 
+                </div>
+                <div class='section last'>
+                    <div>
+                        <input class="uibutton loading" ng-click="backToList()" title="quay lại" value="Quay lại"/>
+                    </div>
                 </div>
             </form>
         </div>

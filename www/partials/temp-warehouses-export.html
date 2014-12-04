@@ -1,7 +1,7 @@
-<div ng-app="dashboard" ng-controller="totalLiabilityController">
+<div ng-app="dashboard" ng-controller="warehousesExportController">
     <div class="onecolumn" style="margin-top: 10px">
         <div class="header">
-            <span ><span class="ico  gray random"></span> Danh sách Tổng nợ</span>
+            <span ><span class="ico  gray random"></span> Danh sách xuất kho</span>
         </div><!-- End header -->	
         <div class=" clear"></div>
         <div class="content">
@@ -14,33 +14,33 @@
                             </div>
                         </td>
                         <td>
-                            <input type="text" ng-model="searchBill" class="small"/>
+                            <input type="text" ng-model="filter_bill" class="small"/>
                         </td>
                     </tr>
                 </table>
             </div>
             <form> 
                 <div class="tableName">
-                    <table class="display" id="tabel_product">
+                    <table class="display">
                         <thead>
                             <tr>
                                 <th><div class="th_wrapp">stt</div></th>
-                                <th><div class="th_wrapp">Ngày</div></th>
-                                <th><div class="th_wrapp">Tổng Tiền</div></th>
-                                <th><div class="th_wrapp">Nợ</div></th>
-                                <th><div class="th_wrapp">Chi tiết</div></th>
-                            </tr>
+                                <th><div class="th_wrapp">kho xuất</div></th>
+                                <th><div class="th_wrapp">kho nhận</div></th>
+                                <th><div class="th_wrapp">Ngày xuất</div></th>
+                                <th><div class="th_wrapp">chi tiết</div></th>
+                        </tr>
                         </thead>
                         <tbody id="show_product">
-                            <tr ng-repeat="item in bill | filter:searchBill" class="odd gradeX" data-id="{{item.id}}">
+                            <tr ng-repeat="item in exports | filter:filter_bill" class="odd gradeX" data-id="{{item.id}}">
                                 <td>{{item.stt}}</td>
+                                <td>{{item.warehouse_name_from}}</td>
+                                <td>{{item.warehouse_name_to}}</td>
                                 <td>{{item.created}}</td>
-                                <td>{{item.price | number}}</td>
-                                <td>{{item.debit | number}}</td>
                                 <td>
                                     <span id="edit_btn_{{item.id}}">
                                         <span class="tip">
-                                            <a href="#warehousing-detail/{{item.id}}" title="Edit">
+                                            <a href="#export-detail/{{item.id}}" title="Edit">
                                                 <img src="/www/img/icon/icon_edit.png">
                                             </a>
                                         </span> 

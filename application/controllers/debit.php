@@ -25,5 +25,16 @@ class Debit extends CI_Controller {
         }
         echo json_encode(array('bill' => $bill));
     }
+    public function warehousingDetail(){
+        $warehousing_id = $this->input->get('id');
+        $this->load->model('warehousing_model');
+        $warehousing = $this->warehousing_model->get_by_id($warehousing_id);
+        $i = 1;
+        foreach($warehousing->detail as $key => $row){
+            $warehousing->detail[$key]->stt = $i;
+            $i++;
+        }
+        echo json_encode(array('bill' => $warehousing));
+    }
 }
 
