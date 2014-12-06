@@ -873,13 +873,15 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
         }
         $scope.init();
         $scope.openPopup = function(size,$event){
+            if($event)
+                var customer_id = $($event.currentTarget).data('id');
             var modalInstance = $modal.open({
                 templateUrl: 'create_customer',
                 controller: 'createCustomerController',
                 size: size,
                 resolve: {
                   items: function () {
-                    return {type: $stateParams.type}
+                    return {type: $stateParams.type, customer_id: customer_id}
                   }
                 }
             });
@@ -895,22 +897,26 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 $scope.customer_name = 'Đối tác';
             else
                 $scope.customer_name = 'Khách hàng';
-//            if(data){
-//                $http({method: 'GET', url: config.base + '/warehouses/getWarehouse/' + items, reponseType: 'json'}).
-//                    success(function(data, status) {
-//                      console.log(data);
-//    
-//                    }).
-//                    error(function(data, status) {
-//                      console.log(data)
-//                    });
-//            }
+            if(items.customer_id){
+                $http({method: 'GET', url: config.base + '/customers/getCustomer?id=' + items.customer_id, reponseType: 'json'}).
+                    success(function(data, status) {
+                      $scope.customer = data.customer;
+    
+                    }).
+                    error(function(data, status) {
+                      console.log(data)
+                    });
+            }
 
     
         $scope.ok = function () {
-            $http({method: 'POST', url: config.base + '/customers/createCustomer',data: $scope.customer, reponseType: 'json'}).
+            if(items.customer_id)
+                var url = config.base + '/customers/editCustomer?id=' + items.customer_id;
+            else
+                var url = config.base + '/customers/createCustomer';
+            $http({method: 'POST', url: url,data: $scope.customer, reponseType: 'json'}).
                     success(function(data, status) {
-//                      $modalInstance.close(data);
+                      $modalInstance.close(data);
                     }).
                     error(function(data, status) {
                       console.log(data)

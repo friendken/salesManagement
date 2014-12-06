@@ -78,9 +78,9 @@
                                 <td>{{item.phone_home}}</td>
                                 <td>{{item.phone_mobile}}</td>
                                 <td>
-                                    <span id="edit_btn_{{item.id}}">
+                                    <span>
                                         <span class="tip">
-                                            <a href="#edit-product/{{item.id}}" title="Edit">
+                                            <a ng-click="openPopup(null,$event)" data-id="{{item.id}}" title="Edit">
                                                 <img src="/www/img/icon/icon_edit.png">
                                             </a>
                                         </span> 

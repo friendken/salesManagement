@@ -19,6 +19,16 @@ class Customers extends CI_Controller {
         $customer_id = $this->customers->insert($customer);
         echo json_encode($customer_id);
     }
+    public function getCustomer(){
+        $customer_id = $this->input->get('id');
+        $customer = $this->customers->get_by_id($customer_id);
+        echo json_encode(array('customer' => $customer));
+    }
+    public function editCustomer(){
+        $id = $this->input->get('id');
+        $customer = $this->input->json();
+        $this->customers->update($customer, array('id' => $id));
+    }
     
 }
 ?>
