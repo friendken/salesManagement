@@ -1,3 +1,9 @@
+$(document).ready(function(){
+    $('ul#main_menu li').on('click',function(){
+        $('ul#main_menu li').removeClass('select')
+        $(this).addClass('select');
+    })
+})
 function calculatorMoney(el) {
     var id = $(el).closest('tr').data('id'),
         target = $(el).closest('tr'),

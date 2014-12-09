@@ -177,4 +177,11 @@ config(function($stateProvider, $urlRouterProvider) {
       },
       controller: 'customersController'
     })
+    .state('order-create', {
+      url: "/order-create",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-order-create.html'}
+      },
+      controller: 'createOrderController'
+    })
 });
