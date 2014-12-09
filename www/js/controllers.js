@@ -927,10 +927,14 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
     })
     .controller('createOrderController', ['$scope','$http','$location', function($scope, $http, $location) {
         $scope.init = function (){
-            $http({method: 'GET', url: config.base + '/customers?type=customer', reponseType: 'json'}).
+            $http({method: 'GET', url: config.base + '/order/createOrder?type=customer', reponseType: 'json'}).
                 success(function(data, status) {
                     $scope.customers = data.customers;
-                    $scope.initSelect(data.customers,'#sl_customer');
+                    $scope.products = data.products;
+                    $scope.units = data.units;
+                    $scope.initDataSelect(data.customers,'#sl_customer');
+                    $scope.initDataSelect(data.products,'#tr_order_1 select.load_product');
+                    $scope.initSelect();
                 }).
                 error(function(data, status) {
                   console.log(data);
@@ -945,13 +949,17 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 }
             }
         };
-        
-        $scope.initSelect = function (data,target){
+        $scope.initDataSelect = function(data,target){
             var html ='';
+            $(target).next('div').remove();
+            $(target).removeClass('chzn-done');
+            $(target).html(html);
             for(var x in data){
                 html += '<option value="' + data[x].id + '">' + data[x].name + '</option>';
             }
             $(target).html(html);
+        };
+        $scope.initSelect = function (){
             $(' select').not("select.chzn-select,select[multiple],select#box1Storage,select#box2Storage").selectmenu({
                 style: 'dropdown',
                 transferClasses: true,
@@ -959,5 +967,41 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             });
 
             $(".chzn-select").chosen(); 
+        };
+        $scope.selectProduct = function(){
+            var target_id = $(event.currentTarget).closest('tr').data('id');
+            $scope.products.forEach(function(product){
+                if(product.id === $scope.select_product){
+                    $scope.initDataSelect(product.sale_price,'#tr_order_' + target_id + ' select.load_unit');
+                    $('#tr_order_' + target_id).children('td:nth-child(4)').children('input.show_buy').val(numeral(parseInt(product.buy_price[0].price) / parseInt(product.buy_price[0].quantity)).format('0,0'));
+                    $('#tr_order_' + target_id).children('td:nth-child(4)').children('input.show_buy_origin').val(product.buy_price[0].id);
+                    $scope.initSelect();
+                    return false;
+                }
+            });
+            console.log(target_id);
+        };
+        $scope.selectUnit = function(){
+            var target_id = $(event.currentTarget).closest('tr').data('id');
+            $scope.units.forEach(function(unit){
+                if(unit.id === $scope.select_unit){
+                    $('#tr_order_' + target_id).children('td:nth-child(6)').children('input.show_sale').val(numeral(parseInt(unit.price)).format('0,0'));
+                    $('#tr_order_' + target_id).children('td:nth-child(6)').children('input.show_sale_origin').val(unit.price);
+                    $('#tr_order_' + target_id).children('td:nth-child(6)').children('input.show_sale_origin').attr('data-sale-id',unit.id);
+                }
+            });
+            console.log(target_id);
+        };
+        $scope.calculatorPrice = function(){
+            var target_id = $(event.currentTarget).closest('tr').data('id'),
+                quantity = parseInt($(event.currentTarget).val()),
+                price = parseInt($('#tr_order_' + target_id).children('td:nth-child(6)').children('input.show_sale_origin').val());
+                
+            if(quantity !== '' && isNaN(quantity)){
+                $('#tr_order_' + target_id).children('td:nth-child(8)').children('span').html('');
+                return false;
+            }
+            var format_price = numeral(quantity * price).format('0,0');
+            $('#tr_order_' + target_id).children('td:nth-child(8)').children('span').html('<h5>' + format_price + '</h5>');
         };
     }])

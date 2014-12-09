@@ -21,7 +21,7 @@
                 </div>
                 <div class='section'>
                     <h3 style="margin-top: 10px">Danh sách sản phẩm nhập</h3>
-                    <div style="margin-left: 5%">
+                    <div style="margin-left: 0%">
                         <table class="display">
                             <thead>
                             <tr>
@@ -36,22 +36,30 @@
                             </tr>
                             </thead>
                             <tbody class="list_product_price">
-                                <tr class="product_buy_price" data-id="1" id="tr_product_buy_price_1">
+                                <tr class="product_buy_price" data-id="1" id="tr_order_1">
                                     <td>
                                         <div class="iconBox color">
                                         <a class="btn_more_buy" data-id="1" ng-click="moreBuy()"  title="thêm giá">
-                                            <img src="/www/img/icon/directional_down.png">
+                                            <img alt="" src="/www/img/icon/directional_down.png">
                                         </a>
                                         </div>
                                     </td>
                                     <td>1</td>
                                     <td style="width: 150px">
-                                        <select data-placeholder="sản phẩm" onchange="loadUnitProduct(this)" class="chzn-select load_product"></select>
+                                        <select data-placeholder="sản phẩm" ng-model="select_product" ng-change="selectProduct()" class="chzn-select load_product"></select>
                                     </td>
-                                    <td><input style="width: 100px" type="text" readonly/></td>
-                                    <td class="small load_unit" style="width: 150px"><select data-placeholder="chọn quy cách" class="chzn-select"></select></td>
-                                    <td><input style="width: 100px" type="text" readonly/></td>
-                                    <td><input style="width: 50px" type="text"/></td>
+                                    <td>
+                                        <input style="width: 100px" type="text" class="show_buy" readonly/>
+                                        <input type="hidden" class="show_buy_origin"/>
+                                    </td>
+                                    <td style="width: 150px">
+                                        <select data-placeholder="chọn quy cách" ng-model="select_unit" ng-change="selectUnit()" class="chzn-select load_unit"></select>
+                                    </td>
+                                    <td>
+                                        <input style="width: 100px" class="show_sale" type="text" readonly/>
+                                        <input type="hidden" class="show_sale_origin"/>
+                                    </td>
+                                    <td><input style="width: 50px" ng-model="quantity" ng-keyup="calculatorPrice()" type="text"/></td>
                                     <td>
                                         <span id="show_bill_product_1"></span>
                                         <input class="bill_product" type="hidden" id="txt_hide_1" value="0"/>
