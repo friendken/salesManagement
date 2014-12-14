@@ -467,7 +467,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 $http({method: 'post', url: $scope.url,
                         data: $scope.wholesale, reponseType: 'json'}).
                         success(function(data, status) {
-                            console.log(data)
+                            console.log(data);
                             showAlert.showSuccess(3000,'lưu thành công');
 //                            $location.path('product');
                         }).
@@ -475,18 +475,18 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                           console.log(data);
                         });
                 
-            }
+            };
     }])
     .controller('billController', ['$scope','$http','$stateParams', function($scope,$http,$stateParams) {
             console.log('load bill');
-            if ($stateParams.type == 'wholesale'){
+            if ($stateParams.type === 'wholesale'){
                 $scope.urlLoad = config.base + '/warehouse_wholesale_sale';
-                $scope.product_name_type = 'Sỉ'
-                $scope.type = 'wholesale'
+                $scope.product_name_type = 'Sỉ';
+                $scope.type = 'wholesale';
             }else{
                 $scope.urlLoad = config.base + '/warehouse_retail_sale';
-                $scope.product_name_type = 'Lẻ'
-                $scope.type = 'retail'
+                $scope.product_name_type = 'Lẻ';
+                $scope.type = 'retail';
             }
             $scope.init = function(){
                 $http({method: 'GET', url: $scope.urlLoad, reponseType: 'json'}).
@@ -512,13 +512,13 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
 //                    $('#tabel_product_type').dataTable();
                 }).
                 error(function(data, status) {
-                  console.log(data)
+                  console.log(data);
                 });
-            }
+            };
             $scope.init();
             $scope.backToList = function(){
                 $location.path('bill/' + $stateParams.type);
-            }
+            };
     }])
     .controller('warehouseDivideController', ['$scope','$http','$stateParams','$location', function($scope,$http,$stateParams,$location) {
                 console.log('load warehouse divide');
@@ -535,52 +535,52 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
 
                     }).
                     error(function(data, status) {
-                      console.log(data)
+                      console.log(data);
                     });
-                }
+                };
                 $scope.renderTable = function (products, warehouses){
-                    var html = ''
+                    var html = '';
                     for(var x in products){
-                        html += '<tr>'
-                        html += '<td>' + products[x].stt + '</td>'
-                        html += '<td>' + products[x].detail.name + '</td>'
-                        html += '<td id="product_quantity_' + products[x].product_id + '">' + products[x].quantity + '</td>'
-                        html += '<td>' + products[x].unit.name + '</td>'
-                        html += '<td align="left">'
-                        html += '<div>'
-                        html += '<span><lable>Kho nhà </label></span>'
-                        html += '<span><input type="text" data-product-id="' + products[x].product_id + '" data-warehouse-id="0" id="warehouse_' + products[x].product_id + '" value="' + products[x].quantity + '"/></span>'
-                        html += '</div>'
+                        html += '<tr>';
+                        html += '<td>' + products[x].stt + '</td>';
+                        html += '<td>' + products[x].detail.name + '</td>';
+                        html += '<td id="product_quantity_' + products[x].product_id + '">' + products[x].quantity + '</td>';
+                        html += '<td>' + products[x].unit.name + '</td>';
+                        html += '<td align="left">';
+                        html += '<div>';
+                        html += '<span><lable>Kho nhà </label></span>';
+                        html += '<span><input type="text" data-product-id="' + products[x].product_id + '" data-warehouse-id="0" id="warehouse_' + products[x].product_id + '" value="' + products[x].quantity + '"/></span>';
+                        html += '</div>';
                         for(var y in warehouses){
-                            html += '<div>'
-                            html += '<span><lable>' + warehouses[y].name + '</label></span>'
-                            html += '<span><input class="storge_product_' + products[x].product_id + '" onkeyup="dividedQuantity(this)" data-product-id="' + products[x].product_id + '" data-warehouse-id="' + warehouses[y].id + ' "type="text" /></span>'
-                            html += '</div>'
+                            html += '<div>';
+                            html += '<span><lable>' + warehouses[y].name + '</label></span>';
+                            html += '<span><input class="storge_product_' + products[x].product_id + '" onkeyup="dividedQuantity(this)" data-product-id="' + products[x].product_id + '" data-warehouse-id="' + warehouses[y].id + ' "type="text" /></span>';
+                            html += '</div>';
                         }
-                        html += '</td>'
-                        html += '</tr>'
+                        html += '</td>';
+                        html += '</tr>';
                     }
                     $('#list-product-divide').html(html);
-                }
+                };
                 $scope.init();
                 $scope.divideWarehouse = function(){
                     var list = new Array();
                     $('input').each(function(){
                         var product_id = $(this).data('product-id'),
-                            warehouse_id = $(this).data('warehouse-id')
+                            warehouse_id = $(this).data('warehouse-id');
                         if(list[warehouse_id])
-                            list[warehouse_id].push({product_id: product_id,quantity: this.value})
+                            list[warehouse_id].push({product_id: product_id,quantity: this.value});
                         else
-                            list[warehouse_id] = new Array({product_id: product_id,quantity: this.value})
-                    })
+                            list[warehouse_id] = new Array({product_id: product_id,quantity: this.value});
+                    });
                     $http({method: 'POST', url: config.base + '/warehouse_divide/updateStorge',data: {list: list,warehousing_id: $stateParams.warehousing_id}, reponseType: 'json'}).
                     success(function(data, status) {
-                      console.log(data)
+                      console.log(data);
                     }).
                     error(function(data, status) {
-                      console.log(data)
+                      console.log(data);
                     });
-                }
+                };
     }])
     .controller('warehouseListController', ['$scope', '$http', '$location', '$modal', function($scope, $http, $location, $modal) {
                 console.log('load warehouse list');
@@ -677,7 +677,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             });
 
             $(".chzn-select").chosen(); 
-        }
+        };
          
     }])
     .controller('warehouseOutOfStorgeController', ['$scope','$http', function($scope,$http) {
@@ -685,24 +685,24 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
         $scope.init = function (){
             $http({method: 'GET', url: config.base + '/warehouses/getProductOutOfStorge', reponseType: 'json'}).
                 success(function(data, status) {
-                  $scope.products = data.products
+                  $scope.products = data.products;
                 }).
                 error(function(data, status) {
-                  console.log(data)
+                  console.log(data);
                 });
-        }
+        };
         $scope.init(); 
     }])
     .controller('totalLiabilityController', ['$scope','$http', function($scope,$http) {
         $scope.init = function (){
             $http({method: 'GET', url: config.base + '/debit/totalLiability', reponseType: 'json'}).
                 success(function(data, status) {
-                  $scope.bill = data.bill
+                  $scope.bill = data.bill;
                 }).
                 error(function(data, status) {
-                  console.log(data)
+                  console.log(data);
                 });
-        }
+        };
         $scope.init(); 
     }])
     .controller('totalDebitController', ['$scope','$http', function($scope,$http) {
@@ -714,7 +714,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 error(function(data, status) {
                   console.log(data);
                 });
-        }
+        };
         $scope.init(); 
     }])
     .controller('warehousingHistoryController', ['$scope','$http', function($scope,$http) {
@@ -823,40 +823,40 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                     $scope.transferList = new Array();
                 }).
                 error(function(data, status) {
-                  console.log(data)
+                  console.log(data);
                 });
-        }
+        };
     }])
     .controller('warehousesExportController', ['$scope','$http', function($scope, $http) {
         $scope.init = function (){
             $http({method: 'GET', url: config.base + '/stock_transfer/getExport', reponseType: 'json'}).
                 success(function(data, status) {
-                  $scope.exports = data.export
+                  $scope.exports = data.export;
                 }).
                 error(function(data, status) {
-                  console.log(data)
+                  console.log(data);
                 });
-        }
+        };
         $scope.init(); 
     }])
     .controller('exportDetailController', ['$scope','$http','$stateParams','$location', function($scope, $http, $stateParams, $location) {
         $scope.init = function (){
             $http({method: 'GET', url: config.base + '/stock_transfer/getExportDetail?id=' + $stateParams.id, reponseType: 'json'}).
                 success(function(data, status) {
-                  $scope.exports = data.exports
+                  $scope.exports = data.exports;
                 }).
                 error(function(data, status) {
-                  console.log(data)
+                  console.log(data);
                 });
-        }
+        };
         $scope.init(); 
         $scope.backToList = function(){
             $location.path('warehouses-export');
-        }
+        };
     }])
     .controller('customersController', ['$scope','$http','$stateParams','$modal', function($scope, $http, $stateParams, $modal) {
         $scope.customer_type = $stateParams.type;
-            if($stateParams.type == 'partner')
+            if($stateParams.type === 'partner')
                 $scope.customer_name = 'Đối tác';
             else
                 $scope.customer_name = 'Khách hàng';
@@ -868,7 +868,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 error(function(data, status) {
                   console.log(data);
                 });
-        }
+        };
         $scope.init();
         $scope.openPopup = function(size,$event){
             if($event)
@@ -879,19 +879,19 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 size: size,
                 resolve: {
                   items: function () {
-                    return {type: $stateParams.type, customer_id: customer_id}
+                    return {type: $stateParams.type, customer_id: customer_id};
                   }
                 }
             });
             modalInstance.result.then(function () {
                 $scope.init();
             });
-        }
+        };
     }])
     .controller('createCustomerController', function ($scope,$http, $modalInstance, items) {
             $scope.customer = {};
             $scope.customer.type = items.type;
-            if(items.type == 'partner')
+            if(items.type === 'partner')
                 $scope.customer_name = 'Đối tác';
             else
                 $scope.customer_name = 'Khách hàng';
@@ -902,7 +902,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
     
                     }).
                     error(function(data, status) {
-                      console.log(data)
+                      console.log(data);
                     });
             }
 
@@ -925,7 +925,8 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
           $modalInstance.dismiss('cancel');
         };
     })
-    .controller('createOrderController', ['$scope','$http','$location', function($scope, $http, $location) {
+    .controller('createOrderController', ['$scope','$http','$location','showAlert', function($scope, $http, $location, showAlert) {
+        $scope.order = {};
         $scope.init = function (){
             $http({method: 'GET', url: config.base + '/order/createOrder?type=customer', reponseType: 'json'}).
                 success(function(data, status) {
@@ -971,7 +972,8 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
         $scope.selectProduct = function(){
             var target_id = $(event.currentTarget).closest('tr').data('id');
             $scope.products.forEach(function(product){
-                if(product.id === $scope.select_product){
+                if(product.id === $('#tr_order_' + target_id).children('td:nth-child(3)').children('select.load_product').val()){
+                    $('#tr_order_' + target_id + ' td:nth-child(5)').html('<select data-placeholder="chọn quy cách" ng-model="select_unit" onchange="angular.element(this).scope().selectUnit()" class="chzn-select load_unit"></select>');
                     $scope.initDataSelect(product.sale_price,'#tr_order_' + target_id + ' select.load_unit');
                     $('#tr_order_' + target_id).children('td:nth-child(4)').children('input.show_buy').val(numeral(parseInt(product.buy_price[0].price) / parseInt(product.buy_price[0].quantity)).format('0,0'));
                     $('#tr_order_' + target_id).children('td:nth-child(4)').children('input.show_buy_origin').val(product.buy_price[0].id);
@@ -984,7 +986,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
         $scope.selectUnit = function(){
             var target_id = $(event.currentTarget).closest('tr').data('id');
             $scope.units.forEach(function(unit){
-                if(unit.id === $scope.select_unit){
+                if(unit.id === $('#tr_order_' + target_id).children('td:nth-child(5)').children('select.load_unit').val()){
                     $('#tr_order_' + target_id).children('td:nth-child(6)').children('input.show_sale').val(numeral(parseInt(unit.price)).format('0,0'));
                     $('#tr_order_' + target_id).children('td:nth-child(6)').children('input.show_sale_origin').val(unit.price);
                     $('#tr_order_' + target_id).children('td:nth-child(6)').children('input.show_sale_origin').attr('data-sale-id',unit.id);
@@ -997,11 +999,125 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 quantity = parseInt($(event.currentTarget).val()),
                 price = parseInt($('#tr_order_' + target_id).children('td:nth-child(6)').children('input.show_sale_origin').val());
                 
-            if(quantity !== '' && isNaN(quantity)){
+            if(isNaN(quantity)){
+                quantity = 0;
                 $('#tr_order_' + target_id).children('td:nth-child(8)').children('span').html('');
-                return false;
             }
             var format_price = numeral(quantity * price).format('0,0');
             $('#tr_order_' + target_id).children('td:nth-child(8)').children('span').html('<h5>' + format_price + '</h5>');
+            $('#tr_order_' + target_id).children('td:nth-child(8)').children('input').val(quantity * price);
+            var total_order = 0;
+            $('.price_order').each(function(){
+                total_order += parseInt(this.value);
+            });
+            $('#total_order').html(numeral(total_order).format('0,0'));
+            $('#txt_hide_total_bill').val(total_order);
+        };
+        $scope.moreOrder = function(){
+            var tr_id = parseInt($('.btn_more_order').data('id')),
+                new_id = tr_id + 1,
+                template = $('#tr_order_' + tr_id);
+            $('.btn_more_order').data('id',new_id);
+            template.after('<tr class="product_order" data-id="'+ new_id +'" id="tr_order_' + new_id + '">' + template.html() + '<tr>');
+            $('#tr_order_' + new_id + ' td:nth-child(3)').html('<select data-placeholder="sản phẩm" ng-model="select_product" onchange="angular.element(this).scope().selectProduct()" class="chzn-select load_product"></select>');
+            $scope.initDataSelect($scope.products,'#tr_order_' + new_id + ' select.load_product');
+            $('#tr_order_' + new_id + ' td:nth-child(1)').html('');
+            $('#tr_order_' + new_id + ' td:nth-child(7)').html('<input style="width: 50px" ng-model="quantity" onkeyup="angular.element(this).scope().calculatorPrice()" type="text"/>');
+            $('#tr_order_' + new_id + ' td:nth-child(2)').html(new_id);
+            $scope.initSelect();
+        };
+        $scope.saveOrder = function(){
+            var orders = new Array();
+            $('.product_order').each(function(){
+                var order = {product_id: $(this).children('td:nth-child(3)').children('select').val(),
+                             cost: $(this).children('td:nth-child(4)').children('.show_buy_origin').val(),
+                             unit: $(this).children('td:nth-child(5)').children('select').val(),
+                             price: $(this).children('td:nth-child(6)').children('.show_sale_origin').val(),
+                             quantity: $(this).children('td:nth-child(7)').children('input').val(),
+                             total: $(this).children('td:nth-child(8)').children('.price_order').val()};
+                orders.push(order);
+            });
+            $scope.order.orders = orders;
+            $scope.order.total_price = $('#txt_hide_total_bill').val();
+            //send request
+            $http({method: 'POST', url: config.base + '/order/addOrder',data: $scope.order, reponseType: 'json'}).
+            success(function(data, status) {
+                showAlert.showSuccess(3000,'lưu thành công');
+            }).
+            error(function(data, status) {
+              console.log(data);
+            });
         };
     }])
+    .controller('managementOrderController', ['$scope','$http','showAlert','$location', function($scope, $http, showAlert, $location) {
+        $scope.orders = new Array();
+        $scope.shipments = new Array();
+        $scope.date = new Date();
+        $scope.init = function (){
+            $http({method: 'GET', url: config.base + '/order/managementOrder', reponseType: 'json'}).
+                success(function(data, status) {
+                    $scope.orders = data.orders;
+                    $scope.initSelect();
+                }).
+                error(function(data, status) {
+                  console.log(data);
+                });
+        };
+        $scope.init();
+        $scope.initSelect = function (){
+            $(' select').not("select.chzn-select,select[multiple],select#box1Storage,select#box2Storage").selectmenu({
+                style: 'dropdown',
+                transferClasses: true,
+                width: null
+            });
+
+            $(".chzn-select").chosen(); 
+        };
+        $scope.selectOrder = function ($event, back){
+            var order_id = $($event.currentTarget).data('id');
+            if(back){
+                for(var x in $scope.shipments){
+                    if($scope.shipments[x].id == order_id){
+                        $scope.orders.push($scope.shipments[x]);
+                        $scope.shipments.splice(x,1);
+                        break;
+                    }
+                }
+                
+            }else{
+                for(var x in $scope.orders){
+                    if($scope.orders[x].id == order_id){
+                        $scope.shipments.push($scope.orders[x]);
+                        $scope.orders.splice(x,1);
+                        break;
+                    }
+                }
+            }
+        };
+        $scope.divideProduct = function (){
+            $scope.order.shipments = $scope.shipments;
+            
+            //send request
+            $http({method: 'POST', url: config.base + '/order/createShipment',data: $scope.order, reponseType: 'json'}).
+            success(function(data, status) {
+                showAlert.showSuccess(3000,'lưu thành công');
+                $location.path('order-divide/' + data.shipment_id);
+            }).
+            error(function(data, status) {
+              console.log(data);
+            });
+            
+        };
+    }])
+    .controller('divideOrderController', ['$scope','$http', '$stateParams', function($scope, $http, $stateParams) {
+            $scope.init = function (){
+                $http({method: 'GET', url: config.base + '/order/divideOrder?shipment_id=' + $stateParams.shipment_id, reponseType: 'json'}).
+                    success(function(data, status) {
+                      $scope.products = data.products;
+                    }).
+                    error(function(data, status) {
+                      console.log(data);
+                    });
+            };
+            $scope.init(); 
+        }])

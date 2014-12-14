@@ -1,0 +1,43 @@
+<div ng-app="dashboard" ng-controller="divideOrderController">
+    <div class="onecolumn" style="margin-top: 10px">
+        <div class="header">
+            <span ><span class="ico  gray random"></span> Danh sách sản phẩm</span>
+        </div><!-- End header -->	
+        <div class=" clear"></div>
+        <div class="content"  >
+            <div class="section">
+                <h3>Phân kho</h3>
+            </div>
+            <form> 
+                <div class="tableName">
+                    <table id="tabel_product_type" class="display">
+                        <thead>
+                            <tr>
+                                <th><div class="th_wrapp">stt</div></th>
+                                <th><div class="th_wrapp">Tên Sản Phẩm</div></th>
+                                <th><div class="th_wrapp">Số lượng</div></th>
+                                <th><div class="th_wrapp">Kho</div></th>
+                            </tr>
+                        </thead>
+                        <tbody id="list-product-divide">
+                            <tr ng-repeat="(key,product) in products">
+                                <td>{{key + 1}}</td>
+                                <td>{{product.product_name}}</td>
+                                <td>{{product.quantity}}</td>
+                                <td>
+                                    <div style="padding: 15px; width: 170px" ng-repeat="item in product.warehouse">
+                                    <div style="float: left;">{{item.warehouses_name}}</div>
+                                    <div style="float: left;"><input type="text" class="small"/></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+            <div class="section last">
+                <div class="right" style="margin-left: 435px"><a class="uibutton " ng-click='divideWarehouse()'>Phân kho</a></div>
+            </div>
+        </div>
+    </div>
+</div>

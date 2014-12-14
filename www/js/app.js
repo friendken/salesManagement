@@ -5,9 +5,9 @@ var dashboard = angular.module('dashboard', [
     'ui.bootstrap',
 //  'ngRoute',
 //  'dashboard.filters',
-  'dashboard.services',
-  'dashboard.directives',
-  'dashboard.controllers'
+    'dashboard.services',
+    'dashboard.directives',
+    'dashboard.controllers'
 ]).
 config(function($stateProvider, $urlRouterProvider) {
   //
@@ -183,5 +183,19 @@ config(function($stateProvider, $urlRouterProvider) {
         "content": { templateUrl: '/www/partials/temp-order-create.html'}
       },
       controller: 'createOrderController'
+    })
+    .state('order-management', {
+      url: "/order-management",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-order-management.html'}
+      },
+      controller: 'managementOrderController'
+    })
+    .state('order-divide', {
+      url: "/order-divide/:shipment_id",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-order-divide.html'}
+      },
+      controller: 'divideOrderController'
     })
 });

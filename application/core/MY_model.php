@@ -20,7 +20,13 @@ class MY_model extends CI_Model {
                         ->get($this->table_name)
                         ->row();
     }
-
+    public function get_array($where_arr = null){
+        if (isset($where_arr))
+            foreach($where_arr as $index => $value)
+                $this->CI->db->where("$index",$value);
+        $list = $this->CI->db->get($this->table_name)->result();
+        return $list;
+    }
     public function insert($row_data) {
         $r = $this->db->insert($this->table_name, $row_data);
         return $this->db->insert_id();

@@ -39,4 +39,16 @@ class Warehouses_detail_model extends MY_model {
                                 order by product_id')
                         ->result();
     }
+    public function get_array($where_arr = null){
+        $product = $this->db->select('*,
+                        (select `name` from warehouses where id = wd.warehouses_id) as warehouses_name,
+                        (select `address` from warehouses where id = wd.warehouses_id) as warehouses_address,')
+                            ->from($this->table_name.' as wd');
+        if(isset($where_arr)){
+            foreach($where_arr as $index => $value){
+                $product->where("$index",$value);
+            }
+        }
+        return $product->get()->result();
+    }
 }

@@ -894,7 +894,7 @@ a.ui-selectmenu {
 	background : #c2e3f0;
 }
 .ui-selectmenu.small, .ui-selectmenu-menu.small {
-	width : 75px;
+	width : 120px;
 }
 .ui-selectmenu.small .ui-selectmenu-status {
 	width : 40px;
@@ -905,6 +905,7 @@ a.ui-selectmenu {
 .ui-selectmenu.big .ui-selectmenu-status {
 	width : 255px;
 }
+
 .multiple {
 	display : block;
 	border : 1px solid #c5c5c5;
@@ -975,8 +976,8 @@ form input.small {
 	width: 20%;
 }
 form input.medium, form textarea.medium {
-	width: 40%;
-	max-width:40%
+	width: 85%;
+	max-width:85%
 }
 form input.large, form textarea.large {
 	width: 69%;

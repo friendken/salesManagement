@@ -35,11 +35,11 @@
                                 <th><div class="th_wrapp">Thành tiền</div></th>
                             </tr>
                             </thead>
-                            <tbody class="list_product_price">
-                                <tr class="product_buy_price" data-id="1" id="tr_order_1">
+                            <tbody class="list_order_product">
+                                <tr class="product_order" data-id="1" id="tr_order_1">
                                     <td>
                                         <div class="iconBox color">
-                                        <a class="btn_more_buy" data-id="1" ng-click="moreBuy()"  title="thêm giá">
+                                        <a class="btn_more_order" data-id="1" ng-click="moreOrder()"  title="thêm giá">
                                             <img alt="" src="/www/img/icon/directional_down.png">
                                         </a>
                                         </div>
@@ -62,15 +62,15 @@
                                     <td><input style="width: 50px" ng-model="quantity" ng-keyup="calculatorPrice()" type="text"/></td>
                                     <td>
                                         <span id="show_bill_product_1"></span>
-                                        <input class="bill_product" type="hidden" id="txt_hide_1" value="0"/>
+                                        <input class="price_order" type="hidden" id="txt_hide_1" value="0"/>
                                     </td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
                                     <td colspan="6" style="text-align: right">
-                                        <h4>Tổng Cộng: <span id="total_bill">{{show_total_bill}}</span></h4>
-                                        <input type="hidden" id="txt_hide_total_bill" ng-model="wholesale.total_bill"/>
+                                        <h4>Tổng Cộng: <span id="total_order">{{show_total_order}}</span></h4>
+                                        <input type="hidden" id="txt_hide_total_bill" />
                                     </td>
                                 </tr>
                             </tfoot>
@@ -80,12 +80,7 @@
                 </div>
                 <div class='section last'>
                     <div>
-                        <input class="uibutton loading"  title="Saving" type="submit" value="Tạo hóa đơn"/>
-                        Tình trạng: 
-                        <b>Nợ &nbsp;</b>
-                        <input type="text" class="xsmall" readonly ng-model="wholesale.debt"/>
-                        <b>&nbsp; Thanh toán &nbsp;</b>
-                        <input type="text" class="xsmall" ng-keyup="checkBill()" ng-model="wholesale.actual"/>
+                        <input class="uibutton loading" ng-click="saveOrder()" title="Saving" type="submit" value="Tạo hóa đơn"/>
                     </div>
                 </div>
             </form>
