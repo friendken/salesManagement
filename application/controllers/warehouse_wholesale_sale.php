@@ -22,15 +22,18 @@ class Warehouse_wholesale_sale extends CI_Controller {
         $price = $this->product_sale->get_by_id($id);
         echo json_encode($price);
     }
-    public function createBill(){
-        $bill = $this->input->json();
+    public function createBill($bill = null, $from = null){
+        if(!isset($bill))
+            $bill = $this->input->json();
         $code_bill = strtoupper(substr(md5(time()),0,6));
         
         #create bill
         $data_bill = array('bill_code' => $code_bill,
                            'customer_id' => $bill->partner,
-                           'debit' => $bill->debt,
                            'price_total' => $bill->total_bill);
+        if(isset($bill->debt))
+            $data_bill['debit'] = $bill->debt;
+        
         $bill_id = $this->bill->insert($data_bill);
         #create bill detail
         $bill_detail = array();
@@ -41,9 +44,11 @@ class Warehouse_wholesale_sale extends CI_Controller {
                                  'price' => $row->price);
             $this->bill_detail->insert($bill_detail);
             #update quantity of product
-            $update_warehouse = $this->updateQuantityWarehouse($row->product_id, $row->quantity);
-            if($update_warehouse == true){
-                $this->updateQuantityBuy($row->product_id,$row->quantity);
+            if(!isset($from)){
+                $update_warehouse = $this->updateQuantityWarehouse($row->product_id, $row->quantity);
+                if($update_warehouse == true){
+                    $this->updateQuantityBuy($row->product_id,$row->quantity);
+                }
             }
         }
 //        echo $bill_id;
@@ -70,5 +75,34 @@ class Warehouse_wholesale_sale extends CI_Controller {
             }
         }
         return false;
+    }
+    
+    public function createBillFromOrder(){
+        $data = $this->input->json();
+        $this->load->model('order_model','order');
+        $order = $this->order->get_by_id($data->order_id);
+        $data_inset = array('partner' => $order->customer_id,
+                            'total_bill' => $order->total_price);
+        
+        if($data->price != ''){
+            if((int)$order->total_price - (int)$data->price != 0)
+                $data_inset['debt'] = (int)$order->total_price - (int)$data->price;
+        }
+        
+        #init array for order detail
+        foreach($order->order_detail as $key => $row){
+            $data_inset['buy_price'][] = (object)array('product_id' => $row->product_id,
+                                                        'quantity' => $row->quantity,
+                                                        'price' => $row->total);
+        }
+        
+        $this->createBill((object)$data_inset,true);
+        $this->order->update(array('delivery' => "1"),array('id' => $data->order_id));
+        $shipment = $this->order->get_array(array('shipment_id' => $data->shipment_id,'delivery' => '0'));
+        if(count($shipment) == 0){
+            $this->load->model('shipments_model');
+            $this->shipments_model->update(array('status' => '3'),array('id' => $data->shipment_id));
+        }
+        echo json_encode($data_inset);
     }
 }

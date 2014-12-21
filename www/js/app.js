@@ -198,4 +198,18 @@ config(function($stateProvider, $urlRouterProvider) {
       },
       controller: 'divideOrderController'
     })
+    .state('order-status', {
+      url: "/order-status",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-order-status.html'}
+      },
+      controller: 'statusOrderController'
+    })
+    .state('order-return', {
+      url: "/order-return/:order_id",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-order-return.html'}
+      },
+      controller: 'returnOrderController'
+    })
 });

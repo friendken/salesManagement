@@ -3,18 +3,18 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/wamp/www/salesManagement/www/partials/temp-order-divide.html</file>
-            <file>file:/C:/wamp/www/salesManagement/application/models/warehouse_wholesale_model.php</file>
+            <file>file:/C:/wamp/www/salesManagement/www/partials/temp-order-status.html</file>
+            <file>file:/C:/wamp/www/salesManagement/application/controllers/warehouse_wholesale_sale.php</file>
             <file>file:/C:/wamp/www/salesManagement/www/js/controllers.js</file>
-            <file>file:/C:/wamp/www/salesManagement/application/models/products_model.php</file>
             <file>file:/C:/wamp/www/salesManagement/application/models/shipments_model.php</file>
-            <file>file:/C:/wamp/www/salesManagement/www/partials/temp-order-create.html</file>
-            <file>file:/C:/wamp/www/salesManagement/www/partials/temp-order-management.html</file>
+            <file>file:/C:/wamp/www/salesManagement/www/partials/temp-order-return.html</file>
             <file>file:/C:/wamp/www/salesManagement/application/controllers/order.php</file>
-            <file>file:/C:/wamp/www/salesManagement/application/views/dashboard.php</file>
             <file>file:/C:/wamp/www/salesManagement/www/js/app.js</file>
+            <file>file:/C:/wamp/www/salesManagement/application/controllers/warehouse_divide.php</file>
             <file>file:/C:/wamp/www/salesManagement/application/models/order_detail_model.php</file>
+            <file>file:/C:/wamp/www/salesManagement/application/models/order_status_type_model.php</file>
             <file>file:/C:/wamp/www/salesManagement/application/models/warehouses_detail_model.php</file>
+            <file>file:/C:/wamp/www/salesManagement/application/models/customers_model.php</file>
             <file>file:/C:/wamp/www/salesManagement/application/models/order_model.php</file>
         </group>
     </open-files>

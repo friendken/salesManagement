@@ -1,4 +1,4 @@
-<div ng-app="dashboard" ng-controller="divideOrderController">
+<div ng-app="dashboard" ng-controller="returnOrderController">
     <div class="onecolumn" style="margin-top: 10px">
         <div class="header">
             <span ><span class="ico  gray random"></span> Danh sách sản phẩm</span>
@@ -20,17 +20,17 @@
                             </tr>
                         </thead>
                         <tbody id="list-product-divide">
-                            <tr ng-repeat="(key,product) in products" data-product-id="{{key}}">
-                                <td>{{key}}</td>
+                            <tr ng-repeat="(key,product) in products" data-product-id="{{product.product_id}}">
+                                <td>{{key + 1}}</td>
                                 <td>{{product.product_name}}</td>
                                 <td>
-                                    <span id="show_quantity_{{key}}">{{product.quantity}}</span>
-                                    <input id="origin_quantity_{{key}}" type="hidden" value="{{product.quantity}}"/>
+                                    <span id="show_quantity_{{product.product_id}}">{{product.quantity}}</span>
+                                    <input id="origin_quantity_{{product.product_id}}" type="hidden" value="{{product.quantity}}"/>
                                 </td>
                                 <td>
                                     <div style="padding: 15px; width: 170px" ng-repeat="item in product.warehouse">
-                                        <div style="float: left;">{{item.warehouses_name}}</div>
-                                        <div style="float: right; position: absolute"><input class="small warehouse_quantity_{{key}} warehouse_quantity" data-product-id="{{key}}" data-warehouse-id="{{item.warehouses_id}}" placeholder="{{item.quantity}}" ng-model="quantity_warehouse" ng-keyup="quantityWarehouse($event)" type="text"/></div>
+                                        <div style="float: left;">{{item.name}}</div>
+                                        <div style="float: right; position: absolute"><input class="small warehouse_quantity_{{product.product_id}} warehouse_quantity" data-product-id="{{product.product_id}}" data-warehouse-id="{{item.id}}" ng-model="quantity_warehouse" ng-keyup="quantityWarehouse($event)" type="text"/></div>
                                     </div>
                                 </td>
                             </tr>
@@ -39,7 +39,7 @@
                 </div>
             </form>
             <div class="section last">
-                <div class="right" style="margin-left: 435px"><a class="uibutton " ng-click='divideProduct()'>Phân kho</a></div>
+                <div class="right" style="margin-left: 435px"><a class="uibutton " ng-click='divideWarehouse()'>Phân kho</a></div>
             </div>
         </div>
     </div>

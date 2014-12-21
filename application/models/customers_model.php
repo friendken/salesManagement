@@ -9,5 +9,6 @@ class Customers_model extends MY_model {
                         ->get($this->table_name)
                         ->result();
     }
+    
 }
 ?>

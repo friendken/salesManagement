@@ -39,7 +39,7 @@ class MY_model extends CI_Model {
     public function delete($where) {
         return $this->db->delete($this->table_name, $where);
     }
-
+    
     protected function row_or_null($query) {
         $query = $this->db->get_where($this->table_name, $query);
         if ($query->num_rows() == 0) {

@@ -71,7 +71,7 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="(key,item) in customers | filter:searchCustomer" class="odd gradeX">
-                                <td>{{item.key + 1}}</td>
+                                <td>{{key + 1}}</td>
                                 <td>{{item.name}}</td>
                                 <td ng-if="customer_type == 'partner'">{{item.store_name}}</td>
                                 <td>{{item.address}}</td>
