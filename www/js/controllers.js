@@ -1126,7 +1126,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                     });
             };
     }])
-    .controller('statusOrderController', ['$scope','$http','$location', function($scope, $http, $location) {
+    .controller('statusOrderController', ['$scope','$http','$location','renderSelect', function($scope, $http, $location, renderSelect) {
         $scope.init = function (){
             $http({method: 'GET', url: config.base + '/order/statusOrder', reponseType: 'json'}).
                 success(function(data, status) {
@@ -1138,7 +1138,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
         };
         $scope.init(); 
         setTimeout(function(){ 
-            $scope.initSelect();
+            renderSelect.initSelect();
           }, 2000);
         $scope.changeStatus = function($event){
             var shipment_id = $($event.currentTarget).data('shipment-id'),
@@ -1155,17 +1155,11 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 default:
                     break;
             }
-            
+            setTimeout(function(){ 
+                renderSelect.initSelect();
+            }, 2000);
         };
-        $scope.initSelect = function (){
-            $('select').not("select.chzn-select,select[multiple],select#box1Storage,select#box2Storage").selectmenu({
-                style: 'dropdown',
-                transferClasses: true,
-                width: null
-            });
-
-            $(".chzn-select").chosen(); 
-        };
+        
         $scope.updateStatusShipment = function (shipment_id, status){
             $http({method: 'GET', url: config.base + '/order/updateStatusShipment?shipment_id=' + shipment_id + '&status=' + status, reponseType: 'json'}).
                 success(function(data, status) {
@@ -1192,6 +1186,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                     $scope.updateOrder(order_id);
                     break
             }
+            
         };
         $scope.createBill = function(order_id, price, shipment_id){
             $http({method: 'POST', url: config.base + '/warehouse_wholesale_sale/createBillFromOrder',data: {order_id: order_id,price: price, shipment_id: shipment_id}, reponseType: 'json'}).
@@ -1216,7 +1211,9 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             $scope.init = function (){
                 $http({method: 'GET', url: config.base + '/order/returnWarehouse?order_id=' + $stateParams.order_id, reponseType: 'json'}).
                     success(function(data, status) {
-                      $scope.products = data.order;
+                        if(data.order.length == 0)
+                            $location.path('order-status');
+                        $scope.products = data.order;
                     }).
                     error(function(data, status) {
                       console.log(data);

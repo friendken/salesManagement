@@ -37,7 +37,7 @@
                             <tr ng-repeat="(key,item) in bill | filter:searchBill" class="odd gradeX" data-id="{{item.id}}">
                                 <td>{{key + 1}}</td>
                                 <td>{{item.bill_code}}</td>
-                                <td>{{item.customer_id}}</td>
+                                <td>{{item.customer_name}}</td>
                                 <td>{{item.price_total | number}}</td>
                                 <td>{{item.debit | number}}</td>
                                 <td>{{item.created}}</td>

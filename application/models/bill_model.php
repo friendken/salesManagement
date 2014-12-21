@@ -40,7 +40,9 @@ class Bill_model extends MY_model {
         return $bill;
     }
     public function getDebit(){
-        return $this->db->where('debit != null or debit != 0')
+        return $this->db->select('*,
+                                 (select `name` from customers where id = '.$this->table_name.'.customer_id) as customer_name')
+                        ->where('debit != null or debit != 0')
                         ->get($this->table_name)
                         ->result();
     }
