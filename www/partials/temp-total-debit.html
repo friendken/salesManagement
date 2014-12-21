@@ -34,8 +34,8 @@
                             </tr>
                         </thead>
                         <tbody id="show_product">
-                            <tr ng-repeat="item in bill | filter:searchBill" class="odd gradeX" data-id="{{item.id}}">
-                                <td>{{item.stt}}</td>
+                            <tr ng-repeat="(key,item) in bill | filter:searchBill" class="odd gradeX" data-id="{{item.id}}">
+                                <td>{{key + 1}}</td>
                                 <td>{{item.bill_code}}</td>
                                 <td>{{item.customer_id}}</td>
                                 <td>{{item.price_total | number}}</td>

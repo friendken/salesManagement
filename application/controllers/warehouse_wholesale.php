@@ -14,11 +14,15 @@ class Warehouse_wholesale extends CI_Controller {
     }
     public function index(){
         $products = $this->wholesale->get_all();
-        echo json_encode(array('products' => $products));
+        $this->load->model('customers_model','customers');
+        $customers = $this->customers->get_array(array('type' => 'customer'));
+        echo json_encode(array('products' => $products,'customers' => $customers));
     }
     public function addWholesale(){
         $products = $this->product->get_all();
-        echo json_encode(array('products' => $products));
+        $this->load->model('customers_model','customers');
+        $customers = $this->customers->get_array(array('type' => 'partner'));
+        echo json_encode(array('products' => $products,'customers' => $customers));
     }
     public function saveAddWholesale(){
         $wholesale = $this->input->json();

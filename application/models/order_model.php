@@ -32,4 +32,13 @@ class Order_model extends MY_model {
         $order->order_detail = $this->order_detail->get_array(array('order_id' => $id));
         return $order;
     }
+    public function getRestOrder($truck_id){
+        return $this->db->query('select *,
+                                (select `name` from customers where id = o.customer_id) as customer_name,
+                                (select address from customers where id = o.customer_id) as customer_address
+                                from `'.$this->table_name.'` as o
+                                where shipment_id in (select id from shipments where truck_id = '.$truck_id.') 
+                                and `status` = 5')
+                        ->result();
+    }
 }

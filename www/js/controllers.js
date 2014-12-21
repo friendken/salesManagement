@@ -177,7 +177,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 $scope.init();
             };
     }])
-    .controller('warehouseWholesaleController', ['$scope','$http','$stateParams','showAlert','$location', function($scope,$http,$stateParams,showAlert,$location) {
+    .controller('warehouseWholesaleController', ['$scope','$http','$stateParams','showAlert','$location','renderSelect', function($scope,$http,$stateParams,showAlert,$location, renderSelect) {
             console.log('load warehouse-wholesale');
             if($stateParams.type === 'wholesale'){
                 $scope.url = config.base + '/warehouse_wholesale/saveAddWholesale';
@@ -195,30 +195,17 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 $http({method: 'GET', url: config.base + '/warehouse_wholesale/addWholesale', reponseType: 'json'}).
                     success(function(data, status) {
                       //==== get data account profile ========
-                        var html_select = '';
-                        for(var x in data.products){
-                            html_select += '<option value="' + data.products[x].id + '">' + data.products[x].name + '</option>';
-                        }
-                        $('#tr_product_buy_price_1 select.load_product').append(html_select);
-                        $scope.initSelect();
-                        
-    //                    $('#tabel_product_type').dataTable();
+                        renderSelect.initDataSelect(data.customers,'#invoice-customer');
+                        renderSelect.initDataSelect(data.products,'#tr_product_buy_price_1 select.load_product');
+                        renderSelect.initSelect();
+
                     }).
                     error(function(data, status) {
                       console.log(data);
                     });
             };
             $scope.init();
-            $scope.initSelect = function (){
-                $(' select').not("select.chzn-select,select[multiple],select#box1Storage,select#box2Storage").selectmenu({
-                    style: 'dropdown',
-                    transferClasses: true,
-                    width: null
-                });
-                
-                $(".chzn-select").chosen(); 
-            };
-//            $scope.initSelect();
+            
             $scope.moreBuy = function(){
                 //get template and new tr_id
                 var tr_id = $('.btn_more_buy').data('id');
@@ -255,13 +242,12 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 $('#tr_product_buy_price_' + new_id).children('td:nth-child(7)').children('input').prop('id','txt_hide_' + new_id);
                 $('#tr_product_buy_price_' + new_id).children('td:nth-child(7)').children('span').html('');
                 $('#tr_product_buy_price_' + new_id).children('td:nth-child(7)').children('input').val(0);
-                $scope.initSelect();
+                renderSelect.initSelect();
             };
             $scope.checkBill = function(){
                 $scope.wholesale.debt = parseInt($('#txt_hide_total_bill').val()) - parseInt($scope.wholesale.actual);
             };
             $scope.addWhole = function(){
-                
                 var buy_price = new Array();
                 $('.product_buy_price').each(function(){
                    if($(this).children('td:nth-child(4)').children('input').val().trim() !== '' || $(this).children('td:nth-child(6)').children('input').val().trim() !== ''){
@@ -358,7 +344,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 }
             };
         }])
-        .controller('warehouseSaleController', ['$scope','$http','$stateParams','showAlert', function($scope,$http,$stateParams,showAlert) {
+        .controller('warehouseSaleController', ['$scope','$http','$stateParams','showAlert','renderSelect', function($scope,$http,$stateParams,showAlert,renderSelect) {
             console.log('load warehouse-sale');
             if($stateParams.type === 'wholesale'){
                 $scope.url = config.base + '/warehouse_wholesale_sale/createBill';
@@ -380,12 +366,9 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 $http({method: 'GET', url: $scope.load_product, reponseType: 'json'}).
                     success(function(data, status) {
                       // get data account profile 
-                        var html_select = '';
-                        for(var x in data.products){
-                            html_select += '<option value="' + data.products[x].product_id + '">' + data.products[x].name + '</option>';
-                        }
-                        $('#tr_product_buy_price_1 select.load_product').append(html_select);
-                        $scope.initSelect();
+                        renderSelect.initDataSelect(data.customers,'#sale-customer');
+                        renderSelect.initDataSelect(data.products,'#tr_product_buy_price_1 select.load_product');
+                        renderSelect.initSelect();
     
                     }).
                     error(function(data, status) {
@@ -393,16 +376,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                     });
             };
             $scope.init();
-            $scope.initSelect = function (){
-                $(' select').not("select.chzn-select,select[multiple],select#box1Storage,select#box2Storage").selectmenu({
-                    style: 'dropdown',
-                    transferClasses: true,
-                    width: null
-                });
-                
-                $(".chzn-select").chosen(); 
-            };
-
+            
             $scope.moreBuy = function(){
                 //get template and new tr_id
                 var tr_id = $('.btn_more_buy').data('id');
@@ -439,7 +413,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 $('#tr_product_buy_price_' + new_id).children('td:nth-child(7)').children('input').prop('id','txt_hide_' + new_id);
                 $('#tr_product_buy_price_' + new_id).children('td:nth-child(7)').children('span').html('');
                 $('#tr_product_buy_price_' + new_id).children('td:nth-child(7)').children('input').val(0);
-                $scope.initSelect();
+                renderSelect.initSelect();
             };
             $scope.checkBill = function($event){
                 $scope.wholesale.debt = parseInt($('#txt_hide_total_bill').val()) - parseInt($scope.wholesale.actual);
@@ -924,7 +898,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
           $modalInstance.dismiss('cancel');
         };
     })
-    .controller('createOrderController', ['$scope','$http','$location','showAlert', function($scope, $http, $location, showAlert) {
+    .controller('createOrderController', ['$scope','$http','$location','showAlert','renderSelect', function($scope, $http, $location, showAlert, renderSelect) {
         $scope.order = {};
         $scope.init = function (){
             $http({method: 'GET', url: config.base + '/order/createOrder?type=customer', reponseType: 'json'}).
@@ -932,9 +906,9 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                     $scope.customers = data.customers;
                     $scope.products = data.products;
                     $scope.units = data.units;
-                    $scope.initDataSelect(data.customers,'#sl_customer');
-                    $scope.initDataSelect(data.products,'#tr_order_1 select.load_product');
-                    $scope.initSelect();
+                    renderSelect.initDataSelect(data.customers,'#sl_customer');
+                    renderSelect.initDataSelect(data.products,'#tr_order_1 select.load_product');
+                    renderSelect.initSelect();
                 }).
                 error(function(data, status) {
                   console.log(data);
@@ -949,34 +923,16 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 }
             }
         };
-        $scope.initDataSelect = function(data,target){
-            var html ='';
-            $(target).next('div').remove();
-            $(target).removeClass('chzn-done');
-            $(target).html(html);
-            for(var x in data){
-                html += '<option value="' + data[x].id + '">' + data[x].name + '</option>';
-            }
-            $(target).html(html);
-        };
-        $scope.initSelect = function (){
-            $(' select').not("select.chzn-select,select[multiple],select#box1Storage,select#box2Storage").selectmenu({
-                style: 'dropdown',
-                transferClasses: true,
-                width: null
-            });
-
-            $(".chzn-select").chosen(); 
-        };
+        
         $scope.selectProduct = function(){
             var target_id = $(event.currentTarget).closest('tr').data('id');
             $scope.products.forEach(function(product){
                 if(product.id === $('#tr_order_' + target_id).children('td:nth-child(3)').children('select.load_product').val()){
                     $('#tr_order_' + target_id + ' td:nth-child(5)').html('<select data-placeholder="chọn quy cách" ng-model="select_unit" onchange="angular.element(this).scope().selectUnit()" class="chzn-select load_unit"></select>');
-                    $scope.initDataSelect(product.sale_price,'#tr_order_' + target_id + ' select.load_unit');
+                    renderSelect.initDataSelect(product.sale_price,'#tr_order_' + target_id + ' select.load_unit');
                     $('#tr_order_' + target_id).children('td:nth-child(4)').children('input.show_buy').val(numeral(parseInt(product.buy_price[0].price) / parseInt(product.buy_price[0].quantity)).format('0,0'));
                     $('#tr_order_' + target_id).children('td:nth-child(4)').children('input.show_buy_origin').val(product.buy_price[0].id);
-                    $scope.initSelect();
+                    renderSelect.initSelect();
                     return false;
                 }
             });
@@ -1019,11 +975,11 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             $('.btn_more_order').data('id',new_id);
             template.after('<tr class="product_order" data-id="'+ new_id +'" id="tr_order_' + new_id + '">' + template.html() + '<tr>');
             $('#tr_order_' + new_id + ' td:nth-child(3)').html('<select data-placeholder="sản phẩm" ng-model="select_product" onchange="angular.element(this).scope().selectProduct()" class="chzn-select load_product"></select>');
-            $scope.initDataSelect($scope.products,'#tr_order_' + new_id + ' select.load_product');
+            renderSelect.initDataSelect($scope.products,'#tr_order_' + new_id + ' select.load_product');
             $('#tr_order_' + new_id + ' td:nth-child(1)').html('');
             $('#tr_order_' + new_id + ' td:nth-child(7)').html('<input style="width: 50px" ng-model="quantity" onkeyup="angular.element(this).scope().calculatorPrice()" type="text"/>');
             $('#tr_order_' + new_id + ' td:nth-child(2)').html(new_id);
-            $scope.initSelect();
+            renderSelect.initSelect();
         };
         $scope.saveOrder = function(){
             var orders = new Array();
@@ -1048,7 +1004,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             });
         };
     }])
-    .controller('managementOrderController', ['$scope','$http','showAlert','$location', function($scope, $http, showAlert, $location) {
+    .controller('managementOrderController', ['$scope','$http','showAlert','$location','renderSelect', function($scope, $http, showAlert, $location, renderSelect) {
         $scope.orders = new Array();
         $scope.shipments = new Array();
         $scope.date = new Date();
@@ -1056,22 +1012,15 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             $http({method: 'GET', url: config.base + '/order/managementOrder', reponseType: 'json'}).
                 success(function(data, status) {
                     $scope.orders = data.orders;
-                    $scope.initSelect();
+                    var staff = new Array({id: 1, name: 9874},{id: 9, name: 4569});
+                    renderSelect.initDataSelect(staff, '#order-truck-manager');
+                    renderSelect.initSelect();
                 }).
                 error(function(data, status) {
                   console.log(data);
                 });
         };
         $scope.init();
-        $scope.initSelect = function (){
-            $(' select').not("select.chzn-select,select[multiple],select#box1Storage,select#box2Storage").selectmenu({
-                style: 'dropdown',
-                transferClasses: true,
-                width: null
-            });
-
-            $(".chzn-select").chosen(); 
-        };
         $scope.selectOrder = function ($event, back){
             var order_id = $($event.currentTarget).data('id');
             if(back){
@@ -1092,6 +1041,20 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                     }
                 }
             }
+        };
+        $scope.selectTruck = function(){
+            $http({method: 'GET', url: config.base + '/order/getRestOrder?truck_id=' + $scope.order.truck,data: $scope.order, reponseType: 'json'}).
+            success(function(data, status) {
+                if($scope.shipments.length == 0)
+                    $scope.shipments = data.orders;
+                else{
+                    if(data.orders.length != 0)
+                        $scope.shipments.push(data.orders)
+                }
+            }).
+            error(function(data, status) {
+              console.log(data);
+            });
         };
         $scope.divideProduct = function (){
             $scope.order.shipments = $scope.shipments;

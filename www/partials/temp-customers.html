@@ -9,7 +9,7 @@
                 <label>Tên Khách hàng</label>
                 <div><input type='text' ng-model='customer.name'/></div>
             </div>
-            <div class='section' ng-if="customer.type == 'partner'">
+            <div class='section'>
                 <label>Tên cửa hàng</label>
                 <div><input type='text' ng-model='customer.store_name'/></div>
             </div>
@@ -62,7 +62,7 @@
                             <tr>
                                 <th><div class="th_wrapp">stt</div></th>
                                 <th><div class="th_wrapp">{{customer_name}}</div></th>
-                                <th ng-if="customer_type == 'partner'"><div class="th_wrapp">Cửa Hàng</div></th>
+                                <th><div class="th_wrapp">Cửa Hàng</div></th>
                                 <th><div class="th_wrapp">Địa Chỉ</div></th>
                                 <th><div class="th_wrapp">ĐT nhà</div></th>
                                 <th><div class="th_wrapp">Di động</div></th>
@@ -73,7 +73,7 @@
                             <tr ng-repeat="(key,item) in customers | filter:searchCustomer" class="odd gradeX">
                                 <td>{{key + 1}}</td>
                                 <td>{{item.name}}</td>
-                                <td ng-if="customer_type == 'partner'">{{item.store_name}}</td>
+                                <td>{{item.store_name}}</td>
                                 <td>{{item.address}}</td>
                                 <td>{{item.phone_home}}</td>
                                 <td>{{item.phone_mobile}}</td>

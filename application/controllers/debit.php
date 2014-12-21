@@ -18,11 +18,6 @@ class Debit extends CI_Controller {
     public function totalDebit() {
         $this->load->model('bill_model');
         $bill = $this->bill_model->getDebit();
-        $i = 1;
-        foreach ($bill as $row => $key){
-            $bill[$row]->stt = $i;
-            $i++;
-        }
         echo json_encode(array('bill' => $bill));
     }
     public function warehousingDetail(){

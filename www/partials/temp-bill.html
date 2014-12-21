@@ -36,7 +36,7 @@
                             <tr ng-repeat="item in bills | filter:filter_bill" class="odd gradeX" data-id="{{item.id}}">
                                 <td>{{item.id}}</td>
                                 <td>{{item.bill_code}}</td>
-                                <td>{{item.customer_id}}</td>
+                                <td>{{item.customer_name}}</td>
                                 <td>{{item.price_total | number}}</td>
                                 <td>{{item.created}}</td>
                                 <td>

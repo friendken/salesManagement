@@ -15,7 +15,9 @@ class Warehouse_retail extends CI_Controller {
 
     public function index() {
         $products = $this->retail->get_all();
-        echo json_encode(array('products' => $products));
+        $this->load->model('customers_model','customers');
+        $customers = $this->customers->get_array(array('type' => 'customer'));
+        echo json_encode(array('products' => $products,'customers' => $customers));
     }
 
     public function addRetail() {

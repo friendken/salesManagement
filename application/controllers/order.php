@@ -44,6 +44,8 @@ class Order extends CI_Controller {
                              'sub_driver' => $shipment->sub_driver);
         $shipment_id = $this->shipment->insert($data_insert);
         foreach($shipment->shipments as $key => $row){
+            if($row->status == 5)
+                $this->shipment->update(array('status' => '3'),array('id' => $row->shipment_id));
             $this->order->update(array('shipment_id' => $shipment_id),array('id' => $row->id));
         }
         echo json_encode(array('shipment_id' =>$shipment_id));
@@ -57,9 +59,12 @@ class Order extends CI_Controller {
         $shipment = $this->shipments_model->get_by_id($shipment_id);
         #get orders
         $orders = $this->order->get_array(array('shipment_id' => $shipment_id));
-        $order_detail = array_map(function($order){
-            return $order->id;
-        },$orders);
+        $order_detail = array();
+        foreach($orders as $key => $row){
+            if($row->status != 5)
+                array_push($order_detail,$row->id);
+        }
+        
         $order_detail = implode(',', $order_detail);
         $order_detail = $this->order_detail->get_order_detail($order_detail);
         $arr = array();
@@ -130,6 +135,11 @@ class Order extends CI_Controller {
             $order[$key]->warehouse = $warehouses;
         }
         echo json_encode(array('order' => $order));
+    }
+    public function getRestOrder(){
+        $truck_id = $this->input->get('truck_id');
+        $orders = $this->order->getRestOrder($truck_id);
+        echo json_encode(array('orders' => $orders));
     }
     public function getReturnWarehouse(){
         $product = $this->input->json();

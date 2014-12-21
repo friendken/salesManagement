@@ -32,6 +32,30 @@ angular.module('dashboard.services', [])
                 return false;
             }
             $('#alertMessage').addClass('success').html(str).stop(true,true).show().animate({ opacity: 1,right: '10'}, 500);	
-        }
+        };
         return httpApi;
-    });
+    })
+    .factory('renderSelect', function() {
+        var httpApi = {};
+
+        httpApi.initDataSelect = function(data,target){
+            var html ='';
+            $(target).next('div').remove();
+            $(target).removeClass('chzn-done');
+            $(target).html(html);
+            for(var x in data){
+                html += '<option value="' + data[x].id + '">' + data[x].name + '</option>';
+            }
+            $(target).html(html);
+        };
+        httpApi.initSelect = function(){
+            $(' select').not("select.chzn-select,select[multiple],select#box1Storage,select#box2Storage").selectmenu({
+                style: 'dropdown',
+                transferClasses: true,
+                width: null
+            });
+
+            $(".chzn-select").chosen();
+        };
+        return httpApi;
+    });;

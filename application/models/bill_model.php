@@ -13,7 +13,9 @@ class Bill_model extends MY_model {
 
 
     public function get_all_by_type($type){
-        $bills = $this->db->where('warehouse', $type)
+        $bills = $this->db->select('*,
+                                    (select `name` from customers where id = '.$this->table_name.'.customer_id) as customer_name')
+                        ->where('warehouse', $type)
                         ->order_by('created','decs')
                         ->get($this->table_name)
                         ->result();

@@ -12,7 +12,7 @@
                 <div class='section'>
                     <h3 style="margin-top: 10px">Thông tin hóa đơn</h3>
                     <label>Tên khách hàng :</label>
-                    <div>{{bill.customer_id}}</div>
+                    <div>{{bill.customer.name}}</div>
                     <label>Mã hóa đơn :</label>
                     <div>{{bill.bill_code}}</div>
                     <label>Ngày tạo :</label>
@@ -29,6 +29,7 @@
                                 <th><div class="th_wrapp">stt</div></th>
                                 <th><div class="th_wrapp">tên sản phảm</div></th>
                                 <th><div class="th_wrapp">số lượng</div></th>
+                                <th><div class="th_wrapp">Giá Sản phẩm</div></th>
                                 <th><div class="th_wrapp">Quy cách</div></th>
                                 <th><div class="th_wrapp">thành tiền</div></th>
                             </tr>
@@ -38,6 +39,7 @@
                                     <td class="small">{{item.stt}}</td>
                                     <td class="small">{{item.product_name}}</td>
                                     <td class="small">{{item.quantity}}</td>
+                                    <td class="small">{{item.price / item.quantity | number}}</td>
                                     <td class="small">{{item.unit.name}}</td>
                                     <td class="small">{{item.price | number}}</td>
                                 </tr>

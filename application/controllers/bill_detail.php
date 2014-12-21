@@ -13,7 +13,9 @@ class Bill_detail extends CI_Controller {
     public function index() {
         $id = $_GET['id'];
         $type = $_GET['type'];
+        $this->load->model('customers_model','customer');
         $bill_detail = $this->bill->get_by_id($id);
+        $bill_detail->customer = $this->customer->get_by_id($bill_detail->customer_id);
         foreach ($bill_detail->detail as $key => $row){
             if($type == 'wholesale')
                 $bill_detail->detail[$key]->unit = $this->product_sale->get_unit_primary($row->product_id);
