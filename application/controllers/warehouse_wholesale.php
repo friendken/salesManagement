@@ -19,7 +19,7 @@ class Warehouse_wholesale extends CI_Controller {
         echo json_encode(array('products' => $products,'customers' => $customers));
     }
     public function addWholesale(){
-        $products = $this->product->get_all();
+        $products = $this->product->get_array(array('active' => '0'));
         $this->load->model('customers_model','customers');
         $customers = $this->customers->get_array(array('type' => 'partner'));
         echo json_encode(array('products' => $products,'customers' => $customers));

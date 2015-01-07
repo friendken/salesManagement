@@ -31,31 +31,36 @@
                 </div>
                 <div class="section">
                     <label>giá bán</label>
-                    <div>
-                        <table>
+                    <div style="margin-left: 260px;">
+                        <table class="display">
+                            <thead>
                             <tr>
                                 <th>Đơn vị</th>
                                 <th>Số lượng</th>
                                 <th>Quy cách</th>
                                 <th>Giá bán</th>
+                                <th></th>
                             </tr>
+                            </thead>
                             <tbody class="list_product_price">
                                 <tr class="product_price" ng-repeat="item in product.sale_price" id="tr_product_price_{{item.id}}">
                                     <td class="small">{{item.parent_name}}</td>
                                     <td class="small"><input type="text" value="{{item.quantity}}" /></td>
                                     <td class="small"><input type="text" value="{{item.name}}"/></td>
                                     <td class="small"><input type="text" value="{{item.price}}"/></td>
+                                    <td>
+                                        <div class="iconBox color">
+                                            <a id="btn_more_price" data-id="1" ng-click="morePrice()"  title="thêm giá">
+                                                <img src="/www/img/icon/directional_down.png">
+                                            </a>
+                                        </div>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
-                        <div class="iconBox color">
-                        <a id="btn_more_price" data-id="1" ng-click="morePrice()"  title="thêm giá">
-                            <img src="/www/img/icon/directional_down.png">
-                        </a>
-                        </div>
                     </div>
                 </div>
-                <div class="section">
+                <div class="section" ng-if="product.buy_price.length > 0">
                     <h5>giá mua</h5>
                     <div style="margin-left: 30px;">
                         <table class="display">

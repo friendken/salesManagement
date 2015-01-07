@@ -35,15 +35,15 @@
                         <thead>
                             <tr>
                                 <th><div class="th_wrapp">id</div></th>
-                        <th><div class="th_wrapp">Tên Sản Phẩm</div></th>
-                        <th><div class="th_wrapp">Loại Sản Phẩm</div></th>
-                        <th><div class="th_wrapp">Ngày tạo</div></th>
-                        <th><div class="th_wrapp">action</div></th>
-                        </tr>
+                                <th><div class="th_wrapp">Tên Sản Phẩm</div></th>
+                                <th><div class="th_wrapp">Loại Sản Phẩm</div></th>
+                                <th><div class="th_wrapp">Ngày tạo</div></th>
+                                <th><div class="th_wrapp">action</div></th>
+                            </tr>
                         </thead>
                         <tbody id="show_product">
-                            <tr ng-repeat="item in products | filter:filter_product" class="odd gradeX" data-id="{{item.id}}">
-                                <td>{{item.id}}</td>
+                            <tr ng-repeat="(key,item) in products | filter:filter_product" class="odd gradeX" data-id="{{item.id}}">
+                                <td>{{key + 1}}</td>
                                 <td>{{item.name}}</td>
                                 <td>{{item.product_type_name}}</td>
                                 <td>{{item.created}}</td>
@@ -55,7 +55,7 @@
                                             </a>
                                         </span> 
                                         <span class="tip">
-                                            <a id="1" class="Delete" title="Delete">
+                                            <a id="{{item.id}}" class="Delete" ng-click="deleteProduct($event)" title="Delete">
                                                 <img src="/www/img/icon/icon_delete.png">
                                             </a>
                                         </span>

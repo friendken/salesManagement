@@ -12,7 +12,7 @@ class Products extends CI_Controller {
     }
     public function index() {
         $this->load->model('products_type_model','product_type');
-        $product = $this->product->get_all();
+        $product = $this->product->get_array(array('active' => '0'));
         $product_type_all = $this->product_type->get_all();
         foreach($product as $key => $row){
             //get product type
@@ -24,6 +24,11 @@ class Products extends CI_Controller {
         }
         
         echo json_encode(array('products' => $product,'product_type' => $product_type_all));
+    }
+    public function deleteProduct(){
+        $id = $this->input->get('id');
+        $this->product->update(array('active' => 1),array('id' => $id));
+        echo $id;
     }
     public function createProductView(){
         if(isset($_GET['id'])){

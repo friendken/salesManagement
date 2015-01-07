@@ -100,6 +100,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 });
         };
         $scope.init();
+
         $scope.morePrice = function (){
             var tr_id = $('#btn_more_price').data('id');
             var template = $('#tr_product_price_' + tr_id);
@@ -114,6 +115,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             $('.list_product_price').append('<tr class="product_price" id="tr_product_price_' + new_id +'">' + template.html() + '</tr>');
             var new_template = $('#tr_product_price_' + new_id);
             $('#tr_product_price_' + new_id + ' input').val('');
+            $('#tr_product_price_' + new_id).children('td:nth-child(5)').html('');
             new_template.children('td:nth-child(1)').text(unit + ' =');
         };
         $scope.createProduct = function (){
@@ -124,8 +126,11 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                                     {name: $(this).children('td:nth-child(3)').children().val()},
                                     {price: $(this).children('td:nth-child(4)').children().val()}]);
             });
+
             if(list_price.length == 0)
                 return false;
+
+
             $scope.product.sale_price = list_price;
             var product = {name: $scope.product.name,
                            code: $scope.product.code,
@@ -136,31 +141,23 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             $http({method: 'post', url: $scope.urlSave,
                data: product, reponseType: 'json'}).
                success(function(data, status) {
-                   console.log(data);
-//                   $scope.cancelCreate();
                    showAlert.showSuccess(3000,'lưu thành công');
                    $location.path('product');
-//                   $scope.init();
-
                }).
                error(function(data, status) {
                  console.log(data);
                });
         };
     }])
-    .controller('productController', ['$scope','$http', function($scope,$http) {
+    .controller('productController', ['$scope','$http','renderSelect', function($scope,$http,renderSelect) {
             console.log('load product list');
             $scope.init = function(){
                 $http({method: 'GET', url: config.base + '/products', reponseType: 'json'}).
                     success(function(data, status) {
                       //==== get data account profile ========
                         $scope.products = data.products;
-                        var html_select = '';
-                        for(var x in data.product_type){
-                            html_select += '<option value="' + data.product_type[x].id + '">' + data.product_type[x].name + '</option>';
-                        }
-                        $('#filter_product_type').append(html_select);
-                        $scope.initSelect();
+                        renderSelect.initDataSelect(data.product_type,'#filter_product_type');
+                        renderSelect.initSelect();
                         
                     }).
                     error(function(data, status) {
@@ -168,18 +165,17 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                     });
             };
             $scope.init();
-            $scope.initSelect = function (){
-                $(' select').not("select.chzn-select,select[multiple],select#box1Storage,select#box2Storage").selectmenu({
-                    style: 'dropdown',
-                    transferClasses: true,
-                    width: null
-                });
-                
-                $(".chzn-select").chosen(); 
-            };
-            $scope.refeshTable = function(){
-                $scope.init();
-            };
+            $scope.deleteProduct = function ($event){
+                if(!confirm('bạn chắc chứ?'))
+                    return false;
+                $http({method: 'GET', url: config.base + '/products/deleteProduct?id=' + $($event.currentTarget).attr('id'), reponseType: 'json'}).
+                    success(function(data, status) {
+                        $scope.init();
+                    }).
+                    error(function(data, status) {
+                        console.log(data);
+                    });
+            }
     }])
     .controller('warehouseWholesaleController', ['$scope','$http','$stateParams','showAlert','$location','renderSelect', function($scope,$http,$stateParams,showAlert,$location, renderSelect) {
             console.log('load warehouse-wholesale');

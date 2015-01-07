@@ -18,7 +18,8 @@
                 <div class='section'>
                     <h3 style="margin-top: 10px">Danh sách sản phẩm nhập</h3>
                     <div style="margin-left: 5%">
-                        <table>
+                        <table class="display">
+                            <thead>
                             <tr>
                                 <th></th>
                                 <th>STT</th>
@@ -28,6 +29,7 @@
                                 <th>Giá mua</th>
                                 <th>Thành tiền</th>
                             </tr>
+                            </thead>
                             <tbody class="list_product_price">
                                 <tr class="product_buy_price" data-id="1" id="tr_product_buy_price_1">
                                     <td>
@@ -41,7 +43,7 @@
                                     <td style="width: 210px">
                                         <select data-placeholder="sản phẩm" onchange="loadUnitProduct(this)" class="chzn-select load_product"></select>
                                     </td>
-                                    <td class="small"><input type="text" onkeyup="calculatorMoney(this)"/></td>
+                                    <td ><input style="width: 110px" type="text" onkeyup="calculatorMoney(this)"/></td>
                                     <td class="small load_unit" style="width: 180px"><select data-placeholder="chọn quy cách" class="chzn-select"></select></td>
                                     <td class="small"><input type="text" onkeyup="calculatorMoney(this)"/></td>
                                     <td class="small">

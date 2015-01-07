@@ -46,7 +46,7 @@ class Products_model extends MY_model {
         return $product;
     }
     public function get_all_order($order = null) {
-        $products = parent::get_all();
+        $products = parent::get_array(array('active' => '0'));
         foreach($products as $key => $row){
             $products[$key] = $this->get_by_id($row->id,$order);
         }
