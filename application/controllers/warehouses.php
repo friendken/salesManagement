@@ -11,11 +11,7 @@ class Warehouses extends CI_Controller {
         $this->load->model('products_model','products');
     }
     public function index() {
-        $type = $this->input->get('type');
-        if ($type == 'warehouse')
-            $data = $this->warehouses->get_all();
-        else
-            $data = $this->products->get_all();
+        $data = $this->warehouses->get_all();
         echo json_encode(array('warehouses' => $data));
     }
     public function getWarehouse($warehouses_id){

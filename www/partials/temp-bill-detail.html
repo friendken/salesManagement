@@ -19,6 +19,8 @@
                     <div>{{bill.created}}</div>
                     <label>Tổng Hóa đơn :</label>
                     <div>{{bill.price_total | number}}</div>
+                    <label ng-if="bill.total_debit != 0">số tiền thiếu trong tất cả hóa đơn :</label>
+                    <div ng-if="bill.total_debit != 0">{{bill.total_debit | number}} - <a href="#total-debit-customer/{{bill.customer_id}}">xem chi tiết</a></div>
                 </div>
                 <div class='section'>
                     <h3 style="margin-top: 10px">chi tiết hóa đơn</h3>

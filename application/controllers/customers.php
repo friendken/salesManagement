@@ -29,6 +29,11 @@ class Customers extends CI_Controller {
         $customer = $this->input->json();
         $this->customers->update($customer, array('id' => $id));
     }
+    public function deleteCustomer(){
+        $id = $this->input->get('id');
+        $this->customers->update(array('active' => '1'), array('id' => $id));
+        echo $id;
+    }
     
 }
 ?>

@@ -5,9 +5,11 @@ class Products_buy_price_model extends MY_model {
     protected $table_name = 'products_buy_price';
     
     public function get_by_product_id($product_id,$order = null){
-        $product =  $this->db->where('product_id', $product_id);
+        $product =  $this->db->where('product_id', $product_id)
+                             ->where('remaining_quantity >','0');
         if($order)
             $product->order_by('price','desc');
+
         return $product->get($this->table_name)
                         ->result();
     }

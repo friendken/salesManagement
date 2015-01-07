@@ -119,16 +119,20 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
         $scope.createProduct = function (){
             var list_price = new Array();
             $('.product_price').each(function(){
-                list_price.push([{quantity: $(this).children('td:nth-child(2)').children().val()},
-                                {name: $(this).children('td:nth-child(3)').children().val()},
-                                {price: $(this).children('td:nth-child(4)').children().val()}]);
+                if($(this).children('td:nth-child(2)').children().val() != '')
+                    list_price.push([{quantity: $(this).children('td:nth-child(2)').children().val()},
+                                    {name: $(this).children('td:nth-child(3)').children().val()},
+                                    {price: $(this).children('td:nth-child(4)').children().val()}]);
             });
+            if(list_price.length == 0)
+                return false;
             $scope.product.sale_price = list_price;
             var product = {name: $scope.product.name,
                            code: $scope.product.code,
                            description: $scope.product.description,
                            product_type: $scope.product.product_type.id,
                            list_price: $scope.product.sale_price};
+
             $http({method: 'post', url: $scope.urlSave,
                data: product, reponseType: 'json'}).
                success(function(data, status) {
@@ -678,11 +682,19 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
         };
         $scope.init(); 
     }])
-    .controller('totalDebitController', ['$scope','$http', function($scope,$http) {
+    .controller('totalDebitController', ['$scope','$http','$stateParams', function($scope,$http,$stateParams) {
         $scope.init = function (){
             $http({method: 'GET', url: config.base + '/debit/totalDebit', reponseType: 'json'}).
                 success(function(data, status) {
-                  $scope.bill = data.bill;
+                    $scope.bill = data.bill;
+                    if($stateParams.customer_id){
+                        data.bill.forEach(function(item){
+                            if(item.customer_id == $stateParams.customer_id){
+                                $scope.searchBill = item.customer_name;
+                                return false;
+                            }
+                        });
+                    }
                 }).
                 error(function(data, status) {
                   console.log(data);
@@ -843,6 +855,17 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 });
         };
         $scope.init();
+        $scope.deleteCustomer = function($event){
+            if(!confirm('bạn chắc chứ?'))
+                return false;
+            $http({method: 'GET', url: config.base + '/customers/deleteCustomer?id=' + $($event.currentTarget).attr('id'), reponseType: 'json'}).
+                success(function(data, status) {
+
+                }).
+                error(function(data, status) {
+                    console.log(data);
+                });
+        }
         $scope.openPopup = function(size,$event){
             if($event)
                 var customer_id = $($event.currentTarget).data('id');

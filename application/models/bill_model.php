@@ -46,4 +46,11 @@ class Bill_model extends MY_model {
                         ->get($this->table_name)
                         ->result();
     }
+    public function get_customer_debit($customer_id){
+        return $this->db->select('sum(debit) as debt')
+                        ->where('customer_id', $customer_id)
+                        ->where('debit is not null')
+                        ->get($this->table_name)
+                        ->row();
+    }
 }

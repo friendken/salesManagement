@@ -135,6 +135,13 @@ config(function($stateProvider, $urlRouterProvider) {
       },
       controller: 'totalDebitController'
     })
+    .state('total-debit-customer', {
+      url: "/total-debit-customer/:customer_id",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-total-debit.html'}
+      },
+      controller: 'totalDebitController'
+    })
     .state('warehousing-history', {
       url: "/warehousing-history",
       views: {
