@@ -28,12 +28,16 @@ class Warehouses extends CI_Controller {
         $warehouses_id = $this->input->get('id');
         $this->load->model('warehouses_detail_model','warehouse_detail');
         $this->load->model('products_sale_price_model','products_sale');
-        $storge = $this->warehouse_detail->get_warehouse_storge($warehouses_id);
-        $i = 1;
+        $this->load->model('warehouse_wholesale_model','warehouse_wholesale');
+        if($warehouses_id != 0)
+            $storge = $this->warehouse_detail->get_warehouse_storge($warehouses_id);
+        else
+            $storge = $this->warehouse_wholesale->get_all();
+
         foreach ($storge as $key => $row){
-            $storge[$key]->stt = $i;
             $storge[$key]->unit = $this->products_sale->get_unit_primary($row->product_id);
-            $i++;
+            if(isset($row->name))
+                $storge[$key]->product_name = $row->name;
         }
         echo json_encode(array('warehouses' => $storge));
     }
@@ -51,7 +55,7 @@ class Warehouses extends CI_Controller {
         $this->load->model('warehouses_detail_model','warehouse_detail');
         $this->load->model('products_model','products');
         $warehouses = $this->warehouse_detail->get_warehouse_status();
-        $products = $this->products->get_all();
+        $products = $this->products->get_array(array('active' => 0));
         echo json_encode(array('warehouses' => $warehouses, 'products' => $products));
     }
 }

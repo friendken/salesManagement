@@ -16,17 +16,23 @@ class Customers extends CI_Controller {
     }
     public function createCustomer(){
         $customer = $this->input->json();
+        $customer->phone_home = json_encode($customer->phone_home);
+        $customer->phone_mobile = json_encode($customer->phone_mobile);
         $customer_id = $this->customers->insert($customer);
         echo json_encode($customer_id);
     }
     public function getCustomer(){
         $customer_id = $this->input->get('id');
         $customer = $this->customers->get_by_id($customer_id);
+        $customer->phone_home = json_decode($customer->phone_home);
+        $customer->phone_mobile = json_decode($customer->phone_mobile);
         echo json_encode(array('customer' => $customer));
     }
     public function editCustomer(){
         $id = $this->input->get('id');
         $customer = $this->input->json();
+        $customer->phone_home = json_encode($customer->phone_home);
+        $customer->phone_mobile = json_encode($customer->phone_mobile);
         $this->customers->update($customer, array('id' => $id));
     }
     public function deleteCustomer(){

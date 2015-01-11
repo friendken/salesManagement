@@ -12,7 +12,10 @@ class Order extends CI_Controller {
     public function createOrder(){
         $type = $this->input->get('type');
         $customers = $this->customers->get_all_customer_by_type($type);
-        
+        $this->load->model('bill_model','bill');
+        foreach($customers as $key => $row){
+            $customers[$key]->total_debt = $this->bill->get_customer_debit($row->id);
+        }
         #get products
         $this->load->model('products_model');
         $products = $this->products_model->get_all_order('order');

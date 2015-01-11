@@ -23,10 +23,8 @@
                 </div>
                 <div class='section'>
                     <label>Ngành Hàng</label>
-                    <div>
-                        <select data-placeholder="chọn loại sản phẩm" class="chzn-select chzn-done" ng-model="product.product_type" ng-options="item.name for item in product_type track by item.id">
-                            <option selected="">chọn loại sản phẩm</option>
-                        </select>
+                    <div style="width: 200px">
+                        <select data-placeholder="chọn loại sản phẩm" id="product-type" class="chzn-select" ng-model="product.product_type"></select>
                     </div>
                 </div>
                 <div class="section">

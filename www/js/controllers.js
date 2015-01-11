@@ -25,6 +25,17 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
         $scope.editProduct = function(el){
             $scope.changeView('edit','cancel',el.item.id);
         };
+        $scope.deleteProductType = function(){
+            if(!confirm('Bạn chắc chứ?'))
+                return false;
+            $http({method: 'GET', url: config.base + '/product_type/deleteType?id=' + this.item.id, reponseType: 'json'}).
+                success(function(data, status) {
+                    $scope.init();
+                }).
+                error(function(data, status) {
+                    console.log(data);
+                });
+        }
         $scope.updateProduct = function(el){
             $http({method: 'POST', url: config.base + '/product_type/updateProductType',
                 data:{id: el.item.id, name: $('#cancel_name_' + el.item.id).val()}, reponseType: 'json'}).
@@ -71,7 +82,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 });
             };
     }])
-    .controller('createProductController', ['$scope','$http','showAlert','$stateParams','$location', function($scope,$http,showAlert,$stateParams,$location) {
+    .controller('createProductController', ['$scope','$http','showAlert','$stateParams','$location','renderSelect', function($scope,$http,showAlert,$stateParams,$location,renderSelect) {
         if($stateParams.id){
             $scope.url = config.base + '/products/createProductView?id=' + $stateParams.id;
             $scope.urlSave = config.base + '/products/editProduct?id=' + $stateParams.id;
@@ -83,9 +94,9 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
         $scope.init = function(){
             $http({method: 'GET', url: $scope.url, reponseType: 'json'}).
                 success(function(data, status) {
-                  //==== get data account profile ========
-//                   console.log(data.product_type)
                     $scope.product_type = data.product_type;
+                    renderSelect.initDataSelect(data.product_type,'#product-type');
+                    renderSelect.initSelect();
                     $scope.product.product_type = data.product_type[0];
                     $scope.product.sale_price = [{id:1, name: '',quantity: '',price: '',parent_name: ''}];
                     if(data.products){
@@ -100,7 +111,6 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 });
         };
         $scope.init();
-
         $scope.morePrice = function (){
             var tr_id = $('#btn_more_price').data('id');
             var template = $('#tr_product_price_' + tr_id);
@@ -130,12 +140,11 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             if(list_price.length == 0)
                 return false;
 
-
             $scope.product.sale_price = list_price;
             var product = {name: $scope.product.name,
                            code: $scope.product.code,
                            description: $scope.product.description,
-                           product_type: $scope.product.product_type.id,
+                           product_type: $scope.product.product_type,
                            list_price: $scope.product.sale_price};
 
             $http({method: 'post', url: $scope.urlSave,
@@ -182,10 +191,12 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             if($stateParams.type === 'wholesale'){
                 $scope.url = config.base + '/warehouse_wholesale/saveAddWholesale';
                 $scope.warehouse_type = 'Sỉ';
+                $scope.warehouse_type_en = 'wholesale'
             }
             else{
                 $scope.url = config.base + '/warehouse_retail/saveAddRetail';
                 $scope.warehouse_type = 'Lẻ';
+                $scope.warehouse_type_en = 'retail'
             }
             $scope.wholesale = {};
             $scope.wholesale.partner = 1;
@@ -245,7 +256,18 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 renderSelect.initSelect();
             };
             $scope.checkBill = function(){
+                if($('#actual_warehouse').val().replace(/,/ig,'') == 0){
+                    $scope.wholesale.debt = 0;
+                    $('#debt_warehouse').val(0);
+                    return false;
+                }
+
+                $scope.wholesale.actual = parseInt($('#actual_warehouse').val().replace(/,/ig,''));
+                $('#actual_warehouse').val(numeral($('#actual_warehouse').val()).format('0,0'));
+
+
                 $scope.wholesale.debt = parseInt($('#txt_hide_total_bill').val()) - parseInt($scope.wholesale.actual);
+                $('#debt_warehouse').val(numeral($scope.wholesale.debt).format('0,0'));
             };
             $scope.addWhole = function(){
                 var buy_price = new Array();
@@ -283,10 +305,10 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 console.log('load warehouse');
                 if ($stateParams.type === 'wholesale'){
                     $scope.urlLoad = config.base + '/warehouse_wholesale';
-                    $scope.product_name_type = 'Sỉ';
+                    $scope.product_name_type = 'sỉ';
                 }else{
                     $scope.urlLoad = config.base + '/warehouse_retail';
-                    $scope.product_name_type = 'Lẻ';
+                    $scope.product_name_type = 'lẻ';
                 }
                 $scope.init = function(){
                     $http({method: 'GET', url: $scope.urlLoad, reponseType: 'json'}).
@@ -349,34 +371,42 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             if($stateParams.type === 'wholesale'){
                 $scope.url = config.base + '/warehouse_wholesale_sale/createBill';
                 $scope.load_product = config.base + '/warehouse_wholesale';
-                $scope.warehouse_type = 'Sỉ';
+                $scope.warehouse_type = 'sỉ';
                 $scope.warehouse_type_en = 'wholesale';
             }
             else{
                 $scope.url = config.base + '/warehouse_retail_sale/createBill';
                 $scope.load_product = config.base + '/warehouse_retail';
-                $scope.warehouse_type = 'Lẻ';
+                $scope.warehouse_type = 'lẻ';
                 $scope.warehouse_type_en = 'retail';
             }
             $scope.wholesale = {};
+            $scope.show_customer = new Array();
             $scope.wholesale.partner = 1;
             $scope.wholesale.total_bill = 0;
             $scope.show_total_bill = 0;
             $scope.init = function(){
                 $http({method: 'GET', url: $scope.load_product, reponseType: 'json'}).
                     success(function(data, status) {
-                      // get data account profile 
+                        $scope.data_customer = data.customers;
                         renderSelect.initDataSelect(data.customers,'#sale-customer');
-                        renderSelect.initDataSelect(data.products,'#tr_product_buy_price_1 select.load_product');
+                        renderSelect.initDataSelect(data.products,'#tr_product_buy_price_1 select.load_product',true);
                         renderSelect.initSelect();
-    
                     }).
                     error(function(data, status) {
                       console.log(data);
                     });
             };
             $scope.init();
-            
+            $scope.selectCustomer = function(){
+                console.log($scope.wholesale.partner);
+                $scope.data_customer.forEach(function(customer){
+                    if(customer.id == $scope.wholesale.partner){
+                        $scope.show_customer = customer;
+                        return false;
+                    }
+                })
+            }
             $scope.moreBuy = function(){
                 //get template and new tr_id
                 var tr_id = $('.btn_more_buy').data('id');
@@ -416,7 +446,18 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 renderSelect.initSelect();
             };
             $scope.checkBill = function($event){
+                if($('#actual_warehouse').val().replace(/,/ig,'') == 0){
+                    $scope.wholesale.debt = 0;
+                    $('#debt_warehouse').val(0);
+                    return false;
+                }
+
+                $scope.wholesale.actual = parseInt($('#actual_warehouse').val().replace(/,/ig,''));
+                $('#actual_warehouse').val(numeral($('#actual_warehouse').val()).format('0,0'));
+
+
                 $scope.wholesale.debt = parseInt($('#txt_hide_total_bill').val()) - parseInt($scope.wholesale.actual);
+                $('#debt_warehouse').val(numeral($scope.wholesale.debt).format('0,0'));
             };
             $scope.createBill = function(){
                 
@@ -455,11 +496,11 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             console.log('load bill');
             if ($stateParams.type === 'wholesale'){
                 $scope.urlLoad = config.base + '/warehouse_wholesale_sale';
-                $scope.product_name_type = 'Sỉ';
+                $scope.product_name_type = 'sỉ';
                 $scope.type = 'wholesale';
             }else{
                 $scope.urlLoad = config.base + '/warehouse_retail_sale';
-                $scope.product_name_type = 'Lẻ';
+                $scope.product_name_type = 'lẻ';
                 $scope.type = 'retail';
             }
             $scope.init = function(){
@@ -548,7 +589,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                     });
                     $http({method: 'POST', url: config.base + '/warehouse_divide/updateStorge',data: {list: list,warehousing_id: $stateParams.warehousing_id}, reponseType: 'json'}).
                     success(function(data, status) {
-                      console.log(data);
+                        $location.path('product');
                     }).
                     error(function(data, status) {
                       console.log(data);
@@ -856,7 +897,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 return false;
             $http({method: 'GET', url: config.base + '/customers/deleteCustomer?id=' + $($event.currentTarget).attr('id'), reponseType: 'json'}).
                 success(function(data, status) {
-
+					$scope.init();
                 }).
                 error(function(data, status) {
                     console.log(data);
@@ -898,12 +939,31 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                     });
             }
 
-    
+        $scope.morePhone = function($event){
+            var table = $($event.currentTarget).closest('table').data('class');
+            var html = '<tr><td><input type="text" class="' + table.substr(5) + '"/></td><td></td></td></tr>';
+            $('.' + table).append(html);
+        }
         $scope.ok = function () {
             if(items.customer_id)
                 var url = config.base + '/customers/editCustomer?id=' + items.customer_id;
             else
                 var url = config.base + '/customers/createCustomer';
+
+            //get phone home and phone mobile
+            var phone_home = new Array();
+            $('.phone_home').each(function(){
+                if(this.value != '' && !isNaN(this.value))
+                    phone_home.push(this.value);
+            })
+            var phone_mobile = new Array();
+            $('.phone_mobile').each(function(){
+                if(this.value != '' && !isNaN(this.value))
+                    phone_mobile.push(this.value);
+            })
+            $scope.customer.phone_home = phone_home;
+            $scope.customer.phone_mobile = phone_mobile;
+
             $http({method: 'POST', url: url,data: $scope.customer, reponseType: 'json'}).
                     success(function(data, status) {
                       $modalInstance.close(data);
@@ -938,6 +998,10 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             for(var x in $scope.customers){
                 if($scope.customers[x].id === $scope.order.customer_id){
                     $scope.address_store = $scope.customers[x].address;
+					$scope.phone_mobile = $scope.customers[x].phone_mobile;
+					$scope.phone_home = $scope.customers[x].phone_home;
+                    $scope.total_debt = $scope.customers[x].total_debt.debt;
+                    $scope.customer_id = $scope.customers[x].id;
                     break
                 }
             }
@@ -1017,6 +1081,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             $http({method: 'POST', url: config.base + '/order/addOrder',data: $scope.order, reponseType: 'json'}).
             success(function(data, status) {
                 showAlert.showSuccess(3000,'lưu thành công');
+				$location.path('order-management');
             }).
             error(function(data, status) {
               console.log(data);
@@ -1156,7 +1221,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 });
         };
         $scope.init(); 
-        setTimeout(function(){ 
+        setTimeout(function(){
             renderSelect.initSelect();
           }, 2000);
         $scope.changeStatus = function($event){

@@ -1,7 +1,7 @@
 <div ng-app="dashboard" ng-controller="billController">
     <div class="onecolumn" style="margin-top: 10px">
         <div class="header">
-            <span ><span class="ico  gray random"></span> Danh sách Hóa đơn {{product_name_type}}</span>
+            <span ><span class="ico  gray random"></span> Danh sách hóa đơn {{product_name_type}}</span>
         </div><!-- End header -->	
         <div class=" clear"></div>
         <div class="content">
@@ -25,16 +25,16 @@
                         <thead>
                             <tr>
                                 <th><div class="th_wrapp">id</div></th>
-                                <th><div class="th_wrapp">Mã Hóa đơn</div></th>
+                                <th><div class="th_wrapp">Mã hóa đơn</div></th>
                                 <th><div class="th_wrapp">Tên khách hàng</div></th>
                                 <th><div class="th_wrapp">Thành tiền</div></th>
                                 <th><div class="th_wrapp">Ngày tạo</div></th>
-                                <th><div class="th_wrapp">action</div></th>
+                                <th><div class="th_wrapp">Edit</div></th>
                         </tr>
                         </thead>
                         <tbody id="show_product">
-                            <tr ng-repeat="item in bills | filter:filter_bill" class="odd gradeX" data-id="{{item.id}}">
-                                <td>{{item.id}}</td>
+                            <tr ng-repeat="(key,item) in bills | filter:filter_bill" class="odd gradeX" data-id="{{item.id}}">
+                                <td>{{key + 1}}</td>
                                 <td>{{item.bill_code}}</td>
                                 <td>{{item.customer_name}}</td>
                                 <td>{{item.price_total | number}}</td>

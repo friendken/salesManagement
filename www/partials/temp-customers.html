@@ -6,7 +6,7 @@
         <div class="modal-body">
         <form>
             <div class='section'>
-                <label>Tên Khách hàng</label>
+                <label>Tên khách hàng</label>
                 <div><input type='text' ng-model='customer.name'/></div>
             </div>
             <div class='section'>
@@ -19,11 +19,61 @@
             </div>
             <div class='section'>
                 <label>Điện thoại bàn</label>
-                <div><input type='text' ng-model='customer.phone_home'/></div>
+                <div>
+                    <table ng-if="customer.phone_home.length != 0" data-class="list_phone_home" class="list_phone_home">
+                        <tr ng-repeat="item in customer.phone_home">
+                            <td><input type='text' value="{{item}}" class="phone_home"/></td>
+                            <td>
+                                <div class="iconBox color">
+                                    <a ng-click="morePhone($event)"  title="Thêm số điện thoại">
+                                        <img src="/www/img/icon/directional_down.png">
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <table ng-if="customer.phone_home.length == 0" data-class="list_phone_home" class="list_phone_home">
+                        <tr>
+                            <td><input type='text' class="phone_home"/></td>
+                            <td>
+                                <div class="iconBox color">
+                                    <a ng-click="morePhone($event)"  title="Thêm số điện thoại">
+                                        <img src="/www/img/icon/directional_down.png">
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
             <div class='section'>
                 <label>Điện thoại di động</label>
-                <div><input type='text' ng-model='customer.phone_mobile'/></div>
+                <div>
+                    <table ng-if="customer.phone_mobile != 0" data-class="list_phone_mobile" class="list_phone_mobile">
+                        <tr ng-repeat="item in customer.phone_mobile">
+                            <td><input type='text' value="{{item}}" class="phone_mobile"/></td>
+                            <td>
+                                <div class="iconBox color">
+                                    <a ng-click="morePhone($event)"  title="Thêm điện thoại">
+                                        <img src="/www/img/icon/directional_down.png">
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <table ng-if="customer.phone_mobile == 0" data-class="list_phone_mobile" class="list_phone_mobile">
+                        <tr>
+                            <td><input type='text' class="phone_mobile"/></td>
+                            <td>
+                                <div class="iconBox color">
+                                    <a ng-click="morePhone($event)"  title="Thêm điện thoại">
+                                        <img src="/www/img/icon/directional_down.png">
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </form>
         </div>
@@ -60,13 +110,13 @@
                     <table id="tabel_product_type" class="display">
                         <thead>
                             <tr>
-                                <th><div class="th_wrapp">stt</div></th>
+                                <th><div class="th_wrapp">STT</div></th>
                                 <th><div class="th_wrapp">{{customer_name}}</div></th>
-                                <th><div class="th_wrapp">Cửa Hàng</div></th>
-                                <th><div class="th_wrapp">Địa Chỉ</div></th>
+                                <th><div class="th_wrapp">Cửa hàng</div></th>
+                                <th><div class="th_wrapp">Địa chỉ</div></th>
                                 <th><div class="th_wrapp">ĐT nhà</div></th>
                                 <th><div class="th_wrapp">Di động</div></th>
-                                <th><div class="th_wrapp">action</div></th>
+                                <th><div class="th_wrapp">Edit</div></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -75,8 +125,8 @@
                                 <td>{{item.name}}</td>
                                 <td>{{item.store_name}}</td>
                                 <td>{{item.address}}</td>
-                                <td>{{item.phone_home}}</td>
-                                <td>{{item.phone_mobile}}</td>
+                                <td>{{item.phone_home[0]}}</td>
+                                <td>{{item.phone_mobile[0]}}</td>
                                 <td>
                                     <span>
                                         <span class="tip">

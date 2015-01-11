@@ -38,13 +38,19 @@ angular.module('dashboard.services', [])
     .factory('renderSelect', function() {
         var httpApi = {};
 
-        httpApi.initDataSelect = function(data,target){
+        httpApi.initDataSelect = function(data,target,code){
             var html ='';
             $(target).next('div').remove();
             $(target).removeClass('chzn-done');
             $(target).html(html);
-            for(var x in data){
-                html += '<option value="' + data[x].id + '">' + data[x].name + '</option>';
+            if(!code) {
+                for (var x in data) {
+                    html += '<option value="' + data[x].id + '">' + data[x].name + '</option>';
+                }
+            }else{
+                for (var x in data) {
+                    html += '<option value="' + data[x].code + '">' + data[x].name + '</option>';
+                }
             }
             $(target).html(html);
         };

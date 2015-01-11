@@ -25,16 +25,18 @@ class Warehouse_wholesale_sale extends CI_Controller {
     public function createBill($bill = null, $from = null){
         if(!isset($bill))
             $bill = $this->input->json();
-        $code_bill = strtoupper(substr(md5(time()),0,6));
-        
+
         #create bill
-        $data_bill = array('bill_code' => $code_bill,
-                           'customer_id' => $bill->partner,
+        $data_bill = array('customer_id' => $bill->partner,
                            'price_total' => $bill->total_bill);
         if(isset($bill->debt))
             $data_bill['debit'] = $bill->debt;
         
         $bill_id = $this->bill->insert($data_bill);
+        $new_bill = $this->bill->get_by_id($bill_id);
+        $code_bill = 'S'.$new_bill->id;
+
+        $this->bill->update(array('bill_code' => $code_bill),array('id' => $bill_id));
         #create bill detail
         $bill_detail = array();
         foreach($bill->buy_price as $key => $row){

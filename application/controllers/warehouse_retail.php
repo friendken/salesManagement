@@ -11,12 +11,16 @@ class Warehouse_retail extends CI_Controller {
         $this->load->model('products_sale_price_model', 'product_sale');
         $this->load->model('products_buy_price_model', 'product_buy');
         $this->load->model('warehouse_retail_model', 'retail');
+        $this->load->model('bill_model', 'bill');
     }
 
     public function index() {
         $products = $this->retail->get_all();
         $this->load->model('customers_model','customers');
-        $customers = $this->customers->get_array(array('type' => 'customer'));
+        $customers = $this->customers->get_array(array('type' => 'customer','active' => 0));
+        foreach($customers as $key => $row){
+            $customers[$key]->total_debt = $this->bill->get_customer_debit($row->id);
+        }
         echo json_encode(array('products' => $products,'customers' => $customers));
     }
 

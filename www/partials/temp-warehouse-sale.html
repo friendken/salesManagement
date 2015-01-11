@@ -13,12 +13,22 @@
                     <label>chọn khách hàng</label>
                     <div style="width: 200px">
                         <input type="hidden" id="type_sale_product" value="{{warehouse_type_en}}"/>
-                        <select data-placeholder="chọn khách hàng" id="sale-customer" class="chzn-select" ng-model="wholesale.partner"></select>
+                        <select data-placeholder="chọn khách hàng" ng-change="selectCustomer()" id="sale-customer" class="chzn-select" ng-model="wholesale.partner"></select>
                     </div>
                 </div>
+                <div class='section' ng-if="show_customer.length != 0">
+                    <label>Địa chỉ</label>
+                    <div style="width: 200px"><h6>{{show_customer.address}}</h6></div>
+                    <label>Di động</label>
+                    <div style="width: 200px"><h6>{{show_customer.phone_mobile[0]}}</h6></div>
+                    <label>ĐT bàn</label>
+                    <div style="width: 200px"><h6>{{show_customer.phone_home[0]}}</h6></div>
+                    <label ng-if="show_customer.total_debt.debt != null && show_customer.total_debt.debt != 0">Tổng nợ :</label>
+                    <div ng-if="show_customer.total_debt.debt != null && show_customer.total_debt.debt != 0">{{show_customer.total_debt.debt | number}} - <a href="#total-debit-customer/{{show_customer.id}}">xem chi tiết</a></div>
+                </div>
                 <div class='section'>
-                    <h3 style="margin-top: 10px">Danh sách sản phẩm nhập</h3>
-                    <div style="margin-left: 5%">
+                    <h3 style="margin-top: 10px">Danh sách sản phẩm</h3>
+                    <div style="margin-left: 0%">
                         <table class="display">
                             <thead>
                             <tr>
@@ -33,20 +43,20 @@
                             </thead>
                             <tbody class="list_product_price">
                                 <tr class="product_buy_price" data-id="1" id="tr_product_buy_price_1">
-                                    <td>
+                                    <td style="width: 20px">
                                         <div class="iconBox color">
-                                        <a class="btn_more_buy" data-id="1" ng-click="moreBuy()"  title="thêm giá">
-                                            <img src="/www/img/icon/directional_down.png">
-                                        </a>
+                                            <a class="btn_more_buy" data-id="1" ng-click="moreBuy()"  title="thêm giá">
+                                                <img src="/www/img/icon/directional_down.png">
+                                            </a>
                                         </div>
                                     </td>
-                                    <td>1</td>
-                                    <td style="width: 210px">
+                                    <td style="width: 15px">1</td>
+                                    <td style="width: 180px">
                                         <select data-placeholder="sản phẩm" onchange="loadUnitProduct(this,true)" class="chzn-select load_product"></select>
                                     </td>
-                                    <td ><input style="width: 110px" type="text" onkeyup="calculatorMoney(this)"/></td>
-                                    <td class="small load_unit"  style="width: 180px"><select onchange="selectPrice(this,true)" data-placeholder="chọn quy cách" class="chzn-select"></select></td>
-                                    <td class="small"><input type="text" readonly/></td>
+                                    <td ><input style="width: 60px" type="text" onkeyup="calculatorMoney(this)"/></td>
+                                    <td class="small load_unit"  style="width: 140px"><select onchange="selectPrice(this,true)" data-placeholder="chọn quy cách" class="chzn-select"></select></td>
+                                    <td class="small"><input style="width: 80px" type="text" readonly/></td>
                                     <td class="small">
                                         <span id="show_bill_product_1"></span>
                                         <input class="bill_product" type="hidden" id="txt_hide_1" value="0"/>
@@ -70,9 +80,11 @@
                         <input class="uibutton loading"  title="Saving" type="submit" value="Tạo hóa đơn"/>
                         Tình trạng: 
                         <b>Nợ &nbsp;</b>
-                        <input type="text" class="xsmall" readonly ng-model="wholesale.debt"/>
+                        <input type="text" class="xsmall" readonly id="debt_warehouse"/>
+                        <input type="hidden" ng-model="wholesale.debt"/>
                         <b>&nbsp; Thanh toán &nbsp;</b>
-                        <input type="text" class="xsmall" ng-keyup="checkBill($event)" ng-model="wholesale.actual"/>
+                        <input type="text" class="xsmall" ng-keyup="checkBill($event)" id="actual_warehouse"/>
+                        <input type="hidden" ng-model="wholesale.actual"/>
                     </div>
                 </div>
             </form>

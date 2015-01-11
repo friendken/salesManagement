@@ -12,7 +12,7 @@
                 <div class='section'>
                     <h3 style="margin-top: 10px">Thông tin hóa đơn</h3>
                     <label>Tên khách hàng :</label>
-                    <div>1</div>
+                    <div>{{bill.partner_detail.name}}</div>
                     <label>Ngày tạo :</label>
                     <div>{{bill.created}}</div>
                     <label>Tổng Hóa đơn :</label>
@@ -24,11 +24,11 @@
                         <table class="display">
                             <thead>
                             <tr>
-                                <th><div class="th_wrapp">stt</div></th>
-                                <th><div class="th_wrapp">tên sản phảm</div></th>
-                                <th><div class="th_wrapp">số lượng</div></th>
+                                <th><div class="th_wrapp">STT</div></th>
+                                <th><div class="th_wrapp">Tên sản phảm</div></th>
+                                <th><div class="th_wrapp">Số lượng</div></th>
                                 <th><div class="th_wrapp">Quy cách</div></th>
-                                <th><div class="th_wrapp">thành tiền</div></th>
+                                <th><div class="th_wrapp">Thành tiền</div></th>
                             </tr>
                             </thead>
                             <tbody class="list_product_buy_price">

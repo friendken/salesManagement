@@ -1,7 +1,5 @@
 <div ng-app="dashboard" ng-controller="productTypeController">
     <div class="clear"></div>
-
-
     <div class="onecolumn" >
         <div class="header">
             <span ><span class="ico  gray random"></span> Danh sách ngành hàng </span>
@@ -33,7 +31,7 @@
                                             </a>
                                         </span> 
                                         <span class="tip">
-                                            <a id="1" class="Delete" title="Delete">
+                                            <a id="{{item.id}}" ng-click="deleteProductType()" class="Delete" title="Delete">
                                                 <img src="/www/img/icon/icon_delete.png">
                                             </a>
                                         </span>

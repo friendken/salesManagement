@@ -10,7 +10,11 @@ class Warehouse_wholesale_model extends MY_model {
                         ->row();
     }
     public function get_all() {
-        return $this->db->query('select *,(select `name` from products where id = ww.product_id) as `name`, (select `name` from products_sale_price where ww.unit = id) as unit_name from warehouse_wholesale as ww')
+        return $this->db->query('select *,
+                                (select `name` from products where id = ww.product_id) as `name`,
+                                (select code from products where id = ww.product_id) as code,
+                                (select `name` from products_sale_price where ww.unit = id) as unit_name
+                                from warehouse_wholesale as ww')
                         ->result();
     }
 }

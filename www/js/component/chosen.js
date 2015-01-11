@@ -750,7 +750,13 @@ Copyright (c) 2011 by Harvest
             found = false;
             result_id = option.dom_id;
             result = $("#" + result_id);
-            if (regex.test(option.html)) {
+
+            if(!isNaN(searchText))
+                var code_search = option.value;
+            else
+                var code_search = option.html;
+
+            if (regex.test(code_search)) {
               found = true;
               results += 1;
             } else if (option.html.indexOf(" ") >= 0 || option.html.indexOf("[") === 0) {
@@ -766,13 +772,13 @@ Copyright (c) 2011 by Harvest
               }
             }
             if (found) {
-              if (searchText.length) {
-                startpos = option.html.search(zregex);
-                text = option.html.substr(0, startpos + searchText.length) + '</em>' + option.html.substr(startpos + searchText.length);
-                text = text.substr(0, startpos) + '<em>' + text.substr(startpos);
-              } else {
+              //if (searchText.length) {
+              //  startpos = option.html.search(zregex);
+              //  text = option.html.substr(0, startpos + searchText.length) + '</em>' + option.html.substr(startpos + searchText.length);
+              //  text = text.substr(0, startpos) + '<em>' + text.substr(startpos);
+              //} else {
                 text = option.html;
-              }
+              //}
               result.html(text);
               this.result_activate(result);
               if (option.group_array_index != null) {

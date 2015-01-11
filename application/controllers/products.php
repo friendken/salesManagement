@@ -13,11 +13,12 @@ class Products extends CI_Controller {
     public function index() {
         $this->load->model('products_type_model','product_type');
         $product = $this->product->get_array(array('active' => '0'));
-        $product_type_all = $this->product_type->get_all();
+        $product_type_all = $this->product_type->get_array(array('active' => 0));
         foreach($product as $key => $row){
             //get product type
             $product_type = $this->product_type->get_by_id($row->product_type);
-            $product[$key]->product_type_name = $product_type->name;
+            if(count($product_type) > 0)
+                $product[$key]->product_type_name = $product_type->name;
             //cut create date
             $date = explode(' ',$row->created);
             $product[$key]->created = $date[0];
@@ -37,7 +38,7 @@ class Products extends CI_Controller {
         }
             
         $this->load->model('products_type_model','product_type');
-        $product_type = $this->product_type->get_all();
+        $product_type = $this->product_type->get_array(array('active' => 0));
         if(isset($product))
             echo json_encode (array('products' => $product,'product_type' => $product_type));
         else

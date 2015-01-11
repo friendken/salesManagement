@@ -15,10 +15,10 @@ class Bill_detail extends CI_Controller {
         $type = $_GET['type'];
         $this->load->model('customers_model','customer');
         $bill_detail = $this->bill->get_by_id($id);
-        $detb_bill = $this->bill->get_customer_debit($bill_detail->customer_id);
+        $debt_bill = $this->bill->get_customer_debit($bill_detail->customer_id);
         
-        if($detb_bill->debt)
-            $bill_detail->total_debit = (int)$detb_bill->debt;
+        if($debt_bill->debt)
+            $bill_detail->total_debit = (int)$debt_bill->debt;
         else
             $bill_detail->total_debit = 0;
         
