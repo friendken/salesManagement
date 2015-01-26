@@ -1,0 +1,95 @@
+<div ng-app="dashboard" ng-controller="createStaffController">
+        <div class="onecolumn" >
+            <div class="header"><span><span class="ico gray administrator"></span>Nhân viên</span></div>
+            <div class="clear"></div>
+            <div class="content" >
+                <div class="boxtitle min">Ảnh đại diện</div>
+                <form id="validation_demo" action="#">
+                    <div  class="grid1">
+                        <div class="profileSetting" >
+                            <div class="avartar">
+                                <img ng-if="staff.avatar" src="www/img/avatar_staff/{{staff.avatar}}" width="200" height="200" alt="avatar" />
+                                <img ng-if="!staff.avatar" src="www/img/avatar_staff/avartarB.jpg" width="200" height="200" alt="avatar" />
+                            </div>
+                            <div class="avartar">
+                                <input type="file" name="fileupload" onchange="angular.element(this).scope().uploadFile(this.files)" style="width: 185px"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div  class="grid3">
+
+                        <div class="section ">
+                            <label> Họ tên</label>
+                            <div>
+                                <input type="text" class="validate[required] large" ng-model="staff.name" name="f_required" id="f_required">
+                            </div>
+                        </div>
+                        <div class="section">
+                            <label> Ngày sinh</label>
+                            <div><input type="text" style="width: 200px" placeholder="1980-01-01" ng-model="staff.dob" class="medium"/></div>
+                            <label> Chứng minh nhân dân</label>
+                            <div><input type="text" class="medium" ng-model="staff.cmnd" style="width: 200px"/></div>
+                        </div>
+                        <div class="section ">
+                            <label>Giới tính</label>
+                            <div>
+                                <div>
+                                    <input type="radio" name="opinions" ng-model="staff.sex" id="radio-1" value="1"  class="ck"/>
+                                    <label for="radio-1">Nam</label>
+                                </div>
+                                <div>
+                                    <input type="radio" name="opinions" ng-model="staff.sex" id="radio-2" value="0" checked="checked" class="ck"/>
+                                    <label for="radio-2" >Nữ</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section ">
+                            <label>Nguyên quán</label>
+                            <div>
+                                <input type="text" ng-model="staff.fatherland" class="validate[required,custom[email]]  large" >
+                            </div>
+                            <label>Địa chỉ thường trú</label>
+                            <div>
+                                <input type="text" ng-model="staff.address_permanent" class="validate[required,custom[email]]  large">
+                            </div>
+                            <label>Địa chỉ tạm trú</label>
+                            <div>
+                                <input type="text" ng-model="staff.address_temporary" class="validate[required,custom[email]]  large">
+                            </div>
+                        </div>
+                        <div class="section">
+                            <label>Lương</label>
+                            <div>
+                                <input type="text" ng-keyup="formatNumber($event)" value="{{staff.salary|number}}" class="small">
+                            </div>
+                            <label>Vị trí</label>
+                            <div style="width: 155px">
+                                <select id="staff_position" ng-model="staff.position" class="chzn-select"></select>
+                            </div>
+                        </div>
+                        <div class="section">
+                            <label>Ngày vào làm</label>
+                            <div>
+                                <input type="text" ng-model="staff.start_day" placeholder="1980-01-01" class="small" >
+                            </div>
+                            <label>Ngày kết thúc</label>
+                            <div>
+                                <input type="text" ng-model="staff.end_day" placeholder="1980-01-01" class="small">
+                            </div>
+                        </div>
+
+                        <div class="section last">
+                            <div>
+                                <a class="uibutton submit_form" ng-click="saveStaff()">Lưu</a>
+                                <a class="uibutton special" href="#staff">cancel</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+                <div class="clear"></div>
+
+
+            </div>
+        </div>
+</div>

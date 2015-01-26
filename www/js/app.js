@@ -219,4 +219,32 @@ config(function($stateProvider, $urlRouterProvider) {
       },
       controller: 'returnOrderController'
     })
+    .state('trucks', {
+      url: "/trucks",
+      views: {
+          "content": { templateUrl: '/www/partials/temp-trucks.html'}
+      },
+      controller: 'trucksController'
+    })
+    .state('staff', {
+      url: "/staff",
+      views: {
+          "content": { templateUrl: '/www/partials/temp-staff.html'}
+      },
+      controller: 'staffController'
+    })
+  .state('staff-create', {
+      url: "/staff-create",
+      views: {
+          "content": { templateUrl: '/www/partials/temp-staff-create.html'}
+      },
+      controller: 'createStaffController'
+  })
+  .state('staff-edit', {
+      url: "/staff-edit/:id",
+      views: {
+          "content": { templateUrl: '/www/partials/temp-staff-create.html'}
+      },
+      controller: 'createStaffController'
+  })
 });

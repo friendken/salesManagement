@@ -1,0 +1,80 @@
+<div ng-app="dashboard" ng-controller="trucksController">
+    <script type="text/ng-template" id="create_truck">
+        <div class="modal-header">
+            <h3 class="modal-title">Thêm xe</h3>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class='section'>
+                    <label style="width: 65px;">Biển số xe</label>
+                    <div><input type='text' ng-model='truck.name'/></div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <a class="uibutton " ng-click='ok()'>Lưu</a>
+            <a class="uibutton special" ng-click='cancel()'>Hủy</a>
+        </div>
+    </script>
+    <div class="onecolumn" style="margin-top: 10px">
+        <div class="header">
+            <span ><span class="ico  gray random"></span> Danh sách xe</span>
+        </div><!-- End header -->
+        <div class=" clear"></div>
+        <div class="content"  >
+            <div class="section">
+                <table>
+                    <tr>
+                        <td>
+                            <a class="uibutton icon confirm add" ng-click="openPopup()" >Thêm xe</a>
+                        </td>
+                        <td>
+                            <div class="iconBox color">
+                                <img src="/www/img/icon/zoom.png">
+                            </div>
+                        </td>
+                        <td>
+                            <input type="text" ng-model="searchTrucks" class="small"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <form>
+                <div class="tableName">
+                    <table id="tabel_product_type" class="display">
+                        <thead>
+                        <tr>
+                            <th><div class="th_wrapp">STT</div></th>
+                            <th><div class="th_wrapp">Biển số xe</div></th>
+                            <th><div class="th_wrapp">Ngày nhập</div></th>
+                            <th><div class="th_wrapp">Edit</div></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="(key,item) in trucks | filter:searchTrucks" class="odd gradeX">
+                            <td>{{key + 1}}</td>
+                            <td>{{item.name}}</td>
+                            <td>{{item.created}}</td>
+                            <td>
+                                <span>
+                                    <span class="tip">
+                                        <a ng-click="openPopup(null,$event)" data-id="{{item.id}}" title="Edit">
+                                            <img src="/www/img/icon/icon_edit.png">
+                                        </a>
+                                    </span>
+                                    <span class="tip">
+                                        <a id="{{item.id}}" ng-click="deleteTruck($event)" class="Delete"  title="Delete">
+                                            <img src="/www/img/icon/icon_delete.png">
+                                        </a>
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

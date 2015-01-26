@@ -37,8 +37,7 @@ class Order_model extends MY_model {
                                 (select `name` from customers where id = o.customer_id) as customer_name,
                                 (select address from customers where id = o.customer_id) as customer_address
                                 from `'.$this->table_name.'` as o
-                                where shipment_id in (select id from shipments where truck_id = '.$truck_id.') 
-                                and `status` = 5')
+                                where shipment_id in (select id from shipments where truck_id = '.$truck_id.' and `status` != 3)')
                         ->result();
     }
 }

@@ -95,7 +95,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             $http({method: 'GET', url: $scope.url, reponseType: 'json'}).
                 success(function(data, status) {
                     $scope.product_type = data.product_type;
-                    renderSelect.initDataSelect(data.product_type,'#product-type');
+                    renderSelect.initDataSelect(data.product_type,'#product-type','Loại sản phẩm');
                     renderSelect.initSelect();
                     $scope.product.product_type = data.product_type[0];
                     $scope.product.sale_price = [{id:1, name: '',quantity: '',price: '',parent_name: ''}];
@@ -125,16 +125,21 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             $('.list_product_price').append('<tr class="product_price" id="tr_product_price_' + new_id +'">' + template.html() + '</tr>');
             var new_template = $('#tr_product_price_' + new_id);
             $('#tr_product_price_' + new_id + ' input').val('');
+            $('#tr_product_price_' + new_id).children('td:nth(3)').html('<input type="text" onkeyup="angular.element(this).scope().formatNumber()"/>');
             $('#tr_product_price_' + new_id).children('td:nth-child(5)').html('');
             new_template.children('td:nth-child(1)').text(unit + ' =');
         };
+        $scope.formatNumber = function(){
+            var value = event.currentTarget.value.replace(/,/ig,'');
+            $(event.currentTarget).val(numeral(event.currentTarget.value).format('0,0'));
+        }
         $scope.createProduct = function (){
             var list_price = new Array();
             $('.product_price').each(function(){
                 if($(this).children('td:nth-child(2)').children().val() != '')
                     list_price.push([{quantity: $(this).children('td:nth-child(2)').children().val()},
                                     {name: $(this).children('td:nth-child(3)').children().val()},
-                                    {price: $(this).children('td:nth-child(4)').children().val()}]);
+                                    {price: $(this).children('td:nth-child(4)').children().val().replace(/,/ig,'')}]);
             });
 
             if(list_price.length == 0)
@@ -150,7 +155,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             $http({method: 'post', url: $scope.urlSave,
                data: product, reponseType: 'json'}).
                success(function(data, status) {
-                   showAlert.showSuccess(3000,'lưu thành công');
+                   showAlert.showSuccess(3000,'Lưu thành công');
                    $location.path('product');
                }).
                error(function(data, status) {
@@ -165,7 +170,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                     success(function(data, status) {
                       //==== get data account profile ========
                         $scope.products = data.products;
-                        renderSelect.initDataSelect(data.product_type,'#filter_product_type');
+                        renderSelect.initDataSelect(data.product_type,'#filter_product_type','Loại sản phẩm');
                         renderSelect.initSelect();
                         
                     }).
@@ -175,7 +180,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             };
             $scope.init();
             $scope.deleteProduct = function ($event){
-                if(!confirm('bạn chắc chứ?'))
+                if(!confirm('b?n ch?c ch??'))
                     return false;
                 $http({method: 'GET', url: config.base + '/products/deleteProduct?id=' + $($event.currentTarget).attr('id'), reponseType: 'json'}).
                     success(function(data, status) {
@@ -191,23 +196,25 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             if($stateParams.type === 'wholesale'){
                 $scope.url = config.base + '/warehouse_wholesale/saveAddWholesale';
                 $scope.warehouse_type = 'Sỉ';
-                $scope.warehouse_type_en = 'wholesale'
+                $scope.warehouse_type_en = 'wholesale';
             }
             else{
                 $scope.url = config.base + '/warehouse_retail/saveAddRetail';
                 $scope.warehouse_type = 'Lẻ';
-                $scope.warehouse_type_en = 'retail'
+                $scope.warehouse_type_en = 'retail';
             }
             $scope.wholesale = {};
             $scope.wholesale.partner = 1;
             $scope.wholesale.total_bill = 0;
             $scope.show_total_bill = 0;
+
             $scope.init = function(){
                 $http({method: 'GET', url: config.base + '/warehouse_wholesale/addWholesale', reponseType: 'json'}).
                     success(function(data, status) {
-                      //==== get data account profile ========
-                        renderSelect.initDataSelect(data.customers,'#invoice-customer');
-                        renderSelect.initDataSelect(data.products,'#tr_product_buy_price_1 select.load_product');
+                        $scope.products = data.products;
+                        renderSelect.initDataSelect(data.customers,'#invoice-customer','Khách hàng');
+                        renderSelect.initDataSelect(data.customers,'#invoice-store','Cửa hàng',null,true);
+                        renderSelect.initDataSelect(data.products,'#tr_product_buy_price_1 select.load_product','Sản phẩm',true);
                         renderSelect.initSelect();
 
                     }).
@@ -235,11 +242,11 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 
                 //get select product and clone it
                 var select = $('#tr_product_buy_price_' + tr_id + ' select').html();
-                select = '<select data-placeholder="sản phẩm" onchange="loadUnitProduct(this)" class="chzn-select">' + select +'</select>';
+                select = '<select data-placeholder="" onchange="loadUnitProduct(this)" class="chzn-select">' + select +'</select>';
                 
                 //get select unit prodcut and clone it
                 var select_unit = $('#tr_product_buy_price_' + tr_id + ' select.load_unit').html();
-                select_unit = '<select data-placeholder="sản phẩm" class="chzn-select">' + select_unit +'</select>';
+                select_unit = '<select data-placeholder="" class="chzn-select">' + select_unit +'</select>';
                 
                 //clone template and remove date
                 template.after('<tr class="product_buy_price" id="tr_product_buy_price_' + new_id +'">' + template.html() + '</tr>');
@@ -271,9 +278,15 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             };
             $scope.addWhole = function(){
                 var buy_price = new Array();
+                var product_id;
                 $('.product_buy_price').each(function(){
                    if($(this).children('td:nth-child(4)').children('input').val().trim() !== '' || $(this).children('td:nth-child(6)').children('input').val().trim() !== ''){
-                       buy_price.push({product_id: $(this).children('td:nth-child(3)').children('select').val(),
+                       var that = this;
+                       $scope.products.forEach(function(product){
+                           if(product.code == $(that).children('td:nth-child(3)').children('select').val())
+                               product_id = product.id;
+                       })
+                       buy_price.push({product_id: product_id,
                                         quantity: $(this).children('td:nth-child(4)').children('input').val(),
                                         unit: $(this).children('td:nth-child(5)').children('select').val(),
                                         price: $(this).children('td:nth-child(7)').children('input').val()}); 
@@ -281,17 +294,17 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 });
                 
                 if(buy_price.length === 0){
-                    alert('vui lòng nhập sản phẩn vào kho');
+                    alert('Nhập sản phẩm vào kho');
                     return false;
                 } 
                 $scope.wholesale.buy_price = buy_price;
                 $scope.wholesale.total_bill = $('#txt_hide_total_bill').val();
-                
-                //======= send request =======
+
+                // send request
                 $http({method: 'post', url: $scope.url,
                         data: $scope.wholesale, reponseType: 'json'}).
                         success(function(data, status) {
-                            showAlert.showSuccess(3000,'lưu thành công');
+                            showAlert.showSuccess(3000,'Lưu thành công');
                             if($stateParams.type === 'wholesale')
                                 $location.path('warehouse-divide/' + data);
                         }).
@@ -305,10 +318,10 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 console.log('load warehouse');
                 if ($stateParams.type === 'wholesale'){
                     $scope.urlLoad = config.base + '/warehouse_wholesale';
-                    $scope.product_name_type = 'sỉ';
+                    $scope.product_name_type = 'Sỉ';
                 }else{
                     $scope.urlLoad = config.base + '/warehouse_retail';
-                    $scope.product_name_type = 'lẻ';
+                    $scope.product_name_type = 'Lẻ';
                 }
                 $scope.init = function(){
                     $http({method: 'GET', url: $scope.urlLoad, reponseType: 'json'}).
@@ -343,20 +356,20 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 var quantity = $('#quantity_transfer_' + el.item.product_id).val();
                 if(quantity === '' || isNaN(quantity)){
                     $('#quantity_transfer_' + el.item.product_id).addClass('error');
-                    alert('vui lòng kiểm tra lại số lượng nhập');
+                    alert('kiểm tra sản phẩm nhập');
                     return false;
                 }
                 if(parseInt(quantity) > parseInt(el.item.quantity)){
                     $('#quantity_transfer_' + el.item.product_id).addClass('error');
-                    alert('số lượng trong kho không đủ để chuyển');
+                    alert('Lỗi');
                     return false;
                 }
                 $('#quantity_transfer_' + el.item.product_id).removeClass('error');
-                if(confirm('bạn có chắc muốn chuyển ' + quantity + ' ' + el.item.unit_name + ' ' + el.item.name)){
+                if(confirm('Chuyển ' + quantity + ' ' + el.item.unit_name + ' ' + el.item.name)){
                     $http({method: 'post', url: config.base + '/stock_transfer/doTransfer',
                         data: {product_id: el.item.product_id,quantity: quantity}, reponseType: 'json'}).
                         success(function(data, status) {
-                            showAlert.showSuccess(3000,'chuyển thành công');
+                            showAlert.showSuccess(3000,'Chuyển thành công');
                             $scope.init();
 
                         }).
@@ -371,13 +384,13 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             if($stateParams.type === 'wholesale'){
                 $scope.url = config.base + '/warehouse_wholesale_sale/createBill';
                 $scope.load_product = config.base + '/warehouse_wholesale';
-                $scope.warehouse_type = 'sỉ';
+                $scope.warehouse_type = 'Sỉ';
                 $scope.warehouse_type_en = 'wholesale';
             }
             else{
                 $scope.url = config.base + '/warehouse_retail_sale/createBill';
                 $scope.load_product = config.base + '/warehouse_retail';
-                $scope.warehouse_type = 'lẻ';
+                $scope.warehouse_type = 'Lẻ';
                 $scope.warehouse_type_en = 'retail';
             }
             $scope.wholesale = {};
@@ -389,8 +402,10 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 $http({method: 'GET', url: $scope.load_product, reponseType: 'json'}).
                     success(function(data, status) {
                         $scope.data_customer = data.customers;
-                        renderSelect.initDataSelect(data.customers,'#sale-customer');
-                        renderSelect.initDataSelect(data.products,'#tr_product_buy_price_1 select.load_product',true);
+                        $scope.products = data.products;
+                        renderSelect.initDataSelect(data.customers,'#sale-customer','Khách hàng');
+                        renderSelect.initDataSelect(data.customers,'#sale-store','Cửa hàng',null,true);
+                        renderSelect.initDataSelect(data.products,'#tr_product_buy_price_1 select.load_product','Sản phẩm',true);
                         renderSelect.initSelect();
                     }).
                     error(function(data, status) {
@@ -398,10 +413,16 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                     });
             };
             $scope.init();
-            $scope.selectCustomer = function(){
+            $scope.selectCustomer = function(type){
                 console.log($scope.wholesale.partner);
+                if(type == 'partner')
+                    var compare = $scope.partner_id
+                else
+                    var compare = $scope.store_id
+
+                $scope.wholesale.partner = compare;
                 $scope.data_customer.forEach(function(customer){
-                    if(customer.id == $scope.wholesale.partner){
+                    if(customer.id == compare){
                         $scope.show_customer = customer;
                         return false;
                     }
@@ -429,7 +450,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 
                 //get select unit prodcut and clone it
                 var select_unit = $('#tr_product_buy_price_' + tr_id + ' select.load_unit').html();
-                select_unit = '<select data-placeholder="sản phẩm" class="chzn-select">' + select_unit +'</select>';
+                select_unit = '<select data-placeholder="qui cách" class="chzn-select">' + select_unit +'</select>';
                 
                 //clone template and remove date
                 template.after('<tr class="product_buy_price" id="tr_product_buy_price_' + new_id +'">' + template.html() + '</tr>');
@@ -462,28 +483,35 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             $scope.createBill = function(){
                 
                 var buy_price = new Array();
+                var product_id;
                 $('.product_buy_price').each(function(){
                    if($(this).children('td:nth-child(4)').children('input').val().trim() !== '' || $(this).children('td:nth-child(6)').children('input').val().trim() !== ''){
-                       buy_price.push({product_id: $(this).children('td:nth-child(3)').children('select').val(),
+                       var that = this;
+                       $scope.products.forEach(function(product){
+                            if(product.code == $(that).children('td:nth-child(3)').children('select').val())
+                                product_id = product.product_id;
+                        })
+                       buy_price.push({product_id: product_id,
                                         quantity: $(this).children('td:nth-child(4)').children('input').val(),
                                         unit: $(this).children('td:nth-child(5)').children('select').val(),
-                                        price: $(this).children('td:nth-child(7)').children('input').val()}); 
+                                        price: $(this).children('td:nth-child(7)').children('input').val()});
                    };
                 });
                 
                 if(buy_price.length === 0){
-                    alert('vui lòng chọn sản phẩm bán');
+                    alert('chọn sản phẩm');
                     return false;
-                } 
+                }
+
                 $scope.wholesale.buy_price = buy_price;
                 $scope.wholesale.total_bill = $('#txt_hide_total_bill').val();
-                
+
                 //======= send request =======
                 $http({method: 'post', url: $scope.url,
                         data: $scope.wholesale, reponseType: 'json'}).
                         success(function(data, status) {
                             console.log(data);
-                            showAlert.showSuccess(3000,'lưu thành công');
+                            showAlert.showSuccess(3000,'Lưu thành công');
 //                            $location.path('product');
                         }).
                         error(function(data, status) {
@@ -496,11 +524,11 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             console.log('load bill');
             if ($stateParams.type === 'wholesale'){
                 $scope.urlLoad = config.base + '/warehouse_wholesale_sale';
-                $scope.product_name_type = 'sỉ';
+                $scope.product_name_type = 'Sỉ';
                 $scope.type = 'wholesale';
             }else{
                 $scope.urlLoad = config.base + '/warehouse_retail_sale';
-                $scope.product_name_type = 'lẻ';
+                $scope.product_name_type = 'Lẻ';
                 $scope.type = 'retail';
             }
             $scope.init = function(){
@@ -508,7 +536,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 success(function(data, status) {
                   //==== get data account profile ========
                   $scope.bills = data.bills;
-//                    $('#tabel_product_type').dataTable();
+
                 }).
                 error(function(data, status) {
                   console.log(data);
@@ -665,17 +693,13 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
           $modalInstance.dismiss('cancel');
         };
     })
-    .controller('warehouseStatusController', ['$scope','$http', function($scope,$http) {
+    .controller('warehouseStatusController', ['$scope','$http','renderSelect', function($scope,$http, renderSelect) {
             console.log('load tình trạng kho');
         $scope.init = function (){
             $http({method: 'GET', url: config.base + '/warehouses/getAllWarehouses', reponseType: 'json'}).
                 success(function(data, status) {
-                    var html_select = '';
-                    for(var x in data.products){
-                        html_select += '<option value="' + data.products[x].id + '">' + data.products[x].name + '</option>';
-                    }
-                    $('#filter_product_type').append(html_select);
-                    $scope.initSelect();
+                    renderSelect.initDataSelect(data.products,'#filter_product_type','Sản phẩm');
+                    renderSelect.initSelect();
                     $scope.warehouses = data.warehouses;
                 }).
                 error(function(data, status) {
@@ -695,7 +719,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
          
     }])
     .controller('warehouseOutOfStorgeController', ['$scope','$http', function($scope,$http) {
-            console.log('load tình trạng kho');
+            
         $scope.init = function (){
             $http({method: 'GET', url: config.base + '/warehouses/getProductOutOfStorge', reponseType: 'json'}).
                 success(function(data, status) {
@@ -815,11 +839,11 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 unit = $($event.currentTarget).data('unit');
             
             if(value > quantity){
-                alert("không đủ số lượng");
+                alert("Lỗi");
                 return false;
             }
             if(isNaN(value)){
-                alert("số lượng phải là số");
+                alert("Lỗi");
                 return false;
             }
             $scope.transferList.push({remaining: (quantity - value),product_id: product_id, quantity: value, product_name: product_name, unit: unit});
@@ -827,15 +851,15 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
         };
         $scope.saveTransfer = function(){
             if(!$scope.warehouse_to){
-                alert('vui lòng chọn kho muốn chuyển');
+                alert('Chọn sản phẩm');
                 return false;
             }
             if($scope.transferList.length === 0){
-                alert('vui lòng chọn sản phẩm');
+                alert('Chọn sản phẩm');
                 return false;
             }
             if($scope.warehouse_from == $scope.warehouse_to){
-                alert('bạn không thể chuyển sản phẩm trong cùng một kho');
+                alert('Lỗi');
                 return false;
             }
             $http({method: 'POST', url: config.base + '/stock_transfer/saveWarehouseTransfer' , data: {warehouse_from: $scope.warehouse_from, warehouse_to: $scope.warehouse_to, transfer: $scope.transferList},reponseType: 'json'}).
@@ -893,7 +917,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
         };
         $scope.init();
         $scope.deleteCustomer = function($event){
-            if(!confirm('bạn chắc chứ?'))
+            if(!confirm('Chắc không'))
                 return false;
             $http({method: 'GET', url: config.base + '/customers/deleteCustomer?id=' + $($event.currentTarget).attr('id'), reponseType: 'json'}).
                 success(function(data, status) {
@@ -927,7 +951,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             if(items.type === 'partner')
                 $scope.customer_name = 'Đối tác';
             else
-                $scope.customer_name = 'Khách hàng';
+                $scope.customer_name = 'khách hàng';
             if(items.customer_id){
                 $http({method: 'GET', url: config.base + '/customers/getCustomer?id=' + items.customer_id, reponseType: 'json'}).
                     success(function(data, status) {
@@ -985,8 +1009,9 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                     $scope.customers = data.customers;
                     $scope.products = data.products;
                     $scope.units = data.units;
-                    renderSelect.initDataSelect(data.customers,'#sl_customer');
-                    renderSelect.initDataSelect(data.products,'#tr_order_1 select.load_product');
+                    renderSelect.initDataSelect(data.customers,'#sl_customer','Khách hàng');
+                    renderSelect.initDataSelect(data.customers,'#sl_store','Cửa hàng',null,true);
+                    renderSelect.initDataSelect(data.products,'#tr_order_1 select.load_product','Sản phẩm',true);
                     renderSelect.initSelect();
                 }).
                 error(function(data, status) {
@@ -994,9 +1019,15 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 });
         };
         $scope.init(); 
-        $scope.selectCustomer = function (){
+        $scope.selectCustomer = function (type){
+            if(type == 'customer')
+                var compare = $scope.partner_id
+            else
+                var compare = $scope.store_id
+
+            $scope.order.customer_id = compare;
             for(var x in $scope.customers){
-                if($scope.customers[x].id === $scope.order.customer_id){
+                if($scope.customers[x].id === compare){
                     $scope.address_store = $scope.customers[x].address;
 					$scope.phone_mobile = $scope.customers[x].phone_mobile;
 					$scope.phone_home = $scope.customers[x].phone_home;
@@ -1010,13 +1041,15 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
         $scope.selectProduct = function(){
             var target_id = $(event.currentTarget).closest('tr').data('id');
             $scope.products.forEach(function(product){
-                if(product.id === $('#tr_order_' + target_id).children('td:nth-child(3)').children('select.load_product').val()){
-                    $('#tr_order_' + target_id + ' td:nth-child(5)').html('<select data-placeholder="chọn quy cách" ng-model="select_unit" onchange="angular.element(this).scope().selectUnit()" class="chzn-select load_unit"></select>');
-                    renderSelect.initDataSelect(product.sale_price,'#tr_order_' + target_id + ' select.load_unit');
-                    $('#tr_order_' + target_id).children('td:nth-child(4)').children('input.show_buy').val(numeral(parseInt(product.buy_price[0].price) / parseInt(product.buy_price[0].quantity)).format('0,0'));
-                    $('#tr_order_' + target_id).children('td:nth-child(4)').children('input.show_buy_origin').val(product.buy_price[0].id);
-                    renderSelect.initSelect();
-                    return false;
+                    if(product.code === $('#tr_order_' + target_id).children('td:nth-child(3)').children('select.load_product').val()){
+                        $('#tr_order_' + target_id + ' td:nth-child(5)').html('<select data-placeholder="Quy cách" ng-model="select_unit" onchange="angular.element(this).scope().selectUnit()" class="chzn-select load_unit"></select>');
+                        renderSelect.initDataSelect(product.sale_price, '#tr_order_' + target_id + ' select.load_unit','Quy cách');
+                        if(product.buy_price){
+                            $('#tr_order_' + target_id).children('td:nth-child(4)').children('input.show_buy').val(numeral(parseInt(product.buy_price[0].price) / parseInt(product.buy_price[0].quantity)).format('0,0'));
+                            $('#tr_order_' + target_id).children('td:nth-child(4)').children('input.show_buy_origin').val(product.buy_price[0].id);
+                        }
+                        renderSelect.initSelect();
+                        return false;
                 }
             });
             console.log(target_id);
@@ -1057,8 +1090,8 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 template = $('#tr_order_' + tr_id);
             $('.btn_more_order').data('id',new_id);
             template.after('<tr class="product_order" data-id="'+ new_id +'" id="tr_order_' + new_id + '">' + template.html() + '<tr>');
-            $('#tr_order_' + new_id + ' td:nth-child(3)').html('<select data-placeholder="sản phẩm" ng-model="select_product" onchange="angular.element(this).scope().selectProduct()" class="chzn-select load_product"></select>');
-            renderSelect.initDataSelect($scope.products,'#tr_order_' + new_id + ' select.load_product');
+            $('#tr_order_' + new_id + ' td:nth-child(3)').html('<select data-placeholder="Sản phẩm" ng-model="select_product" onchange="angular.element(this).scope().selectProduct()" class="chzn-select load_product"></select>');
+            renderSelect.initDataSelect($scope.products,'#tr_order_' + new_id + ' select.load_product','Sản phẩm',true);
             $('#tr_order_' + new_id + ' td:nth-child(1)').html('');
             $('#tr_order_' + new_id + ' td:nth-child(7)').html('<input style="width: 50px" ng-model="quantity" onkeyup="angular.element(this).scope().calculatorPrice()" type="text"/>');
             $('#tr_order_' + new_id + ' td:nth-child(2)').html(new_id);
@@ -1066,8 +1099,14 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
         };
         $scope.saveOrder = function(){
             var orders = new Array();
+            var product_id
             $('.product_order').each(function(){
-                var order = {product_id: $(this).children('td:nth-child(3)').children('select').val(),
+                var that = this;
+                $scope.products.forEach(function(product){
+                    if(product.code == $(that).children('td:nth-child(3)').children('select').val())
+                        product_id = product.id;
+                })
+                var order = {product_id: product_id,
                              cost: $(this).children('td:nth-child(4)').children('.show_buy_origin').val(),
                              unit: $(this).children('td:nth-child(5)').children('select').val(),
                              price: $(this).children('td:nth-child(6)').children('.show_sale_origin').val(),
@@ -1077,10 +1116,11 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             });
             $scope.order.orders = orders;
             $scope.order.total_price = $('#txt_hide_total_bill').val();
+
             //send request
             $http({method: 'POST', url: config.base + '/order/addOrder',data: $scope.order, reponseType: 'json'}).
             success(function(data, status) {
-                showAlert.showSuccess(3000,'lưu thành công');
+                showAlert.showSuccess(3000,'Lưu thành công');
 				$location.path('order-management');
             }).
             error(function(data, status) {
@@ -1096,8 +1136,9 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             $http({method: 'GET', url: config.base + '/order/managementOrder', reponseType: 'json'}).
                 success(function(data, status) {
                     $scope.orders = data.orders;
-                    var staff = new Array({id: 1, name: 9874},{id: 9, name: 4569});
-                    renderSelect.initDataSelect(staff, '#order-truck-manager');
+                    renderSelect.initDataSelect(data.trucks, '#order-truck-manager','Xe');
+                    renderSelect.initDataSelect(data.staffs, '#order-staff-driver','Tài xế');
+                    renderSelect.initDataSelect(data.staffs, '#order-staff-subdriver','Lơ xe');
                     renderSelect.initSelect();
                 }).
                 error(function(data, status) {
@@ -1146,7 +1187,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             //send request
             $http({method: 'POST', url: config.base + '/order/createShipment',data: $scope.order, reponseType: 'json'}).
             success(function(data, status) {
-                showAlert.showSuccess(3000,'lưu thành công');
+                showAlert.showSuccess(3000,'Lưu thành công');
                 $location.path('order-divide/' + data.shipment_id);
             }).
             error(function(data, status) {
@@ -1176,7 +1217,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 
                 if(value > parseInt($($event.currentTarget).attr('placeholder'))){
                     $($event.currentTarget).val('');
-                    alert('quá số lượng trong kho');
+                    alert('Quá số lượng trong kho');
                     return false;
                 }
                 //get quantity all warehouse
@@ -1185,7 +1226,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                         total += parseInt(this.value);
                 });
                 if(total > product_quantity){
-                    alert('qua so luong can giao');
+                    alert('Quá số lượng cần giao');
                     $($event.currentTarget).val('');
                     return false;
                 }
@@ -1202,7 +1243,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 });
                 $http({method: 'POST', url: config.base + '/order/updateWarehouse?ship_id=' + $stateParams.shipment_id,data: product, reponseType: 'json'}).
                     success(function(data, status) {
-                      showAlert.showSuccess(3000,'lưu thành công');
+                      showAlert.showSuccess(3000,'Lưu thành công');
                       $location.path('order-management');
                     }).
                     error(function(data, status) {
@@ -1243,7 +1284,10 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 renderSelect.initSelect();
             }, 2000);
         };
-        
+        $scope.formatNumber = function(){
+            var value = $(event.currentTarget).val().replace(/,/ig,'');
+            $(event.currentTarget).val(numeral(value).format('0,0'));
+        }
         $scope.updateStatusShipment = function (shipment_id, status){
             $http({method: 'GET', url: config.base + '/order/updateStatusShipment?shipment_id=' + shipment_id + '&status=' + status, reponseType: 'json'}).
                 success(function(data, status) {
@@ -1257,13 +1301,17 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             var shipment_id = $($event.currentTarget).data('shipment-id'),
                 order_id = $($event.currentTarget).data('order-id'),
                 status_id = $('#status_shipment_' + shipment_id + '_order_' + order_id).val(),
-                price = $('#price_shipment_' + shipment_id + '_order_' + order_id).val()
-            
+                price = $('#price_shipment_' + shipment_id + '_order_' + order_id).val().replace(/,/ig,'')
+
             switch (status_id){
                 case "3":
                     $scope.createBill(order_id,price, shipment_id);
                     break;
                 case "4":
+                    $location.path('order-return/' + order_id);
+                    break;
+                case "6":
+                    $scope.createBillAndReturnStore(order_id,price, shipment_id);
                     $location.path('order-return/' + order_id);
                     break;
                 default:
@@ -1281,6 +1329,15 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                   console.log(data);
                 });
         };
+        $scope.createBillAndReturnStore = function(order_id, price, shipment_id){
+            $http({method: 'POST', url: config.base + '/warehouse_wholesale_sale/createBillAndReturnStore',data: {order_id: order_id,price: price, shipment_id: shipment_id}, reponseType: 'json'}).
+                success(function(data, status) {
+//                    $scope.init();
+                }).
+                error(function(data, status) {
+                    console.log(data);
+                });
+        }
         $scope.updateOrder = function(order_id){
             $http({method: 'GET', url: config.base + '/order/updateOrder?order_id=' + order_id,data: {order_id: order_id}, reponseType: 'json'}).
                 success(function(data, status) {
@@ -1295,35 +1352,47 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             $scope.init = function (){
                 $http({method: 'GET', url: config.base + '/order/returnWarehouse?order_id=' + $stateParams.order_id, reponseType: 'json'}).
                     success(function(data, status) {
-                        if(data.order.length == 0)
-                            $location.path('order-status');
                         $scope.products = data.order;
+                        $scope.retails = data.retail;
                     }).
                     error(function(data, status) {
                       console.log(data);
                     });
             };
             $scope.init(); 
-            $scope.quantityWarehouse = function($event){
-                var value = parseInt($($event.currentTarget).val()),
-                    product_id = parseInt($($event.currentTarget).data('product-id')),
-                    product_quantity = parseInt($('#origin_quantity_' + product_id).val()),
-                    total = 0;
-                console.log(value);
-                console.log(product_id);
-                console.log(product_quantity);
-                
+            $scope.quantityWarehouse = function($event,retail){
+                if(!retail){
+                    var value = parseInt($($event.currentTarget).val()),
+                        product_id = parseInt($($event.currentTarget).data('product-id')),
+                        product_quantity = parseInt($('#origin_quantity_' + product_id).val()),
+                        total = 0;
+                }else{
+                    var value = parseInt($($event.currentTarget).val()),
+                        product_id = parseInt($($event.currentTarget).data('product-id')),
+                        product_quantity = parseInt($('#origin_quantity_retail_' + product_id).val()),
+                        total = 0;
+                }
                 //get quantity all warehouse
-                $('.warehouse_quantity_' + product_id).each(function(){
-                    if(this.value !== '')
-                        total += parseInt(this.value);
-                });
+                if(!retail){
+                    $('.warehouse_quantity_' + product_id).each(function(){
+                        if(this.value !== '')
+                            total += parseInt(this.value);
+                    });
+                }else{
+                    $('.retail_quantity_' + product_id).each(function(){
+                        if(this.value !== '')
+                            total += parseInt(this.value);
+                    });
+                }
                 if(total > product_quantity){
-                    alert('qua so luong can giao');
+                    alert('Quá số lượng cần giao');
                     $($event.currentTarget).val('');
                     return false;
                 }
-                $('#show_quantity_' + product_id).text(product_quantity - total);
+                if(!retail)
+                    $('#show_quantity_' + product_id).text(product_quantity - total);
+                else
+                    $('#show_quantity_retail_' + product_id).text(product_quantity - total);
             };
             $scope.divideWarehouse = function(){
                 var product = new Array;
@@ -1334,14 +1403,177 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                     if(quantity !== '')
                         product.push({product_id: product_id,warehouses_id: warehouse_id,quantity: quantity});
                 });
+                var retail = new Array();
+                $('.retail_quantity').each(function(){
+                    var quantity = $(this).val(),
+                        product_id  = $(this).data('product-id');
+                    if(quantity !== '')
+                        retail.push({product_id: product_id,quantity: quantity});
+                })
+                var data = {product: product,retail: retail};
                 
-                $http({method: 'POST', url: config.base + '/order/getReturnWarehouse?order_id=' + $stateParams.order_id ,data: product, reponseType: 'json'}).
+                $http({method: 'POST', url: config.base + '/order/getReturnWarehouse?order_id=' + $stateParams.order_id ,data: data, reponseType: 'json'}).
                     success(function(data, status) {
-                        showAlert.showSuccess(3000,'lưu thành công');
+                        showAlert.showSuccess(3000,'Lưu thành công');
                         $location.path('order-status');
                     }).
                     error(function(data, status) {
                       console.log(data);
                     });
             };
+    }])
+    .controller('trucksController', ['$scope','$http','$modal', function($scope, $http,  $modal) {
+
+        $scope.init = function (){
+            $http({method: 'GET', url: config.base + '/trucks', reponseType: 'json'}).
+                success(function(data, status) {
+                    $scope.trucks = data.trucks;
+                }).
+                error(function(data, status) {
+                    console.log(data);
+                });
+        };
+        $scope.init();
+        $scope.deleteTruck = function($event){
+            if(!confirm('B?n ch?c ch??'))
+                return false;
+            $http({method: 'GET', url: config.base + '/trucks/deleteTruck?id=' + $($event.currentTarget).attr('id'), reponseType: 'json'}).
+                success(function(data, status) {
+                    $scope.init();
+                }).
+                error(function(data, status) {
+                    console.log(data);
+                });
+        }
+        $scope.openPopup = function(size,$event){
+            if($event)
+                var truck_id = $($event.currentTarget).data('id');
+            var modalInstance = $modal.open({
+                templateUrl: 'create_truck',
+                controller: 'createTruckCustomerController',
+                size: size,
+                resolve: {
+                    items: function () {
+                        return {truck_id: truck_id};
+                    }
+                }
+            });
+            modalInstance.result.then(function () {
+                $scope.init();
+            });
+        };
+    }])
+    .controller('createTruckCustomerController', function ($scope,$http, $modalInstance, items) {
+        $scope.truck = {};
+        if(items.truck_id){
+            $http({method: 'GET', url: config.base + '/trucks/getTruck?id=' + items.truck_id, reponseType: 'json'}).
+                success(function(data, status) {
+                    $scope.truck = data.truck;
+                }).
+                error(function(data, status) {
+                    console.log(data);
+                });
+        }
+
+        $scope.ok = function () {
+            if(items.truck_id)
+                var url = config.base + '/trucks/editTruck?id=' + items.truck_id;
+            else
+                var url = config.base + '/trucks/createTruck';
+
+            if(!$scope.truck.name){
+                alert('vui lòng chọn xe');
+                return false;
+            }
+
+            $http({method: 'POST', url: url,data: $scope.truck, reponseType: 'json'}).
+                success(function(data, status) {
+                    $modalInstance.close(data);
+                }).
+                error(function(data, status) {
+                    console.log(data);
+                });
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    })
+    .controller('createStaffController', ['$scope','$http','$location','$stateParams','renderSelect', function($scope, $http, $location, $stateParams, renderSelect) {
+        $scope.staff = {};
+        $scope.init = function(staff_id){
+            $http({method: 'GET', url: config.base + '/staff/detailStaff?id=' + staff_id, reponseType: 'json'}).
+                success(function(data, status) {
+                    $scope.staff = data.staff;
+
+                }).
+                error(function(data, status) {
+                    console.log(data);
+                });
+        }
+        $scope.getPosition = function(){
+            $http({method: 'GET', url: config.base + '/staff/getPosition', reponseType: 'json'}).
+                success(function(data, status) {
+                    renderSelect.initDataSelect(data.position,'#staff_position','Vị trí',null,null,$scope.staff.position)
+                    renderSelect.initSelect();
+                }).
+                error(function(data, status) {
+                    console.log(data);
+                });
+        }
+        
+        if($stateParams.id)
+            $scope.init($stateParams.id);
+        
+        $scope.getPosition();
+        $scope.uploadFile = function(files) {
+            var fd = new FormData();
+            //Take the first selected file
+            fd.append("file", files[0]);
+
+            $http.post(config.base + '/staff/uploadAvatar', fd, {
+                withCredentials: true,
+                headers: {'Content-Type': undefined },
+                transformRequest: angular.identity
+            }).success(function(data){
+                $('.avartar img').prop('src','www/img/avatar_staff/' + data);
+                $scope.staff.avatar = data;
+            }).error();
+
+        };
+        $scope.formatNumber = function($event){
+            var value = $($event.currentTarget).val();
+            $scope.staff.salary = value.replace(/,/ig,'');
+            $($event.currentTarget).val(numeral($scope.staff.salary).format('0,0'))
+        }
+
+        $scope.saveStaff = function() {
+            if($stateParams.id)
+                var url = config.base + '/staff/editStaff?id=' + $stateParams.id;
+            else
+                var url = config.base + '/staff/createStaff';
+
+            $http({method: 'POST', url: url,data: $scope.staff, reponseType: 'json'}).
+                success(function(data, status) {
+                    $location.path('staff');
+                }).
+                error(function(data, status) {
+                    console.log(data);
+                });
+        }
+    }])
+    .controller('staffController', ['$scope','$http','$location', function($scope, $http, $location) {
+        $scope.init = function(){
+            $http({method: 'POST', url: config.base + '/staff', reponseType: 'json'}).
+                success(function(data, status) {
+                    $scope.staffs = data.staffs;
+                }).
+                error(function(data, status) {
+                    console.log(data);
+                });
+        }
+        $scope.init();
+        $scope.editStaff = function(){
+            $location.path('staff-edit/' + this.item.id);
+        }
     }])

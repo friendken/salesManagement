@@ -52,4 +52,9 @@ class Products_model extends MY_model {
         }
         return $products;
     }
+    public function get_by_code($code){
+        return $this->db->where('code',$code)
+                        ->get($this->table_name)
+                        ->row();
+    }
 }

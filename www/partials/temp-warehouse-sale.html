@@ -10,10 +10,16 @@
         <div class="content">
             <form ng-submit="createBill()">
                 <div class='section'>
-                    <label>chọn khách hàng</label>
+                    <label>chọn theo khách hàng</label>
                     <div style="width: 200px">
                         <input type="hidden" id="type_sale_product" value="{{warehouse_type_en}}"/>
-                        <select data-placeholder="chọn khách hàng" ng-change="selectCustomer()" id="sale-customer" class="chzn-select" ng-model="wholesale.partner"></select>
+                        <select data-placeholder="chọn khách hàng" ng-change="selectCustomer('partner')" id="sale-customer" class="chzn-select" ng-model="partner_id"></select>
+                    </div>
+                </div>
+                <div class='section'>
+                    <label>chọn theo cửa hàng</label>
+                    <div style="width: 200px">
+                        <select data-placeholder="chọn khách hàng" ng-change="selectCustomer('store')" id="sale-store" class="chzn-select" ng-model="store_id"></select>
                     </div>
                 </div>
                 <div class='section' ng-if="show_customer.length != 0">

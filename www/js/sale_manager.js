@@ -16,7 +16,7 @@ function calculatorMoney(el) {
     if (price == '' || isNaN(price))
         return false;
     if (quantity > storge){
-        alert('kho trong nhà đã hết, vui lòng nhập thêm sản phẩm để có thê bán hàng')
+        alert('hết sản phẩm')
         target.children('td:nth-child(4)').children().val('')
         return false;
     }
@@ -48,7 +48,7 @@ function loadUnitProduct(el,sale) {
             for (var x in respone.unit) {
                 html_select += '<option value="' + respone.unit[x].id + '">' + respone.unit[x].name + '</option>'
             }
-            $('#tr_product_buy_price_' + id + ' td.load_unit').html('<select onchange="selectPrice(this,true)" data-placeholder="chọn quy cách" class="chzn-select">' + html_select + '</select>');
+            $('#tr_product_buy_price_' + id + ' td.load_unit').html('<select onchange="selectPrice(this,true)" data-placeholder="ch�?n quy cách" class="chzn-select">' + html_select + '</select>');
             $(' select').not("select.chzn-select,select[multiple],select#box1Storage,select#box2Storage").selectmenu({
                 style: 'dropdown',
                 transferClasses: true,
@@ -95,7 +95,7 @@ function dividedQuantity(el){
             total += parseInt(this.value)
     })
     if(warehouse_primary - total < 0){
-        alert("hết số lượng nhập kho");
+        alert("hết sản phẩm trong kho");
         el.value = '';
         return false;
     }

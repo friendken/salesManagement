@@ -3,17 +3,23 @@
         <div class="header">
             <span>
                 <span class="ico gray window"></span>
-                Bán Hàng {{warehouse_type}}
+                Nhập hàng {{warehouse_type}}
             </span>
         </div>
         <div class="clear"></div>
         <div class="content">
             <form ng-submit="addWhole()">
                 <div class='section'>
-                    <label>chọn đối tác</label>
+                    <label>chọn theo đối tác</label>
                     <div style="width: 200px">
                         <input type="hidden" id="type_sale_product" value="{{warehouse_type_en}}"/>
-                        <select data-placeholder="chọn loại sản phẩm" id="invoice-customer" class="chzn-select" ng-model="wholesale.partner"></select>
+                        <select data-placeholder="Chọn khách hàng" id="invoice-customer" class="chzn-select" ng-model="wholesale.partner"></select>
+                    </div>
+                </div>
+                <div class='section'>
+                    <label>chọn cửa hàng</label>
+                    <div style="width: 200px">
+                        <select data-placeholder="Chọn cửa hàng" id="invoice-store" class="chzn-select" ng-model="wholesale.partner"></select>
                     </div>
                 </div>
                 <div class='section'>

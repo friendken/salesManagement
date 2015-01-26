@@ -107,4 +107,26 @@ class Warehouse_wholesale_sale extends CI_Controller {
         }
         echo json_encode($data_inset);
     }
+    public function createBillAndReturnStore(){
+        $data = $this->input->json();
+        $this->load->model('order_model','order');
+        $order = $this->order->get_by_id($data->order_id);
+        $data_inset = array('partner' => $order->customer_id,'total_bill' => $data->price);
+
+        #init array for order detail
+        foreach($order->order_detail as $key => $row){
+            $data_inset['buy_price'][] = (object)array('product_id' => $row->product_id,
+                'quantity' => $row->quantity,
+                'price' => $row->total);
+        }
+        
+        $this->createBill((object)$data_inset,true);
+        $this->order->update(array('delivery' => "1"),array('id' => $data->order_id));
+        $shipment = $this->order->get_array(array('shipment_id' => $data->shipment_id,'delivery' => '0'));
+        if(count($shipment) == 0){
+            $this->load->model('shipments_model');
+            $this->shipments_model->update(array('status' => '3'),array('id' => $data->shipment_id));
+        }
+        echo json_encode($data_inset);
+    }
 }

@@ -20,10 +20,10 @@
             <div class='section'>
                 <label>Điện thoại bàn</label>
                 <div>
-                    <table ng-if="customer.phone_home.length != 0" data-class="list_phone_home" class="list_phone_home">
-                        <tr ng-repeat="item in customer.phone_home">
+                    <table ng-if="customer.phone_home.length != 0 && customer.phone_home" data-class="list_phone_home" class="list_phone_home">
+                        <tr ng-repeat="(key,item) in customer.phone_home">
                             <td><input type='text' value="{{item}}" class="phone_home"/></td>
-                            <td>
+                            <td ng-if='key == 0'>
                                 <div class="iconBox color">
                                     <a ng-click="morePhone($event)"  title="Thêm số điện thoại">
                                         <img src="/www/img/icon/directional_down.png">
@@ -32,7 +32,7 @@
                             </td>
                         </tr>
                     </table>
-                    <table ng-if="customer.phone_home.length == 0" data-class="list_phone_home" class="list_phone_home">
+                    <table ng-if="customer.phone_home.length == 0 || !customer.phone_home" data-class="list_phone_home" class="list_phone_home">
                         <tr>
                             <td><input type='text' class="phone_home"/></td>
                             <td>
@@ -49,10 +49,10 @@
             <div class='section'>
                 <label>Điện thoại di động</label>
                 <div>
-                    <table ng-if="customer.phone_mobile != 0" data-class="list_phone_mobile" class="list_phone_mobile">
-                        <tr ng-repeat="item in customer.phone_mobile">
+                    <table ng-if="customer.phone_mobile != 0 && customer.phone_mobile" data-class="list_phone_mobile" class="list_phone_mobile">
+                        <tr ng-repeat="(key, item) in customer.phone_mobile">
                             <td><input type='text' value="{{item}}" class="phone_mobile"/></td>
-                            <td>
+                            <td ng-if='key == 0'>
                                 <div class="iconBox color">
                                     <a ng-click="morePhone($event)"  title="Thêm điện thoại">
                                         <img src="/www/img/icon/directional_down.png">
@@ -61,7 +61,7 @@
                             </td>
                         </tr>
                     </table>
-                    <table ng-if="customer.phone_mobile == 0" data-class="list_phone_mobile" class="list_phone_mobile">
+                    <table ng-if="customer.phone_mobile == 0 || !customer.phone_mobile" data-class="list_phone_mobile" class="list_phone_mobile">
                         <tr>
                             <td><input type='text' class="phone_mobile"/></td>
                             <td>

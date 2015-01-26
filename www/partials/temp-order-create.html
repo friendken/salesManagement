@@ -12,14 +12,25 @@
                 <div class='section'>
                     <label>chọn đối tác</label>
                     <div style="width: 200px">
-                        <select data-placeholder="chọn khách hàng" ng-change="selectCustomer()" id="sl_customer" class="chzn-select" ng-model="order.customer_id"></select>
+                        <select data-placeholder="chọn khách hàng" ng-change="selectCustomer('customer')" id="sl_customer" class="chzn-select" ng-model="partner_id"></select>
+
                     </div>
+
+                </div>
+                <div class='section'>
+                    <label>chọn đối tác</label>
+                    <div style="width: 200px">
+                        <select data-placeholder="chọn khách hàng" ng-change="selectCustomer('store')" id="sl_store" class="chzn-select" ng-model="store_id"></select>
+                    </div>
+
+                </div>
+                <div class="section">
                     <label>Địa chỉ</label>
                     <div style="width: 200px"><h6>{{address_store}}</h6></div>
-					<label>Di động</label>
-					<div style="width: 200px"><h6>{{phone_mobile[0]}}</h6></div>
-					<label>ĐT bàn</label>
-					<div style="width: 200px"><h6>{{phone_home[0]}}</h6></div>
+                    <label>Di động</label>
+                    <div style="width: 200px"><h6>{{phone_mobile[0]}}</h6></div>
+                    <label>ĐT bàn</label>
+                    <div style="width: 200px"><h6>{{phone_home[0]}}</h6></div>
                     <label ng-if="total_debt != null && total_debt != 0">Tổng nợ :</label>
                     <div ng-if="total_debt != null && total_debt != 0">{{total_debt | number}} - <a href="#total-debit-customer/{{customer.id}}">xem chi tiết</a></div>
                 </div>

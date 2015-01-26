@@ -21,6 +21,11 @@ class Welcome extends CI_Controller {
 	{
 		$this->load->view('welcome_message');
 	}
+    public function test(){
+        $this->load->library('convert_unit');
+        $result = $this->convert_unit->convert_quantity(23,1);
+        var_dump($result);
+    }
 }
 
 /* End of file welcome.php */

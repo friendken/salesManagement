@@ -30,14 +30,19 @@ class Order extends CI_Controller {
         $this->load->model('order_detail_model','order_detail');
         $order_id = $this->order->insert(array('customer_id' => $order->customer_id,'total_price' => $order->total_price));
         foreach($order->orders as $key => $row){
+            $this->load->model('products_sale_price_model','products_sale');
             $order->orders[$key]->order_id = $order_id;
             $this->order_detail->insert($row);
         }
         echo json_encode('success');
     }
     public function managementOrder(){
+        $this->load->model('trucks_model','trucks');
+        $this->load->model('staff_model','staff');
         $orders = $this->order->get_all();
-        echo json_encode(array('orders' => $orders));
+        $trucks = $this->trucks->get_array(array('active' => 0));
+        $staffs = $this->staff->get_array(array('active' => 0));
+        echo json_encode(array('orders' => $orders,'trucks' => $trucks,'staffs' => $staffs));
     }
     public function createShipment(){
         $shipment = $this->input->json();
@@ -60,6 +65,9 @@ class Order extends CI_Controller {
         $this->load->model('warehouse_wholesale_model','warehouse_wholesale');
         $this->load->model('shipments_model');
         $this->load->model('products_sale_price_model','sale_price');
+        $this->load->library('convert_unit');
+        $this->load->model('warehouse_retail_model','warehouse_retail');
+
         $shipment = $this->shipments_model->get_by_id($shipment_id);
         #get orders
         $orders = $this->order->get_array(array('shipment_id' => $shipment_id));
@@ -74,23 +82,21 @@ class Order extends CI_Controller {
         $arr = array();
         
         foreach ($order_detail as $key => $row){
-            $unit = $this->sale_price->get_unit_retail($row->product_id);
-            if($unit->id == $row->unit){
-                $this->load->model('warehouse_retail_model','warehouse_retail');
+            $unit_primary = $this->sale_price->get_unit_primary($row->product_id);
+            if($unit_primary && $unit_primary->id != $row->unit) {
+                $quantity = $this->convert_unit->convert_quantity($row->unit, $row->quantity);
                 $retail = $this->warehouse_retail->get_by_product_id($row->product_id);
                 if(count($retail) > 0)
-                    $this->warehouse_retail->update(array('quantity' => ((int)$retail->quantity - (int)$row->quantity)),array('product_id' => $row->product_id));
+                    $this->warehouse_retail->update(array('quantity' => ((int)$retail->quantity - (int)$quantity)),array('product_id' => $row->product_id));
                 else
-                    $this->warehouse_retail->insert(array('quantity' => $row->quantity,
-                                                          'product_id' => $row->product_id,
-                                                          'unit' => $row->unit));
+                    $this->warehouse_retail->insert(array('quantity' => $quantity,'product_id' => $row->product_id,'unit' => $row->unit));
             }else{
                 if(isset($arr[$row->product_id]))
                     $arr[$row->product_id]['quantity'] += (int)$row->quantity;
                 else{
                     $arr[$row->product_id] = array('product_name' => $row->product_name,
-                                                   'quantity' => (int)$row->quantity,
-                                                   'warehouse' => $this->warehouses_detail->get_array(array('product_id' => $row->product_id)));
+                        'quantity' => (int)$row->quantity,
+                        'warehouse' => $this->warehouses_detail->get_array(array('product_id' => $row->product_id)));
                     $wholse = $this->warehouse_wholesale->get_by_product_id($row->product_id);
                     if(count($wholse) > 0)
                         $arr[$row->product_id]['warehouse'][] = array('id' => 0,'warehouses_id' => 0,'warehouses_name' => 'kho sỉ','quantity' => $wholse->quantity);
@@ -146,33 +152,36 @@ class Order extends CI_Controller {
         $this->load->model('order_detail_model','order_detail');
         $this->load->model('products_sale_price_model','sale_price');
         $order = $this->order_detail->get_order_detail($order_id);
+//        echo json_encode($order);die;
         $warehouses = $this->warehouses_model->get_all();
         $wholesale = array();
+        $retail = array();
         foreach($order as $key => $row){
             $unit = $this->sale_price->get_unit_retail($row->product_id);
             if($unit->id == $row->unit){
-                $this->load->model('warehouse_retail_model','warehouse_retail');
-                $retail = $this->warehouse_retail->get_by_product_id($row->product_id);
-                if(count($retail) > 0)
-                    $this->warehouse_retail->update(array('quantity' => ((int)$retail->quantity + (int)$row->quantity)),array('product_id' => $row->product_id));
-                else
-                    $this->warehouse_retail->insert(array('quantity' => $row->quantity,
-                                                          'product_id' => $row->product_id,
-                                                          'unit' => $row->unit));
+                array_push($retail,$row);
+//                $this->load->model('warehouse_retail_model','warehouse_retail');
+//                $retail = $this->warehouse_retail->get_by_product_id($row->product_id);
+//                if(count($retail) > 0)
+//                    $this->warehouse_retail->update(array('quantity' => ((int)$retail->quantity + (int)$row->quantity)),array('product_id' => $row->product_id));
+//                else
+//                    $this->warehouse_retail->insert(array('quantity' => $row->quantity,
+//                                                          'product_id' => $row->product_id,
+//                                                          'unit' => $row->unit));
             }else{
                 $row->warehouse = $warehouses;
                 array_push($wholesale, $row);
             }
         }
-        if(count($wholesale) == 0){
-            $this->order->update(array('status' => '4','delivery' => '1'),array('id' => $order_id));
-            $shipment = $this->order->get_array(array('shipment_id' => $order_id,'delivery' => '0'));
-            if(count($shipment) == 0){
-                $this->load->model('shipments_model');
-                $this->shipments_model->update(array('status' => '3'),array('id' => $shipment->id));
-            }
-        }
-        echo json_encode(array('order' => $wholesale));
+//        if(count($wholesale) == 0){
+//            $this->order->update(array('status' => '4','delivery' => '1'),array('id' => $order_id));
+//            $shipment = $this->order->get_array(array('shipment_id' => $order_id,'delivery' => '0'));
+//            if(count($shipment) != 0){
+//                $this->load->model('shipments_model');
+//                $this->shipments_model->update(array('status' => '3'),array('id' => $shipment->id));
+//            }
+//        }
+        echo json_encode(array('order' => $wholesale,'retail' => $retail));
     }
     public function getRestOrder(){
         $truck_id = $this->input->get('truck_id');
@@ -180,15 +189,27 @@ class Order extends CI_Controller {
         echo json_encode(array('orders' => $orders));
     }
     public function getReturnWarehouse(){
-        $product = $this->input->json();
+        $data = $this->input->json();
         $order_id = $this->input->get('order_id');
         $this->load->model('warehouses_detail_model','warehouses_detail');
+        $this->load->model('warehouse_retail_model','warehouse_retail');
+        $product = $data->product;
+        #return warehouse whole
         foreach($product as $key => $row){
             $warehouse = $this->warehouses_detail->get_product_storge($row->product_id, $row->warehouses_id);
             if(count($warehouse) > 0)
                 $this->warehouses_detail->update(array('quantity' => ((int)$warehouse->quantity + (int)$row->quantity)),array('id' => $warehouse->id));
             else
                 $this->warehouses_detail->insert(array('product_id' => $row->product_id,'warehouses_id' => $row->warehouses_id,'quantity' => $row->quantity));
+        }
+        #return retail warehouse
+        $retail = $data->retail;
+        foreach($retail as $key => $row){
+            $retail_product = $this->warehouse_retail->get_by_product_id($row->product_id);
+            if(count($retail_product) > 0)
+                $this->warehouse_retail->update(array('quantity' => ((int)$retail_product->quantity + (int)$row->quantity)),array('product_id' => $row->product_id));
+            else
+                $this->warehouse_retail->insert(array('product_id' => $row->product_id,'quantity' => $row->quantity));
         }
         
         $orders = $this->order->get_array(array('id' => $order_id));

@@ -38,13 +38,15 @@ class Warehouse_retail_sale extends CI_Controller {
         #create bill detail
         $bill_detail = array();
         foreach($bill->buy_price as $key => $row){
+            $this->load->library('convert_unit');
+            $quantity = $this->convert_unit->convert_quantity($row->unit,$row->quantity);
             $bill_detail = array('bill_id' => $bill_id,
                                  'product_id' => $row->product_id,
-                                 'quantity' => $row->quantity,
+                                 'quantity' => $quantity,
                                  'price' => $row->price);
             $this->bill_detail->insert($bill_detail);
             #update quantity of product
-            $update_warehouse = $this->updateQuantityWarehouse($row->product_id, $row->quantity);
+            $update_warehouse = $this->updateQuantityWarehouse($row->product_id, $quantity);
             if($update_warehouse == true){
                 $this->updateQuantityBuy($row->product_id,$row->quantity);
             }

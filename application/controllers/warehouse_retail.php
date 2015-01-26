@@ -31,29 +31,30 @@ class Warehouse_retail extends CI_Controller {
 
     public function saveAddRetail() {
         $retail = $this->input->json();
-        //insert product_buy_price
-        $buy_list = array();
-        $reatail_list = array();
+
+        #insert product_buy_price
         foreach ($retail->buy_price as $item => $value) {
-            $unit_primary = $this->product_sale->get_unit_retail($value->product_id);
+
+            $this->load->library('convert_unit');
+            $quantity = $this->convert_unit->convert_quantity($value->unit,$value->quantity);
             $buy_list = array('product_id' => $value->product_id,
                 'price' => $value->price,
                 'warehouse' => 'retail',
-                'unit' => $unit_primary->id,
-                'quantity' => $value->quantity,
+                'unit' => $value->unit,
+                'quantity' => $quantity,
                 'remaining_quantity' => $value->quantity,
                 'partner' => $retail->partner);
             $this->product_buy->insert($buy_list);
-            //insert or update quantity
 
+            #insert or update quantity
             $retail_product = $this->retail->get_by_product_id($value->product_id);
 
             if (count($retail_product) > 0) {
-                $retail_list = array('quantity' => ((int) $value->quantity + (int) $retail_product->quantity));
+                $retail_list = array('quantity' => ((int) $quantity + (int) $retail_product->quantity));
                 $this->retail->update($retail_list, array('product_id' => $value->product_id));
             } else {
                 $retail_list = array('quantity' => $value->quantity,
-                    'unit' => $unit_primary->id,
+                    'unit' => $value->unit,
                     'product_id' => $value->product_id);
                 $this->retail->insert($retail_list);
             }

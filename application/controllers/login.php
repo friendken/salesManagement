@@ -23,7 +23,7 @@ class Login extends CI_Controller {
     public function index() {
         $this->load->helper('html');
         $this->load->helper('url');
-        $this->load->view('login', array('data' => 'Hảo đẹp trai'));
+        $this->load->view('login', array('data' => 'H?o ??p trai'));
     }
 
 }

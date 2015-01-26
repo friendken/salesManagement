@@ -14,9 +14,7 @@
                             </div>
                         </td>
                         <td style="width: 180px">
-                            <select id="filter_product_type" ng-model="filter_product.product_type" data-placeholder="chọn loại sản phẩm" class="chzn-select">
-                                
-                            </select>
+                            <select id="filter_product_type" ng-model="filter_product.product_type" data-placeholder="chọn loại sản phẩm" class="chzn-select"></select>
                         </td>
                         <td>
                             <div class="iconBox color">
@@ -34,17 +32,17 @@
                     <table class="display" id="tabel_product">
                         <thead>
                             <tr>
-                                <th><div class="th_wrapp">id</div></th>
-                                <th><div class="th_wrapp">Tên Sản Phẩm</div></th>
-                                <th><div class="th_wrapp">Loại Sản Phẩm</div></th>
+                                <th><div class="th_wrapp">STT</div></th>
+                                <th><div style="cursor: pointer;" class="th_wrapp" ng-click="predicate = 'name'; reverse=!reverse">Tên sản phẩm</div></th>
+                                <th><div style="cursor: pointer;" class="th_wrapp" ng-click="predicate = 'product_type_name'; reverse=!reverse">Loại sản phẩm</div></th>
                                 <th><div class="th_wrapp">Ngày tạo</div></th>
-                                <th><div class="th_wrapp">action</div></th>
+                                <th><div class="th_wrapp">Edit</div></th>
                             </tr>
                         </thead>
                         <tbody id="show_product">
-                            <tr ng-repeat="(key,item) in products | filter:filter_product" class="odd gradeX" data-id="{{item.id}}">
+                            <tr ng-repeat="(key,item) in products | filter:filter_product  | orderBy:predicate:reverse" class="odd gradeX" data-id="{{item.id}}">
                                 <td>{{key + 1}}</td>
-                                <td>{{item.name}}</td>
+                                <td align='left'>{{item.name}}</td>
                                 <td>{{item.product_type_name}}</td>
                                 <td>{{item.created}}</td>
                                 <td>

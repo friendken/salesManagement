@@ -1,0 +1,70 @@
+<div ng-app="dashboard" ng-controller="staffController">
+    <div class="onecolumn" style="margin-top: 10px">
+        <div class="header">
+            <span ><span class="ico  gray random"></span> Danh sách nhân viên</span>
+        </div><!-- End header -->
+        <div class=" clear"></div>
+        <div class="content"  >
+            <div class="section">
+                <table>
+                    <tr>
+                        <td>
+                            <a class="uibutton icon confirm add" href="#staff-create" >Tạo nhân viên</a>
+                        </td>
+                        <td>
+                            <div class="iconBox color">
+                                <img src="/www/img/icon/zoom.png">
+                            </div>
+                        </td>
+                        <td>
+                            <input type="text" ng-model="searchStaff" class="small"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <form>
+                <div class="tableName">
+                    <table id="tabel_product_type" class="display">
+                        <thead>
+                        <tr>
+                            <th><div class="th_wrapp">STT</div></th>
+                            <th><div class="th_wrapp">Họ tên</div></th>
+                            <th><div class="th_wrapp">Giới tính</div></th>
+                            <th><div class="th_wrapp">Địa chỉ thường trú</div></th>
+                            <th><div class="th_wrapp">Vị trí</div></th>
+                            <th><div class="th_wrapp">Ngày làm</div></th>
+                            <th><div class="th_wrapp">Chi tiết</div></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="(key,item) in staffs | filter:searchStaff" class="odd gradeX">
+                            <td>{{key + 1}}</td>
+                            <td>{{item.name}}</td>
+                            <td ng-if="item.sex == 1">Nam</td>
+                            <td ng-if="item.sex == 0">Nữ</td>
+                            <td>{{item.address_permanent}}</td>
+                            <td>{{item.position_name}}</td>
+                            <td>{{item.start_day}}</td>
+                            <td>
+                                <span>
+                                    <span class="tip">
+                                        <a ng-click="editStaff()" data-id="{{item.id}}" title="Edit">
+                                            <img src="/www/img/icon/icon_edit.png">
+                                        </a>
+                                    </span>
+                                    <span class="tip">
+                                        <a id="{{item.id}}" ng-click="deleteStaff()" class="Delete"  title="Delete">
+                                            <img src="/www/img/icon/icon_delete.png">
+                                        </a>
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

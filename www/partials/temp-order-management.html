@@ -8,10 +8,10 @@
                 <table class="display data_table" >
                     <thead>
                         <tr>
-                            <th><div class="th_wrapp">stt</div></th>
+                            <th><div class="th_wrapp">STT</div></th>
                             <th><div class="th_wrapp">Ngày</div></th>
-                            <th><div class="th_wrapp">khách hàng</div></th>
-                            <th><div class="th_wrapp">cửa hàng</div></th>
+                            <th><div class="th_wrapp">Khách hàng</div></th>
+                            <th><div class="th_wrapp">Cửa hàng</div></th>
                             <th><div class="th_wrapp">Thành tiền</div></th>
                         </tr>
                     </thead>
@@ -44,9 +44,9 @@
                         <td style="width: 125px">
                             <select data-placeholder="chọn xe" id="order-truck-manager" ng-model="order.truck" ng-change="selectTruck()" class="small chzn-select"></select>
                         </td>
-                        <td><label>Tài xế</label></td>
+                        <td><label>Tài xê</label></td>
                         <td>
-                            <select data-placeholder="chọn tài" ng-model="order.driver" class="chzn-select">
+                            <select data-placeholder="chọn tài" id="order-staff-driver" ng-model="order.driver" class="chzn-select">
                                 <option value="1">Nguyen Van A</option>
                             </select>
                         </td>
@@ -56,7 +56,7 @@
                         <td><input type="text" class="medium" ng-model="order.date" style="text-align: center" readonly value="{{date| date:'d-M-yyyy'}}"/></td>
                         <td><label>Lơ xe</label></td>
                         <td>
-                            <select data-placeholder="chọn lơ" ng-model="order.sub_driver" class="chzn-select">
+                            <select data-placeholder="chọn lơ" id="order-staff-subdriver" ng-model="order.sub_driver" class="chzn-select">
                                 <option value="2">Tran Van B</option>
                             </select>
                         </td>
@@ -68,8 +68,8 @@
                         <tr>
                             <th><div class="th_wrapp">stt</div></th>
                             <th><div class="th_wrapp">Ngày</div></th>
-                            <th><div class="th_wrapp">khách hàng</div></th>
-                            <th><div class="th_wrapp">cửa hàng</div></th>
+                            <th><div class="th_wrapp">Khách hàng</div></th>
+                            <th><div class="th_wrapp">Cửa hàng</div></th>
                             <th><div class="th_wrapp">Thành tiền</div></th>
                         </tr>
                     </thead>
@@ -90,7 +90,7 @@
                         </tr>
                     </tbody>
                 </table>
-                <div class="section">
+                <div class="section" ng-if="shipments.length > 0">
                     <a class="uibutton icon next" ng-click="divideProduct()">Next</a>
                 </div> 
             </div>

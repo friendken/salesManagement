@@ -66,9 +66,12 @@
                                         <option value="4">Xuất vào kho</option>
                                         <option value="5" ng-if="item.status.id == 5" selected>Để lại</option>
                                         <option value="5" ng-if="item.status.id != 5" >Để lại</option>
+                                        <option value="6">Lấy 1 nữa hàng</option>
                                     </select>
                                 </td>
-                                <td ng-if="shipment.status == 2" style="width: 100px"><input id="price_shipment_{{shipment.id}}_order_{{item.id}}" type="text" class="medium"/></td>
+                                <td ng-if="shipment.status == 2" style="width: 100px">
+                                    <input id="price_shipment_{{shipment.id}}_order_{{item.id}}" ng-keyup="formatNumber()" type="text" class="medium"/>
+                                </td>
                                 <td><a class="uibutton" data-shipment-id="{{shipment.id}}" data-order-id="{{item.id}}" ng-click="handlingOrder($event)" style="width: 35px">xử lý</a></td>
                             </tr>
                         </tbody>
