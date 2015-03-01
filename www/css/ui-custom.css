@@ -1617,6 +1617,6 @@ float: left;
 }
 @media (min-width: 992px) {
   .modal-lg {
-    width: 900px;
+    width: 1040px;
   }
 }

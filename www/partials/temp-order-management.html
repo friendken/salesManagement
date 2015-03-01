@@ -10,8 +10,7 @@
                         <tr>
                             <th><div class="th_wrapp">STT</div></th>
                             <th><div class="th_wrapp">Ngày</div></th>
-                            <th><div class="th_wrapp">Khách hàng</div></th>
-                            <th><div class="th_wrapp">Cửa hàng</div></th>
+                            <th><div class="th_wrapp">Địa chỉ</div></th>
                             <th><div class="th_wrapp">Thành tiền</div></th>
                         </tr>
                     </thead>
@@ -19,7 +18,6 @@
                         <tr ng-repeat="(key, item) in orders" style="cursor: pointer;" ng-click="selectOrder($event)" data-id="{{item.id}}">
                             <td>{{key + 1}}</td>
                             <td>{{item.created}}</td>
-                            <td>{{item.customer_name}}</td>
                             <td>{{item.customer_address}}</td>
                             <td>{{item.total_price| number}}</td>
                         </tr>
@@ -44,10 +42,10 @@
                         <td style="width: 125px">
                             <select data-placeholder="chọn xe" id="order-truck-manager" ng-model="order.truck" ng-change="selectTruck()" class="small chzn-select"></select>
                         </td>
-                        <td><label>Tài xê</label></td>
+                        <td><label>Tài xế</label></td>
                         <td>
                             <select data-placeholder="chọn tài" id="order-staff-driver" ng-model="order.driver" class="chzn-select">
-                                <option value="1">Nguyen Van A</option>
+                                
                             </select>
                         </td>
                     </tr>
@@ -66,10 +64,9 @@
                 <table class="display data_table" >
                     <thead>
                         <tr>
-                            <th><div class="th_wrapp">stt</div></th>
+                            <th><div class="th_wrapp">STT</div></th>
                             <th><div class="th_wrapp">Ngày</div></th>
-                            <th><div class="th_wrapp">Khách hàng</div></th>
-                            <th><div class="th_wrapp">Cửa hàng</div></th>
+                            <th><div class="th_wrapp">Địa chỉ</div></th>
                             <th><div class="th_wrapp">Thành tiền</div></th>
                         </tr>
                     </thead>
@@ -77,14 +74,12 @@
                         <tr ng-repeat="(key, item) in shipments" style="cursor: pointer;" ng-if="item.status != 5" ng-click="selectOrder($event,true)" data-id="{{item.id}}">
                             <td>{{key + 1}}</td>
                             <td>{{item.created}}</td>
-                            <td>{{item.customer_name}}</td>
                             <td>{{item.customer_address}}</td>
                             <td>{{item.total_price| number}}</td>
                         </tr>
                         <tr ng-repeat="(key, item) in shipments" style="cursor: pointer;" ng-if="item.status == 5" data-id="{{item.id}}">
                             <td>{{key + 1}}</td>
                             <td>{{item.created}}</td>
-                            <td>{{item.customer_name}}</td>
                             <td>{{item.customer_address}}</td>
                             <td>{{item.total_price| number}}</td>
                         </tr>

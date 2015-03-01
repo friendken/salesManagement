@@ -1,0 +1,59 @@
+<div ng-app="dashboard" ng-controller="listOrderController">
+    <div class="onecolumn" style="margin-top: 10px">
+        <div class="header">
+            <span ><span class="ico  gray random"></span> Danh sách Đơn hàng</span>
+        </div><!-- End header -->	
+        <div class=" clear"></div>
+        <div class="content">
+            <div class="section">
+                <table>
+                    <tr>
+                        <td>
+                            <div class="iconBox color">
+                                <img src="/www/img/icon/zoom.png">
+                            </div>
+                        </td>
+                        <td>
+                            <input type="text" ng-model="filter_order" class="small"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <form> 
+                <div class="tableName">
+                    <table class="display">
+                        <thead>
+                            <tr>
+                                <th><div class="th_wrapp">id</div></th>
+                                <th><div class="th_wrapp">Tên khách hàng</div></th>
+                                <th><div class="th_wrapp">Địa chỉ</div></th>
+                                <th><div class="th_wrapp" style="cursor: pointer" ng-click="predicate = 'total_price'; reverse=!reverse">Thành tiền</div></th>
+                                <th><div class="th_wrapp" style="cursor: pointer" ng-click="predicate = 'created'; reverse=!reverse">Ngày tạo</div></th>
+                                <th><div class="th_wrapp">Edit</div></th>
+                        </tr>
+                        </thead>
+                        <tbody id="show_product">
+                            <tr ng-repeat="(key,item) in orders | filter:filter_order | orderBy:predicate:reverse" class="odd gradeX" data-id="{{item.id}}">
+                                <td>{{key + 1}}</td>
+                                <td>{{item.customer_detail.name}}</td>
+                                <td>{{item.customer_detail.address}}</td>
+                                <td>{{item.total_price | number}}</td>
+                                <td>{{item.created}}</td>
+                                <td>
+                                    <span id="edit_btn_{{item.id}}">
+                                        <span class="tip">
+                                            <a href="#order-detail/{{item.id}}" title="Edit">
+                                                <img src="/www/img/icon/icon_edit.png">
+                                            </a>
+                                        </span> 
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

@@ -13,14 +13,36 @@
                     <label>chọn theo đối tác</label>
                     <div style="width: 200px">
                         <input type="hidden" id="type_sale_product" value="{{warehouse_type_en}}"/>
-                        <select data-placeholder="Chọn khách hàng" id="invoice-customer" class="chzn-select" ng-model="wholesale.partner"></select>
+                        <input type="text" ng-model="searchCustomer"/>
                     </div>
                 </div>
-                <div class='section'>
-                    <label>chọn cửa hàng</label>
-                    <div style="width: 200px">
-                        <select data-placeholder="Chọn cửa hàng" id="invoice-store" class="chzn-select" ng-model="wholesale.partner"></select>
-                    </div>
+                <div class='section' ng-if="searchCustomer != ''">
+                    <table class="display">
+                        <thead>
+                            <th>STT</th>
+                            <th>Tên khách hàng</th>
+                            <th>Địa chỉ</th>
+                        </thead>
+                        <tbody>
+                            <tr style="cursor: pointer" ng-click="selectCustomer()" ng-repeat="(key,item) in customers|filter:searchCustomer">
+                                <td>{{key + 1}}</td>
+                                <td>{{item.name}}</td>
+                                <td>{{item.address}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class='section' ng-if="show_customer.length != 0">
+                    <label>Tên đối tác</label>
+                    <div style="width: 200px"><h6>{{show_customer.name}}</h6></div>
+                    <label>Địa chỉ</label>
+                    <div style="width: 200px"><h6>{{show_customer.address}}</h6></div>
+                    <label>Di động</label>
+                    <div style="width: 200px"><h6>{{show_customer.phone_mobile[0]}}</h6></div>
+                    <label>ĐT bàn</label>
+                    <div style="width: 200px"><h6>{{show_customer.phone_home[0]}}</h6></div>
+                    <label ng-if="show_customer.total_debt.debt != null && show_customer.total_debt.debt != 0">Tổng nợ :</label>
+                    <div ng-if="show_customer.total_debt.debt != null && show_customer.total_debt.debt != 0">{{show_customer.total_debt.debt | number}} - <a href="#total-debit-customer/{{show_customer.id}}">xem chi tiết</a></div>
                 </div>
                 <div class='section'>
                     <h3 style="margin-top: 10px">Danh sách sản phẩm</h3>

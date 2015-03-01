@@ -3,8 +3,6 @@
 var dashboard = angular.module('dashboard', [
     'ui.router',
     'ui.bootstrap',
-//  'ngRoute',
-//  'dashboard.filters',
     'dashboard.services',
     'dashboard.directives',
     'dashboard.controllers'
@@ -12,7 +10,7 @@ var dashboard = angular.module('dashboard', [
 config(function($stateProvider, $urlRouterProvider) {
   //
   // For any unmatched url, redirect to /state1
-  $urlRouterProvider.otherwise("/dashboard");
+  $urlRouterProvider.otherwise("/");
   //
   // Now set up the states
   $stateProvider
@@ -219,6 +217,13 @@ config(function($stateProvider, $urlRouterProvider) {
       },
       controller: 'returnOrderController'
     })
+    .state('order-return-half', {
+      url: "/order-return-half/:order_id/:bill_id",
+      views: {
+        "content": { templateUrl: '/www/partials/temp-order-return-half.html'}
+      },
+      controller: 'returnOrderHalfController'
+    })
     .state('trucks', {
       url: "/trucks",
       views: {
@@ -246,5 +251,40 @@ config(function($stateProvider, $urlRouterProvider) {
           "content": { templateUrl: '/www/partials/temp-staff-create.html'}
       },
       controller: 'createStaffController'
+  })
+  .state('order-list', {
+      url: "/order-list",
+      views: {
+          "content": { templateUrl: '/www/partials/temp-order-list.html'}
+      },
+      controller: 'listOrderController'
+  })
+  .state('order-detail', {
+      url: "/order-detail/:order_id",
+      views: {
+          "content": { templateUrl: '/www/partials/temp-order-detail.html'}
+      },
+      controller: 'detailOrderController'
+  })
+  .state('users', {
+      url: "/users",
+      views: {
+          "content": { templateUrl: '/www/partials/temp-user-list.html'}
+      },
+      controller: 'listUserController'
+  })
+  .state('shipment', {
+      url: "/shipment",
+      views: {
+          "content": { templateUrl: '/www/partials/temp-shipment.html'}
+      },
+      controller: 'shipmentController'
+  })
+  .state('shipment-detail', {
+      url: "/shipment-detail/:shipment_id",
+      views: {
+          "content": { templateUrl: '/www/partials/temp-shipment-detail.html'}
+      },
+      controller: 'shipmentDetailController'
   })
 });

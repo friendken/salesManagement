@@ -1,0 +1,75 @@
+<div ng-app="dashboard" ng-controller="shipmentController">
+    <div class="onecolumn" style="margin-top: 10px">
+        <div class="header">
+            <span ><span class="ico  gray random"></span> Danh sách chuyến xe</span>
+        </div><!-- End header -->	
+        <div class=" clear"></div>
+        <div class="content">
+            <table>
+                <tr>
+                    <td><label>Từ ngày</label></td>
+                    <td>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="input-group">
+                                    <input style="margin-top: 5px" type="text" class="form-control" id="from_date" ng-click="open($event)" datepicker-popup="yyyy-MM-dd" ng-model="from_date" is-open="opened" close-text="Close" />
+                                </p>
+                            </div>
+                        </div>
+                    </td>
+                    <td><label>Đến ngày</label></td>
+                    <td>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p class="input-group">
+                                    <input style="margin-top: 5px" type="text" class="form-control" id="to_date" ng-click="open($event)" datepicker-popup="yyyy-MM-dd" ng-model="to_date" is-open="opened" close-text="Close"/>
+                                </p>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <a style="margin-top: -7px" class="uibutton" ng-click="findShipment()" >Tìm kiếm</a>
+                    </td>
+                </tr>
+            </table>
+            <form>
+            <div class="section" ng-if="shipments.length != 0">
+                <h3>Danh sách chuyến hàng</h3>
+                <label>Tìm chuyến hàng</label>
+                <div style="margin-left: 0px"><input type="text" ng-model="searchShipment"/></div>
+                <table class="display">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th style="cursor: pointer" ng-click="predicate = 'driver_name'; reverse=!reverse">Tài xế</th>
+                            <th>Số xe</th>
+                            <th style="cursor: pointer" ng-click="predicate = 'created'; reverse=!reverse">Ngày tạo</th>
+                            <th>Số lượng Đơn hàng</th>
+                            <th>Chi tiết</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="(key,item) in shipments | filter:searchShipment | orderBy:predicate:reverse">
+                            <td>{{key + 1}}</td>
+                            <td>{{item.driver_name}}</td>
+                            <td>{{item.truck_name}}</td>
+                            <td>{{item.created}}</td>
+                            <td>{{item.order_quantity}}</td>
+                            <td>
+                                <span id="edit_btn_{{item.id}}">
+                                    <span class="tip">
+                                        <a href="#shipment-detail/{{item.id}}" title="chi tiết">
+                                            <img src="/www/img/icon/icon_edit.png">
+                                        </a>
+                                    </span> 
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+            </div>
+            </form>
+        </div>
+    </div>
+</div>

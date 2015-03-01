@@ -1,0 +1,53 @@
+<div ng-app="dashboard" ng-controller="shipmentDetailController">
+    <div class="onecolumn" style='margin-top: 10px'>
+        <div class="header">
+            <span>
+                <span class="ico gray window"></span>
+                Chi tiết chuyến hàng
+            </span>
+        </div>
+        <div class="clear"></div>
+        <div class="content">
+            <form >
+                <div class='section'>
+                    <h3 style="margin-top: 10px">Thông tin chuyến hàng</h3>
+                    <label>Tên tài xế :</label>
+                    <div>{{shipment.driver_detail.name}}</div>
+                    <label>Số xe :</label>
+                    <div>{{shipment.truck_detail.name}}</div>
+                    <label>Ngày tạo :</label>
+                    <div>{{shipment.created}}</div>
+                </div>
+                <div class='section'>
+                    <h3 style="margin-top: 10px">chi tiết hóa đơn</h3>
+                    <div style="margin-left: 30px">
+                        <table class="display">
+                            <thead>
+                            <tr>
+                                <th><div class="th_wrapp">STT</div></th>
+                                <th><div class="th_wrapp">Tên khách hàng</div></th>
+                                <th><div class="th_wrapp">Ngày</div></th>
+                                <th><div class="th_wrapp">Thành tiền</div></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="(key,item) in shipment.order_detail">
+                                    <td class="small">{{key + 1}}</td>
+                                    <td class="small">{{item.customer_detail.name}}</td>
+                                    <td class="small">{{item.created}}</td>
+                                    <td class="small">{{item.total_price | number}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div class='section last'>
+                    <div>
+                        <a class="uibutton loading" title="quay lại" href="#shipment">Quay lại</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

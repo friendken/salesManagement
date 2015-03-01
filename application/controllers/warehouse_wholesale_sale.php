@@ -53,7 +53,7 @@ class Warehouse_wholesale_sale extends CI_Controller {
                 }
             }
         }
-//        echo $bill_id;
+        return $bill_id;
     }
     public function updateQuantityBuy($product_id, $quantity){
         $product_buy = $this->product_buy->get_old_product($product_id,'wholesale');
@@ -111,7 +111,9 @@ class Warehouse_wholesale_sale extends CI_Controller {
         $data = $this->input->json();
         $this->load->model('order_model','order');
         $order = $this->order->get_by_id($data->order_id);
-        $data_inset = array('partner' => $order->customer_id,'total_bill' => $data->price);
+        if($data->debit != '' && isset($data->debit))
+            $data->price += $data->debit;
+        $data_inset = array('partner' => $order->customer_id,'total_bill' => $data->price,'debt' => $data->debit);
 
         #init array for order detail
         foreach($order->order_detail as $key => $row){
@@ -120,13 +122,13 @@ class Warehouse_wholesale_sale extends CI_Controller {
                 'price' => $row->total);
         }
         
-        $this->createBill((object)$data_inset,true);
+        $bill_id = $this->createBill((object)$data_inset,true);
         $this->order->update(array('delivery' => "1"),array('id' => $data->order_id));
         $shipment = $this->order->get_array(array('shipment_id' => $data->shipment_id,'delivery' => '0'));
         if(count($shipment) == 0){
             $this->load->model('shipments_model');
             $this->shipments_model->update(array('status' => '3'),array('id' => $data->shipment_id));
         }
-        echo json_encode($data_inset);
+        echo json_encode($bill_id);
     }
 }

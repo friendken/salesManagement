@@ -10,21 +10,33 @@
         <div class="content">
             <form ng-submit="addWhole()">
                 <div class='section'>
-                    <label>chọn đối tác</label>
+                    <label>Chọn khách hàng</label>
                     <div style="width: 200px">
-                        <select data-placeholder="chọn khách hàng" ng-change="selectCustomer('customer')" id="sl_customer" class="chzn-select" ng-model="partner_id"></select>
+                        <input type="text" ng-model="searchCustomer"/>
 
                     </div>
 
                 </div>
-                <div class='section'>
-                    <label>chọn đối tác</label>
-                    <div style="width: 200px">
-                        <select data-placeholder="chọn khách hàng" ng-change="selectCustomer('store')" id="sl_store" class="chzn-select" ng-model="store_id"></select>
-                    </div>
+                <div class='section' ng-if="searchCustomer != ''">
+                    <table class="display">
+                        <thead>
+                            <th>STT</th>
+                            <th>Tên khách hàng</th>
+                            <th>Địa chỉ</th>
+                        </thead>
+                        <tbody>
+                            <tr style="cursor: pointer" ng-click="selectCustomer()" ng-repeat="(key,item) in customers|filter:searchCustomer">
+                                <td>{{key + 1}}</td>
+                                <td>{{item.name}}</td>
+                                <td>{{item.address}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
 
                 </div>
                 <div class="section">
+                    <label>Tên khách hàng</label>
+                    <div style="width: 200px"><h6>{{customer_name}}</h6></div>
                     <label>Địa chỉ</label>
                     <div style="width: 200px"><h6>{{address_store}}</h6></div>
                     <label>Di động</label>
@@ -92,6 +104,12 @@
                         </table>
                     </div>
 
+                </div>
+                <div class="section">
+                    <label>Ghi chú</label>
+                    <div>
+                        <textarea ng-model="order.note" cols="95" rows="6"></textarea>
+                    </div>
                 </div>
                 <div class='section last'>
                     <div>

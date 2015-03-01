@@ -8,8 +8,8 @@
                     <div  class="grid1">
                         <div class="profileSetting" >
                             <div class="avartar">
-                                <img ng-if="staff.avatar" src="www/img/avatar_staff/{{staff.avatar}}" width="200" height="200" alt="avatar" />
-                                <img ng-if="!staff.avatar" src="www/img/avatar_staff/avartarB.jpg" width="200" height="200" alt="avatar" />
+                                <img ng-if="staff.avatar" src="/www/img/avatar_staff/{{staff.avatar}}" width="200" height="200" alt="avatar" />
+                                <img ng-if="!staff.avatar" src="/www/img/avatar_staff/avartarB.jpg" width="200" height="200" alt="avatar" />
                             </div>
                             <div class="avartar">
                                 <input type="file" name="fileupload" onchange="angular.element(this).scope().uploadFile(this.files)" style="width: 185px"/>

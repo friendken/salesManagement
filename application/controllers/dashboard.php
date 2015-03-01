@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 class Dashboard extends CI_Controller {
-
+    
     /**
      * Index Page for this controller.
      *
@@ -23,11 +23,19 @@ class Dashboard extends CI_Controller {
     public function index() {
         $this->load->helper('html');
         $this->load->helper('url');
-        
-        $this->load->view('dashboard', array('data' => 'Hảo đẹp trai'));
+        $this->required_login();
+        $this->load->model('user_model','user');
+        $user = $this->user->get_by_id($this->session->userdata('user_id'));
+        $this->load->view('dashboard', array('user' => $user));
     }
     public function page404(){
         $this->load->view('404');
+    }
+    public function required_login(){
+        $this->load->library('session');
+        $user_id = $this->session->userdata('user_id');
+        if($user_id == '')
+            redirect('login');
     }
 
 }

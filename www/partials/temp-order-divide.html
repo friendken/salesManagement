@@ -27,10 +27,12 @@
                                     <span id="show_quantity_{{key}}">{{product.quantity}}</span>
                                     <input id="origin_quantity_{{key}}" type="hidden" value="{{product.quantity}}"/>
                                 </td>
-                                <td>
-                                    <div style="padding: 15px; width: 170px" ng-repeat="item in product.warehouse">
+                                <td style="width: 300px">
+                                    <div style="padding: 15px; width: 170px; margin-bottom: 10px" ng-repeat="item in product.warehouse">
                                         <div style="float: left;">{{item.warehouses_name}}</div>
-                                        <div style="float: right; position: absolute"><input class="small warehouse_quantity_{{key}} warehouse_quantity" data-product-id="{{key}}" data-warehouse-id="{{item.warehouses_id}}" placeholder="{{item.quantity}}" ng-model="quantity_warehouse" ng-keyup="quantityWarehouse($event)" type="text"/></div>
+                                        <div style="float: right; position: absolute">
+                                            <input style='margin: -10px 0px 0px 40px;' class="small warehouse_quantity_{{key}} warehouse_quantity" data-product-id="{{key}}" data-warehouse-id="{{item.warehouses_id}}" placeholder="{{item.quantity}}" ng-model="quantity_warehouse" ng-keyup="quantityWarehouse($event)" type="text"/>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>

@@ -53,4 +53,17 @@ class Bill_model extends MY_model {
                         ->get($this->table_name)
                         ->row();
     }
+    
+    public function getLastBill(){
+        $bill = $this->db->order_by('id','desc')
+                        ->limit(1)
+                        ->get($this->table_name)
+                        ->row();
+                
+        $bill_detail = $this->db->where('bill_id',(int)$bill->id)
+                                ->get('bill_detail')
+                                ->result();
+        
+        return $bill_detail;
+    }
 }

@@ -1,11 +1,72 @@
 <div ng-app="dashboard" ng-controller="stockTransferController">
-    <div class="column_left" style="margin-top: 10px; width: 62%">
-
-        <div class="onecolumn">
-            <div class="header"><span><span class="ico gray notepad"></span>Kho sỉ</span></div>
-            <br class="clear"/>
-            <div class="content tableName">
-                <div class="section">
+    <script type="text/ng-template" id="check_product">
+        <div class="modal-header">
+            <h3 class="modal-title" style='border-bottom: 0px'>{{titleLightbox}}</h3>
+        </div>
+        <div class="modal-body">
+            <div ng-if="viewTranfer == 0">
+                <form>
+                    <div class='section'>
+                        <label style="width: 150px;">Tên sản phẩm</label>
+                        <div><input type='text' ng-model='searchProduct'/></div>
+                    </div>
+                    <div class='section' style='border-bottom: 0px'>
+                        <table class='display' ng-if='searchProduct != ""'>
+                            <thead>
+                                <tr>
+                                    <th><div class="th_wrapp">Tên sản phẩm</div></th>
+                                    <th><div class="th_wrapp">Số lượng</div></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-click='selectProduct(this)' ng-repeat="item in retail_product | filter:searchProduct">
+                                    <td>{{item.name}}</td>
+                                    <td>{{item.quantity}} {{item.unit_name}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h4 style='border-bottom: 0px; margin: 0px 0px 0px 185px;' ng-if='searchProduct == ""'>Vui lòng tìm sản phẩm</h4>
+                    </div>
+                </form>
+            </div>
+            <div ng-if="viewTranfer == 1">
+                <form>
+                <div class='section'>
+                    <label style="width: 150px;">Tên sản phẩm</label>
+                    <div><input type='text' ng-model='search'/></div>
+                </div>
+                <div class='section' style='border-bottom: 0px'>
+                    <table class='display' ng-if='search != ""'>
+                        <thead>
+                            <tr>
+                                <th><div class="th_wrapp">STT</div></th>
+                                <th><div class="th_wrapp">Mã sản phẩm</div></th>
+                                <th><div class="th_wrapp">Tên sản phẩm</div></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-click='addProduct(this)' ng-repeat="(key,item) in products | filter:search">
+                                <td>{{key + 1}}</td>
+                                <td>{{item.code}}</td>
+                                <td>{{item.name}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h4 style='border-bottom: 0px; margin: 0px 0px 0px 185px;' ng-if='search == ""'>Chọn sản phẩm nhập kho</h4>
+                </div>
+            </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="uibutton " ng-click='addWarehouse()'>Nhập mới</a>
+            <a class="uibutton special" ng-click='cancel()'>Hủy</a>
+        </div>
+    </script>
+    <div class="onecolumn">
+        <div class="header"><span><span class="ico gray notepad"></span>Kho sỉ</span></div>
+        <br class="clear"/>
+        <div class="content tableName">
+            <div class="section">
                 <table>
                     <tr>
                         <td>
@@ -19,58 +80,33 @@
                     </tr>
                 </table>
             </div>
-                <table class="display data_table" >
-                    <thead>
-                        <tr>
-                            <th><div class="th_wrapp">Tên sản phẩm</div></th>
-                            <th><div class="th_wrapp">Số lượng</div></th>
-                            <th><div class="th_wrapp">Chuyển kho</div></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="item in wholesale_products | filter:filter_product">
-                            <td>{{item.name}}</td>
-                            <td>{{item.quantity}} {{item.unit_name}}</td>
-                            <td style="width: 200px">
-                                <div>
-                                    <input type="text" id="quantity_transfer_{{item.product_id}}" style="width: 40px"/>
-                                    <div class="iconBox color">
-                                        <a id="btn_more_price" ng-click="transfer(this)"   title="thêm giá">
-                                            <img src="/www/img/icon/arrow_right2.png">
-                                        </a>
-                                    </div>
+            <table class="display data_table" >
+                <thead>
+                    <tr>
+                        <th><div class="th_wrapp">STT</div></th>
+                        <th><div class="th_wrapp">Tên sản phẩm</div></th>
+                        <th><div class="th_wrapp">Số lượng</div></th>
+                        <th><div class="th_wrapp">Chuyển kho</div></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="(key,item) in wholesale_products| filter:filter_product">
+                        <td>{{key + 1}}</td>
+                        <td>{{item.name}}</td>
+                        <td>{{item.quantity}} {{item.unit_name}}</td>
+                        <td style="width: 200px">
+                            <div>
+                                <input type="text" id="quantity_transfer_{{item.product_id}}" style="width: 40px"/>
+                                <div class="iconBox color" style="bottom: -4px">
+                                    <a id="btn_more_price" ng-click="transfer(null,this)" title="Chuyển kho">
+                                        <img src="/www/img/icon/arrow_right2.png">
+                                    </a>
                                 </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-    </div>
-
-
-    <div class="column_right" style="margin-top: 10px; width: 35%">
-
-        <div class="onecolumn">
-            <div class="header"><span><span class="ico gray notepad"></span>Kho lẻ</span></div>
-            <br class="clear"/>
-            <div class="content tableName">
-                <table class="display data_table" >
-                    <thead>
-                        <tr>
-                            <th><div class="th_wrapp">Tên sản phẩm</div></th>
-                            <th><div class="th_wrapp">Số lượng</div></th>    
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="item in retail_products">
-                            <td>{{item.name}}</td>
-                            <td>{{item.quantity}} {{item.unit_name}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

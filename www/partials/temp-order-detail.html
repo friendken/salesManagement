@@ -1,0 +1,139 @@
+<div ng-app="dashboard" ng-controller="detailOrderController">
+    <script type="text/ng-template" id="add_product">
+        <div class="modal-header">
+            <h3 class="modal-title" style="border-bottom: 0px;">Thêm sản phẩm</h3>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class='section' style="border-bottom: 0px;">
+                    <table class="display">
+                            <thead>
+                            <tr>
+                                <th style="display: none"></th>
+                                <th style="display: none"><div class="th_wrapp">STT</div></th>
+                                <th><div class="th_wrapp">sản phẩm</div></th>
+                                <th><div class="th_wrapp">Giá vốn</div></th>
+                                <th><div class="th_wrapp">Quy cách</div></th>
+                                <th><div class="th_wrapp">Giá bán</div></th>
+                                <th><div class="th_wrapp">Số lượng</div></th>
+                                <th><div class="th_wrapp">Thành tiền</div></th>
+                            </tr>
+                            </thead>
+                            <tbody class="list_order_product">
+                                <tr class="product_order" data-id="1" id="tr_order_1">
+                                    <td style="display: none">
+                                        <div class="iconBox color">
+                                        <a class="btn_more_order" data-id="1" ng-click="moreOrder()"  title="thêm giá">
+                                            <img alt="" src="/www/img/icon/directional_down.png">
+                                        </a>
+                                        </div>
+                                    </td>
+                                    <td style="display: none">1</td>
+                                    <td style="width: 150px">
+                                        <select data-placeholder="sản phẩm" ng-model="product_id" ng-change="selectProduct()" class="chzn-select load_product"></select>
+                                    </td>
+                                    <td>
+                                        <input style="width: 100px" type="text" class="show_buy" readonly/>
+                                        <input type="hidden" class="show_buy_origin"/>
+                                    </td>
+                                    <td style="width: 150px">
+                                        <select data-placeholder="chọn quy cách" ng-model='order.unit' ng-change="selectUnit()" class="chzn-select load_unit"></select>
+                                    </td>
+                                    <td>
+                                        <input style="width: 100px" class="show_sale" type="text" readonly/>
+                                        <input type="hidden" class="show_sale_origin"/>
+                                    </td>
+                                    <td><input style="width: 50px" ng-model="order.quantity" ng-keyup="calculatorPrice()" type="text"/></td>
+                                    <td>
+                                        <span id="show_bill_product_1"></span>
+                                        <input class="price_order" type="hidden" id="txt_hide_1" value="0"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <a class="uibutton " ng-click='ok()'>Lưu</a>
+            <a class="uibutton special" ng-click='cancel()'>Hủy</a>
+        </div>
+    </script>
+    <div class="onecolumn" style='margin-top: 10px'>
+        <div class="header">
+            <span>
+                <span class="ico gray window"></span>
+                Chi tiết hóa đơn
+            </span>
+        </div>
+        <div class="clear"></div>
+        <div class="content">
+            <form >
+                <div class='section'>
+                    <h3 style="margin-top: 10px">Thông tin hóa đơn</h3>
+                    <label>Tên khách hàng :</label>
+                    <div>{{order.customer_detail.name}}</div>
+                    <label>Mã hóa đơn :</label>
+                    <div>{{order.id}}</div>
+                    <label>Ngày tạo :</label>
+                    <div>{{order.created}}</div>
+                    <label>Tổng Hóa đơn :</label>
+                    <div>{{order.total_price | number}}</div>
+                </div>
+                <div class="section">
+                    <label>Ghi chú</label>
+                    <div>
+                        <textarea ng-model="order.note" cols="95" rows="6">{{order.note}}</textarea>
+                    </div>
+                </div>
+                <div class='section'>
+                    <h3 style="margin-top: 10px">chi tiết hóa đơn</h3>
+                    <div style="margin-left: 30px">
+                        <a class="uibutton icon add" ng-click="openPopup()" title="Cập nhật">Thêm sản phẩm</a>
+                        <table class="display">
+                            <thead>
+                            <tr>
+                                <th><div class="th_wrapp">STT</div></th>
+                                <th><div class="th_wrapp">Tên sản phảm</div></th>
+                                <th><div class="th_wrapp">Số lượng</div></th>
+                                <th><div class="th_wrapp">Tồn kho</div></th>
+                                <th><div class="th_wrapp">Quy cách</div></th>
+                                <th><div class="th_wrapp">Giá Sản phẩm</div></th>
+                                <th><div class="th_wrapp">Thành tiền</div></th>
+                                <th><div class="th_wrapp">Xóa</div></th>
+                            </tr>
+                            </thead>
+                            <tbody class="list_product_buy_price">
+                                <tr class="product_buy_price" ng-repeat="(key,item) in order.order_detail" id="tr_product_price_{{item.id}}">
+                                    <td class="small">{{key + 1}}</td>
+                                    <td class="small">{{item.product_detail.name}}</td>
+                                    <td class="small"><input type="text" data-key="{{key}}" class="new_quantity" ng-model="quantity_model" ng-keyup="calulationPrice($event)" style="width: 40px; text-align: center" value="{{item.quantity}}"/></td>
+                                    <td class="small">{{item.product_detail.inventory}}</td>
+                                    <td class="small">{{item.unit_detail.name}}</td>
+                                    <td class="small" id="price_product_{{key}}">{{item.price | number}}</td>
+                                    <td class="small" id="total_product_{{key}}">{{item.total | number}}</td>
+                                    <td>
+                                        <span id="edit_btn_{{item.id}}">
+                                        <span class="tip">
+                                            <a ng-click="deleteProduct()" title="Edit">
+                                                <img src="/www/img/icon/icon_delete.png">
+                                            </a>
+                                        </span> 
+                                    </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+                <div class='section last'>
+                    <div>
+                        <a class="uibutton loading" ng-click="updateOrder()" title="Cập nhật">Cập nhật</a>
+                        <a class="uibutton special" href="#order-list" title="quay lại">Quay lại</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

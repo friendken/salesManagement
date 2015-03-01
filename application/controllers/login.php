@@ -23,7 +23,25 @@ class Login extends CI_Controller {
     public function index() {
         $this->load->helper('html');
         $this->load->helper('url');
+        
         $this->load->view('login', array('data' => 'H?o ??p trai'));
+    }
+    public function check_login(){
+        $user = $_POST;
+        $this->load->model('user_model','user');
+        
+        $login = $this->user->get_login($user['username'],$user['password']);
+        if(count($login) > 0){
+            $this->session->set_userdata(array('user_id' => $login->id));
+            echo json_encode(array('status' => 'success'));die;
+        }
+        
+        echo json_encode(array('status' => 'error'));
+    }
+    public function logout(){
+        $this->session->unset_userdata('user_id');
+        $this->load->helper('url');
+        redirect('login');
     }
 
 }

@@ -53,14 +53,14 @@
 
                 <div class="setting" title="Thông tin tài khoản">
                     <b>Chào, </b> 
-                    <b class="red"></b>
-                    <a href='/SaleManagement/managers/personal_information'>
+                    <b class="red">&nbsp; <?php echo $user->user_name ?></b>
+<!--                    <a href='/SaleManagement/managers/personal_information'>
                         <img src="/www/img/gear.png" class="gear"  alt="Thông tin tài khoản" />
-                    </a>
+                    </a>-->
                 </div>
                 <div class="logout" title="Đăng xuất">
                     <b >Đăng xuất</b>
-                    <a href='/SaleManagement/users/logout'> 
+                    <a href='<?php echo site_url() ?>/login/logout'> 
                         <img src="/www/img/connect.png" name="connect" class="disconnect" alt="Đăng xuất" ></a>
                 </div> 
             </div>

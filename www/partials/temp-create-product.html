@@ -24,7 +24,7 @@
                 <div class='section'>
                     <label>Ngành Hàng</label>
                     <div style="width: 200px">
-                        <select data-placeholder="chọn loại sản phẩm" id="product-type" class="chzn-select" ng-model="product.product_type"></select>
+                        <select data-placeholder="chọn loại sản phẩm" id="product-type-product_type" class="chzn-select" ng-model="product.product_type"></select>
                     </div>
                 </div>
                 <div class="section">
@@ -41,14 +41,14 @@
                             </tr>
                             </thead>
                             <tbody class="list_product_price">
-                                <tr class="product_price" ng-repeat="item in product.sale_price" id="tr_product_price_{{item.id}}">
+                                <tr class="product_price" ng-repeat="(key,item) in product.sale_price" id="tr_product_price_{{key + 1}}">
                                     <td class="small">{{item.parent_name}}</td>
                                     <td class="small"><input type="text" value="{{item.quantity}}" /></td>
                                     <td class="small"><input type="text" value="{{item.name}}"/></td>
                                     <td class="small"><input type="text" ng-keyup="formatNumber()" value="{{item.price|number}}"/></td>
                                     <td>
-                                        <div class="iconBox color">
-                                            <a id="btn_more_price" data-id="1" ng-click="morePrice()"  title="thêm giá">
+                                        <div class="iconBox color" ng-if="key == 0">
+                                            <a id="btn_more_price" value="{{product.sale_price.length}}" ng-click="morePrice()"  title="thêm giá">
                                                 <img src="/www/img/icon/directional_down.png">
                                             </a>
                                         </div>

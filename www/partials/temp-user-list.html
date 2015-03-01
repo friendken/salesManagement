@@ -1,0 +1,91 @@
+<div ng-app="dashboard" ng-controller="listUserController">
+    <script type="text/ng-template" id="create_user">
+        <div class="modal-header">
+            <h3 class="modal-title">Thêm tài khoản</h3>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class='section'>
+                    <label style="width: 65px;">User name</label>
+                    <div><input type='text' ng-model='user.user_name'/></div>
+                </div>
+                <div class='section'>
+                    <label style="width: 65px;">Password</label>
+                    <div><input type='password' ng-model='user.password'/></div>
+                </div>
+                <div class='section'>
+                    <label style="width: 65px;">Quyền</label>
+                    <div style="width: 200px">
+                        <select id="user_role" ng-model="user.role" class="chzn-select"></select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <a class="uibutton " ng-click='ok()'>Lưu</a>
+            <a class="uibutton special" ng-click='cancel()'>Hủy</a>
+        </div>
+    </script>
+    <div class="onecolumn" style="margin-top: 10px">
+        <div class="header">
+            <span ><span class="ico  gray random"></span> Danh sách tài khoản</span>
+        </div><!-- End header -->
+        <div class=" clear"></div>
+        <div class="content"  >
+            <div class="section">
+                <table>
+                    <tr>
+                        <td>
+                            <a class="uibutton icon confirm add" ng-click="openPopup()" >Thêm tài khoản</a>
+                        </td>
+                        <td>
+                            <div class="iconBox color">
+                                <img src="/www/img/icon/zoom.png">
+                            </div>
+                        </td>
+                        <td>
+                            <input type="text" ng-model="searchUser" class="small"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <form>
+                <div class="tableName">
+                    <table id="tabel_product_type" class="display">
+                        <thead>
+                        <tr>
+                            <th><div class="th_wrapp">STT</div></th>
+                            <th><div class="th_wrapp">User name</div></th>
+                            <th><div class="th_wrapp">Quyền</div></th>
+                            <th><div class="th_wrapp">Ngày tạo</div></th>
+                            <th><div class="th_wrapp">Edit</div></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="(key,item) in users | filter:searchUser" class="odd gradeX">
+                            <td>{{key + 1}}</td>
+                            <td>{{item.user_name}}</td>
+                            <td>{{item.role_name}}</td>
+                            <td>{{item.created}}</td>
+                            <td>
+                                <span>
+                                    <span class="tip">
+                                        <a ng-click="openPopup(null,$event)" data-id="{{item.id}}" title="Edit">
+                                            <img src="/www/img/icon/icon_edit.png">
+                                        </a>
+                                    </span>
+                                    <span class="tip">
+                                        <a id="{{item.id}}" ng-click="deleteUser($event)" class="Delete"  title="Delete">
+                                            <img src="/www/img/icon/icon_delete.png">
+                                        </a>
+                                    </span>
+                                </span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

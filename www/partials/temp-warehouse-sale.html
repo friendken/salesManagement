@@ -13,16 +13,29 @@
                     <label>chọn theo khách hàng</label>
                     <div style="width: 200px">
                         <input type="hidden" id="type_sale_product" value="{{warehouse_type_en}}"/>
-                        <select data-placeholder="chọn khách hàng" ng-change="selectCustomer('partner')" id="sale-customer" class="chzn-select" ng-model="partner_id"></select>
+                        <input type="text" ng-model="searchCustomer"/>
                     </div>
                 </div>
-                <div class='section'>
-                    <label>chọn theo cửa hàng</label>
-                    <div style="width: 200px">
-                        <select data-placeholder="chọn khách hàng" ng-change="selectCustomer('store')" id="sale-store" class="chzn-select" ng-model="store_id"></select>
-                    </div>
+                <div class='section' ng-if="searchCustomer != ''">
+                    <table class="display">
+                        <thead>
+                            <th>STT</th>
+                            <th>Tên khách hàng</th>
+                            <th>Địa chỉ</th>
+                        </thead>
+                        <tbody>
+                            <tr style="cursor: pointer" ng-click="selectCustomer()" ng-repeat="(key,item) in data_customer|filter:searchCustomer">
+                                <td>{{key + 1}}</td>
+                                <td>{{item.name}}</td>
+                                <td>{{item.address}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
                 </div>
                 <div class='section' ng-if="show_customer.length != 0">
+                    <label>Tên khách hàng</label>
+                    <div style="width: 200px"><h6>{{show_customer.name}}</h6></div>
                     <label>Địa chỉ</label>
                     <div style="width: 200px"><h6>{{show_customer.address}}</h6></div>
                     <label>Di động</label>
