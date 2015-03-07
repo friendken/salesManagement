@@ -31,7 +31,6 @@ class Bill_detail extends CI_Controller {
         }
         echo json_encode(array('bill' => $bill_detail));
     }
-
 }
 
 /* End of file welcome.php */

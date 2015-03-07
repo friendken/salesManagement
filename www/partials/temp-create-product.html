@@ -68,7 +68,8 @@
                                 <th><div class="th_wrapp">Số lượng</div></th>
                                 <th><div class="th_wrapp">Số lượng còn lại</div></th>
                                 <th><div class="th_wrapp">Quy cách</div></th>
-                                <th><div class="th_wrapp">kho</div></th>
+                                <th><div class="th_wrapp">Gía lẻ</div></th>
+                                <th><div class="th_wrapp">Kho</div></th>
                                 <th><div class="th_wrapp">Giá mua</div></th>
                             </tr>
                             </thead>
@@ -78,6 +79,7 @@
                                     <td class="small">{{item.quantity}}</td>
                                     <td class="small">{{item.remaining_quantity}}</td>
                                     <td class="small">{{item.unit}}</td>
+                                    <td class="small">{{item.price / item.quantity | number}}</td>
                                     <td class="small">{{item.warehouse}}</td>
                                     <td class="small">{{item.price | number}}</td>
                                 </tr>
