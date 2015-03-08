@@ -150,7 +150,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             var product = {name: $scope.product.name,
                            code: $scope.product.code,
                            description: $scope.product.description,
-                           product_type: $scope.product.product_type,
+                           product_type: $('#product-type-product_type').val(),
                            list_price: $scope.product.sale_price};
 
             $http({method: 'post', url: $scope.urlSave,
@@ -1049,6 +1049,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
     })
     .controller('createOrderController', ['$scope','$http','$location','showAlert','renderSelect', function($scope, $http, $location, showAlert, renderSelect) {
         $scope.order = {};
+        $scope.order.note = '';
         $scope.searchCustomer = '';
         $scope.init = function (){
             $http({method: 'GET', url: config.base + '/order/createOrder?type=customer', reponseType: 'json'}).

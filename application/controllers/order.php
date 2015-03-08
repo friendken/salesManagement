@@ -184,15 +184,8 @@ class Order extends CI_Controller {
         $arr = array();
         
         foreach ($order_detail as $key => $row){
-            $unit_primary = $this->sale_price->get_unit_primary($row->product_id);
-            if($unit_primary && $unit_primary->id != $row->unit) {
-                $quantity = $this->convert_unit->convert_quantity($row->unit, $row->quantity);
-                $retail = $this->warehouse_retail->get_by_product_id($row->product_id);
-                if(count($retail) > 0)
-                    $this->warehouse_retail->update(array('quantity' => ((int)$retail->quantity - (int)$quantity)),array('product_id' => $row->product_id));
-                else
-                    $this->warehouse_retail->insert(array('quantity' => $quantity,'product_id' => $row->product_id,'unit' => $row->unit));
-            }else{
+            $unit_primary = $this->sale_price->get_by_product_id($row->product_id);
+            if(count($unit_primary) > 1 && !isset($unit_primary->parent_id)) {
                 if(isset($arr[$row->product_id]))
                     $arr[$row->product_id]['quantity'] += (int)$row->quantity;
                 else{
@@ -203,8 +196,16 @@ class Order extends CI_Controller {
                     if(count($wholse) > 0)
                         $arr[$row->product_id]['warehouse'][] = array('id' => 0,'warehouses_id' => 0,'warehouses_name' => 'kho sỉ','quantity' => $wholse->quantity);
                 }
+            }else{
+                $quantity = $this->convert_unit->convert_quantity($row->unit, $row->quantity);
+                $retail = $this->warehouse_retail->get_by_product_id($row->product_id);
+                if(count($retail) > 0)
+                    $this->warehouse_retail->update(array('quantity' => ((int)$retail->quantity - (int)$quantity)),array('product_id' => $row->product_id));
+                else
+                    $this->warehouse_retail->insert(array('quantity' => $quantity,'product_id' => $row->product_id,'unit' => $row->unit));
             }
         }
+        
         echo json_encode(array('orders' =>$orders,'products' => $arr,'shipment' => $shipment));
     }
     public function updateWarehouse(){
