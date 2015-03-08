@@ -944,10 +944,14 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
     }])
     .controller('customersController', ['$scope','$http','$stateParams','$modal', function($scope, $http, $stateParams, $modal) {
         $scope.customer_type = $stateParams.type;
-            if($stateParams.type === 'partner')
+            if($stateParams.type === 'partner'){
                 $scope.customer_name = 'Đối tác';
-            else
+                $scope.type_customer = 'Ngành hàng';
+            }
+            else{
                 $scope.customer_name = 'Khách hàng';
+                $scope.type_customer = 'Cửa hàng';
+            }
         $scope.init = function (){
             $http({method: 'GET', url: config.base + '/customers?type=' + $stateParams.type, reponseType: 'json'}).
                 success(function(data, status) {
