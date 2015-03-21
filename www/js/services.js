@@ -1,25 +1,5 @@
 'use strict';
 
-/* Services */
-
-
-// Demonstrate how to register services
-// In this case it is a simple value service.
-//angular.module('onBoard.services', []).
-//    factory('httpAPIservice', function($http) {
-//
-//        var httpAPI = {};
-//
-//        httpAPI.get = function(url) {
-//            return $http({
-//                method: 'JSONP',
-//                url: url
-//            });
-//        }
-//
-//        return httpAPI;
-//    });
-
 angular.module('dashboard.services', [])
     .factory('showAlert', function() {
         var httpApi = {};
@@ -38,7 +18,7 @@ angular.module('dashboard.services', [])
     .factory('renderSelect', function() {
         var httpApi = {};
 
-        httpApi.initDataSelect = function(data,target,placeholder,code,store,default_select,limit){
+        httpApi.initDataSelect = function(data,target,placeholder,code,store,default_select,limit,product_type){
             var html ='';
             $(target).next('div').remove();
             $(target).removeClass('chzn-done');
@@ -46,6 +26,13 @@ angular.module('dashboard.services', [])
             html += '<option value="0">' + placeholder + '</option>';
             
             //init select with filter
+            if(product_type){
+                for (var x in data) {
+                        html += '<option value="' + data[x].name + '">' + data[x].name + '</option>';
+                }
+                $(target).html(html);
+                return false;
+            }
             if(limit){
                 for (var x in data) {
                     if(data[x].position == limit)

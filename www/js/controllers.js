@@ -171,7 +171,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                     success(function(data, status) {
                       //==== get data account profile ========
                         $scope.products = data.products;
-                        renderSelect.initDataSelect(data.product_type,'#filter_product_type','Loại sản phẩm');
+                        renderSelect.initDataSelect(data.product_type,'#filter_product_type','Loại sản phẩm',null,null,null,null,true);
                         renderSelect.initSelect();
                         
                     }).
