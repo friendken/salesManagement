@@ -132,11 +132,14 @@ class Order extends CI_Controller {
                                                'total_price' => $order->total_price,
                                                'note' => $order->note));
         foreach($order->orders as $key => $row){
-            $this->load->model('products_sale_price_model','products_sale');
+            $this->load->model('products_buy_price_model','products_buy');
+            $cost = $this->products_buy->get_old_product($row->product_id,'wholesale');
+            if(count($cost) > 0)
+                $row->cost = $cost->id;
             $order->orders[$key]->order_id = $order_id;
             $this->order_detail->insert($row);
         }
-        echo json_encode('success');
+        echo json_encode($order_id);
     }
     public function managementOrder(){
         $this->load->model('trucks_model','trucks');
