@@ -84,4 +84,14 @@ angular.module('dashboard.services', [])
             $(".chzn-select").chosen();
         };
         return httpApi;
-    });;
+    })
+    .service('customers',['$http',function($http){
+        return {
+            getCustomer: function(customer_id,callback){
+                $http.get(config.base + '/customers/getCustomer?id=' + customer_id)
+                    .success(function(result){
+                        callback(result)
+                    })
+            }
+        }
+    }]);

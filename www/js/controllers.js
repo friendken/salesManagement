@@ -4,11 +4,9 @@
 
 angular.module('dashboard.controllers', ['ui.bootstrap'])
     .controller('dashboardController', ['$scope', function($scope) {
-
         console.log('load ok');
     }])
     .controller('productTypeController', ['$scope', '$http','showAlert', function($scope,$http,showAlert) {
-        console.log('load product type');
         
         $scope.init = function(){
             $http({method: 'GET', url: config.base + '/product_type', reponseType: 'json'}).
@@ -22,7 +20,12 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 });
         };
         $scope.init();
-        
+        $scope.printMe = function(){
+            var popupWin = window.open('', '_blank', 'width=100');
+            popupWin.document.open()
+            popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" /></head><body onload="window.print(); window.close()"><div style="font-size:14px">' + '40000 thôi chứ nhiêu, nhưng mày hên vì có thằng bạn đẹp trai như tao =))' + '</div></html>');
+            popupWin.document.close();
+        }
         $scope.editProduct = function(el){
             $scope.changeView('edit','cancel',el.item.id);
         };
@@ -1047,10 +1050,11 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
           $modalInstance.dismiss('cancel');
         };
     })
-    .controller('createOrderController', ['$scope','$http','$location','showAlert','renderSelect', function($scope, $http, $location, showAlert, renderSelect) {
+    .controller('createOrderController', ['$scope','$http','$location','showAlert','renderSelect','$filter', function($scope, $http, $location, showAlert, renderSelect, $filter) {
         $scope.order = {};
         $scope.order.note = '';
         $scope.searchCustomer = '';
+        $scope.customer_print;
         $scope.init = function (){
             $http({method: 'GET', url: config.base + '/order/createOrder?type=customer', reponseType: 'json'}).
                 success(function(data, status) {
@@ -1065,6 +1069,44 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 });
         };
         $scope.init(); 
+        $scope.printMe = function(){
+            //prepare data for print
+            console.log($scope.customer_print)
+            var phone = '',
+                name = ''
+            if($scope.customer_print.phone_home.length > 0)
+                phone += $scope.customer_print.phone_home[0] + ' '
+            if($scope.customer_print.phone_mobile.lengh > 0)
+                phone += $scope.customer_print.phone_mobile[0]
+            if($scope.customer_print.name)
+                name = $scope.customer_print.name
+            var html = '<tr>'
+            var table = $filter('filter')($scope.order.orders,function(item){
+                var product = $filter('filter')($scope.products,function(actual,expected){
+                    return angular.equals(actual.id,'1')
+                })
+                
+            })
+            html +='</tr>'
+            
+//            console.log(product)
+//            return false;
+            var popupWin = window.open('', '_blank', 'width=80');
+            popupWin.document.open()
+            popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" />' +
+                                    '<style>table, th, td {border: 1px solid black;} table{width: 100%;border-collapse: collapse;}</style>' + 
+                                    '</head>' +
+                                    '<body onload="window.print(); window.close()">' +
+                                    '<div style="text-align: center"><h1>TUẤN MAI</h1></div>' +
+                                    '<div>Địa chỉ: ' + $scope.customer_print.address + '</div>' +
+                                    '<div>Điện thoại: ' + phone + '</div>' +
+                                    '<div>Tên KH: ' + name + '</div>' +
+                                    '<div><table><tr style="text-align: center"><td>stt</td><td>Tên SP</td><td>sl</td><td>Tiền</td></tr>' +
+                                    '<tr><td>1</td><td>mì hảo hảo</td><td>10</td><td>78,000</td></tr>' +
+                                    '</table></div>' +
+                                    '</body></html>');
+            popupWin.document.close();
+        }
         $scope.selectCustomer = function (){
             $scope.searchCustomer = '';
             $scope.customer_name = this.item.name;
@@ -1073,6 +1115,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             $scope.phone_home = this.item.phone_home;
             $scope.total_debt = this.item.total_debt.debt;
             $scope.order.customer_id = this.item.id;
+            $scope.customer_print = this.item
         };
         
         $scope.selectProduct = function(){
@@ -1153,7 +1196,8 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
             });
             $scope.order.orders = orders;
             $scope.order.total_price = $('#txt_hide_total_bill').val();
-
+            $scope.printMe();
+            return false;
             //send request
             $http({method: 'POST', url: config.base + '/order/addOrder',data: $scope.order, reponseType: 'json'}).
             success(function(data, status) {
