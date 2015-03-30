@@ -131,6 +131,8 @@ class Order extends CI_Controller {
         $order_id = $this->order->insert(array('customer_id' => $order->customer_id,
                                                'total_price' => $order->total_price,
                                                'note' => $order->note));
+        $order_code = $this->convertBillCode($order_id,'CH');
+        $this->order->update(array('order_code' => $order_code),array('id' => $order_id));
         foreach($order->orders as $key => $row){
             $this->load->model('products_buy_price_model','products_buy');
             $cost = $this->products_buy->get_old_product($row->product_id,'wholesale');
@@ -139,7 +141,7 @@ class Order extends CI_Controller {
             $order->orders[$key]->order_id = $order_id;
             $this->order_detail->insert($row);
         }
-        echo json_encode($order_id);
+        echo json_encode($order_code);
     }
     public function managementOrder(){
         $this->load->model('trucks_model','trucks');
@@ -388,6 +390,14 @@ class Order extends CI_Controller {
             $this->shipments_model->update(array('status' => '3'),array('id' => $orders[0]->shipment_id));
         }
         echo json_encode($product);
+    }
+    function convertBillCode($bill_id,$type = null){
+        $bill_code = '';
+        for($i = 0; $i < (7 - strlen($bill_id));$i++){
+            $bill_code .= '0';
+        }
+        $bill_code = $type.$bill_code.$bill_id;
+        return $bill_code;
     }
 }
 ?>

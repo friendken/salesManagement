@@ -1110,7 +1110,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                                     '<div style="text-align: center"><h1>TUẤN MAI</h1></div>' +
                                     '<div>Địa chỉ: ' + $scope.customer_print.address + '</div>' +
                                     '<div>Điện thoại: ' + phone + '</div>' +
-                                    '<div>Mã HĐ: ' + order_id + '</div>' +
+                                    '<div>Mã HĐ: ' + order_id.replace(/"/ig,'') + '</div>' +
                                     '<div>Tên KH: ' + name + '</div><br>' +
                                     '<div><table><thead><tr style="text-align: center"><td>stt</td><td>Tên SP</td><td>sl</td><td>Tien</td></tr></thead>' +
                                     '<tbody>' + html + '</tbody>' +

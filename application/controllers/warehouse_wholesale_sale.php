@@ -29,14 +29,19 @@ class Warehouse_wholesale_sale extends CI_Controller {
         #create bill
         $data_bill = array('customer_id' => $bill->partner,
                            'price_total' => $bill->total_bill);
+        if(isset($bill->bill_code))
+            $data_bill['bill_code'] = $bill->bill_code;
         if(isset($bill->debt))
             $data_bill['debit'] = $bill->debt;
         
         $bill_id = $this->bill->insert($data_bill);
-        $new_bill = $this->bill->get_by_id($bill_id);
-        $code_bill = 'S'.$new_bill->id;
-
-        $this->bill->update(array('bill_code' => $code_bill),array('id' => $bill_id));
+        
+        if(!isset($bill->bill_code)){
+            $new_bill = $this->bill->get_by_id($bill_id);
+            $code_bill = 'S'.$new_bill->id;
+            $this->bill->update(array('bill_code' => $code_bill),array('id' => $bill_id));
+        }
+        
         #create bill detail
         $bill_detail = array();
         foreach($bill->buy_price as $key => $row){
@@ -84,7 +89,8 @@ class Warehouse_wholesale_sale extends CI_Controller {
         $this->load->model('order_model','order');
         $order = $this->order->get_by_id($data->order_id);
         $data_inset = array('partner' => $order->customer_id,
-                            'total_bill' => $order->total_price);
+                            'total_bill' => $order->total_price,
+                            'bill_code' => $order->order_code);
         
         if($data->price != ''){
             if((int)$order->total_price - (int)$data->price != 0)
@@ -98,7 +104,8 @@ class Warehouse_wholesale_sale extends CI_Controller {
                                                         'price' => $row->total);
         }
         
-        $this->createBill((object)$data_inset,true);
+        $bill_id = $this->createBill((object)$data_inset,true);
+        
         $this->order->update(array('delivery' => "1"),array('id' => $data->order_id));
         $shipment = $this->order->get_array(array('shipment_id' => $data->shipment_id,'delivery' => '0'));
         if(count($shipment) == 0){
@@ -121,8 +128,10 @@ class Warehouse_wholesale_sale extends CI_Controller {
                 'quantity' => $row->quantity,
                 'price' => $row->total);
         }
-        
+        $this->load->model('bill_model');
         $bill_id = $this->createBill((object)$data_inset,true);
+        $new_bill = $this->bill_model->get_by_id($bill_id);
+        $this->bill_model->update(array('bill_code' => 'CH'.$new_bill->id),array('id' => $new_bill->id));
         $this->order->update(array('delivery' => "1"),array('id' => $data->order_id));
         $shipment = $this->order->get_array(array('shipment_id' => $data->shipment_id,'delivery' => '0'));
         if(count($shipment) == 0){
@@ -131,4 +140,5 @@ class Warehouse_wholesale_sale extends CI_Controller {
         }
         echo json_encode($bill_id);
     }
+    
 }
