@@ -56,6 +56,7 @@ class Warehouse_wholesale_sale extends CI_Controller {
                 if($update_warehouse == true){
                     $this->updateQuantityBuy($row->product_id,$row->quantity);
                 }
+                echo json_encode($code_bill);
             }
         }
         return $bill_id;

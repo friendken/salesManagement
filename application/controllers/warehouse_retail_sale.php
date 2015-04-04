@@ -51,7 +51,7 @@ class Warehouse_retail_sale extends CI_Controller {
                 $this->updateQuantityBuy($row->product_id,$row->quantity);
             }
         }
-//        echo $bill_id;
+        echo json_encode($code_bill);
     }
     public function updateQuantityBuy($product_id, $quantity){
         $product_buy = $this->product_buy->get_old_product($product_id,'retail');
