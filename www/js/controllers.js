@@ -458,6 +458,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 $scope.wholesale.total_bill = 0;
                 $scope.show_total_bill = 0;
                 $scope.customer_print;
+                $scope.order_id_print = '';
                 $scope.init = function () {
                     $http({method: 'GET', url: $scope.load_product, reponseType: 'json'}).
                             success(function (data, status) {
@@ -530,7 +531,8 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                     $scope.wholesale.debt = parseInt($('#txt_hide_total_bill').val()) - parseInt($scope.wholesale.actual);
                     $('#debt_warehouse').val(numeral($scope.wholesale.debt).format('0,0'));
                 };
-                $scope.printMe = function (order_id) {
+                $scope.printMe = function () {
+                    
                     //prepare data for print
                     console.log($scope.customer_print)
                     var phone = '',
@@ -568,14 +570,14 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                             '<div>Tên KH: ' + name + '</div>' +
                             '<div>Địa chỉ: ' + $scope.customer_print.address + '</div>' +
                             '<div>Điện thoại: ' + phone + '</div>' +
-                            '<div>Mã HĐ: ' + order_id.replace(/"/ig, '') + '</div><br>' +
+                            '<div>Mã HĐ: ' + $scope.order_id_print.replace(/"/ig, '') + '</div><br>' +
                             '<div><table><thead><tr style="text-align: center"><td>&nbsp</td><td>Tên SP</td><td>SL</td><td>VNĐ</td></tr></thead>' +
                             '<tbody>' + html + '</tbody>' +
                             '<tfoot><tr><td colspan="2">Thành tiền: <br>Tổng nợ: <br> Tổng cộng' +
                             '<td colspan="2">' +
-                            numeral((parseInt(debt) + parseInt($scope.wholesale.total_bill))).format('0,0') + '<br>' +
+                            numeral($scope.wholesale.total_bill).format('0,0') + '<br>' +
                             numeral(debt).format('0,0') + '<br>' +
-                            numeral($scope.wholesale.total_bill).format('0,0') +
+                            numeral((parseInt(debt) + parseInt($scope.wholesale.total_bill))).format('0,0') + 
                             '</td></tr></tfoot></table></div>' +
                             '</body></html>');
                     popupWin.document.close();
@@ -611,7 +613,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                     $http({method: 'post', url: $scope.url,
                         data: $scope.wholesale, reponseType: 'json'}).
                             success(function (data, status) {
-                                $scope.printMe(data);
+                                $scope.order_id_print = data
                                 showAlert.showSuccess(3000, 'Lưu thành công');
 //                            $location.path('product');
                             }).
@@ -1111,6 +1113,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 $scope.order.note = '';
                 $scope.searchCustomer = '';
                 $scope.customer_print;
+                $scope.order_id_print = '';
                 $scope.init = function () {
                     $http({method: 'GET', url: config.base + '/order/createOrder?type=customer', reponseType: 'json'}).
                             success(function (data, status) {
@@ -1125,7 +1128,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                             });
                 };
                 $scope.init();
-                $scope.printMe = function (order_id) {
+                $scope.printMe = function () {
                     //prepare data for print
                     console.log($scope.customer_print)
                     var phone = '',
@@ -1138,7 +1141,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                     if ($scope.customer_print.name)
                         name = $scope.customer_print.name;
                     if ($scope.customer_print.total_debt.debt)
-                        debt = numeral($scope.customer_print.total_debt.debt).format('0,0');
+                        debt = $scope.customer_print.total_debt.debt
                     var html = '';
                     var i = 1;
                     var table = $filter('filter')($scope.order.orders, function (item) {
@@ -1170,9 +1173,9 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                             '<tbody>' + html + '</tbody>' +
                             '<tfoot><tr><td colspan="2">Thành tiền: <br>Tổng nợ: <br> Tổng cộng' +
                             '<td colspan="2">' +
-                            numeral((parseInt(debt) + parseInt($scope.order.total_price))).format('0,0') + '<br>' +
-                            debt + '<br>' +
-                            numeral($scope.order.total_price).format('0,0') +
+                            numeral($scope.order.total_price).format('0,0') + '<br>' + 
+                            numeral(debt).format('0,0') + '<br>' +
+                            numeral((parseInt(debt) + parseInt($scope.order.total_price))).format('0,0') +
                             '</td></tr></tfoot></table></div>' +
                             '</body></html>');
                     popupWin.document.close();
@@ -1270,9 +1273,9 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                     //send request
                     $http({method: 'POST', url: config.base + '/order/addOrder', data: $scope.order, reponseType: 'json'}).
                             success(function (data, status) {
-                                $scope.printMe(data);
+                                $scope.order_id_print = data;
                                 showAlert.showSuccess(3000, 'Lưu thành công');
-                                $location.path('order-management');
+                                // $location.path('order-management');
                             }).
                             error(function (data, status) {
                                 console.log(data);
