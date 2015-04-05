@@ -26,12 +26,12 @@ class Product_sale_price extends CI_Controller {
 
             #get count in wholesale warehouse
             $this->load->model('warehouse_wholesale_model','warehouse_wholesale');
-            $whole = $this->warehouse_wholesale->get_by_id($product_id);
+            $whole = $this->warehouse_wholesale->get_by_product_id($product_id);
+            
             if(count($whole) > 0){
                 $storge = (int)$warehouses->total + (int)$whole->quantity;
                 $storge_in_house = (int)$whole->quantity;    
             }
-            
         }else{
             $this->load->model('warehouse_retail_model','warehouse_retail');
             $retail = $this->warehouse_retail->get_by_product_id($product_id);

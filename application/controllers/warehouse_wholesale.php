@@ -13,6 +13,7 @@ class Warehouse_wholesale extends CI_Controller {
         $this->load->model('warehouse_wholesale_model','wholesale');
         $this->load->model('bill_model','bill');
     }
+    
     public function index(){
         $products = $this->wholesale->get_all();
         $this->load->model('customers_model','customers');
@@ -34,7 +35,8 @@ class Warehouse_wholesale extends CI_Controller {
         #insert warehousing
         $this->load->model('warehousing_model');
         $warehousing_id = $this->warehousing_model->insert(array('price' => $wholesale->total_bill,
-                                                                 'debit' => $wholesale->debt));
+                                                                 'debit' => $wholesale->debt,
+                                                                 'partner_id' => $wholesale->partner));
         #insert product_buy_price
         $buy_list = array();
         $wholesale_list = array();

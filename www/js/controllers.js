@@ -1841,8 +1841,14 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                             });
                 }
                 $scope.init();
-                $scope.editStaff = function () {
-                    $location.path('staff-edit/' + this.item.id);
+                $scope.deleteOrder = function (index) {
+                    if(!confirm('Bạn chắc chứ?'))
+                        return false;
+                    
+                    $http.delete(config.base + '/order/deleteOrder/' + this.item.id).success(function(){
+                        $scope.orders.splice(index,1);
+                    })
+                    console.log(this.item)
                 }
             }])
         .controller('detailOrderController', ['$scope', '$http', '$location', '$stateParams', '$modal', function ($scope, $http, $location, $stateParams, $modal) {

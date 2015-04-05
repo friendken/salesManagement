@@ -9,6 +9,11 @@ class Order extends CI_Controller {
         $this->load->model('customers_model','customers');
         $this->load->model('order_model','order');
     }
+    public function deleteOrder($order_id){
+        $this->load->model('order_detail_model','order_detail');
+        $this->order->delete(array('id' => $order_id));
+        $this->order_detail->delete(array('order_id' => $order_id));
+    }
     public function updateOrderDetail(){
         $data = $this->input->json();
         $orders = $data->order_detail;
