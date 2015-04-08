@@ -1353,13 +1353,14 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
 
                 };
             }])
-        .controller('divideOrderController', ['$scope', '$http', '$stateParams', 'showAlert', '$location', function ($scope, $http, $stateParams, showAlert, $location) {
+        .controller('divideOrderController', ['$scope', '$http', '$stateParams', 'showAlert', '$location','$modal', function ($scope, $http, $stateParams, showAlert, $location,$modal) {
                 $scope.init = function () {
                     $http({method: 'GET', url: config.base + '/order/divideOrder?shipment_id=' + $stateParams.shipment_id, reponseType: 'json'}).
                             success(function (data, status) {
                                 if (data.shipment.allow == 1)
                                     window.location = config.base + '/dashboard/page404';
                                 $scope.products = data.products;
+                                $scope.orders = data.orders
                             }).
                             error(function (data, status) {
                                 console.log(data);
@@ -1389,6 +1390,32 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                     }
                     $('#show_quantity_' + product_id).text(product_quantity - total);
                 };
+                $scope.deleteProduct = function(index){
+                    if(!confirm('Bạn chắc chứ?'))
+                        return false;
+                    $http.delete(config.base + '/order/deleteProductInOrder/' + $stateParams.shipment_id + '/' + this.product.product_id)
+                            .success(function(data){
+                        $scope.init();
+                    })
+                }
+                $scope.updateQuantity = function (size) {
+                    var that = this
+                    var modalInstance = $modal.open({
+                        templateUrl: 'update_quantity_product',
+                        controller: 'updateQuantityOrderController',
+                        size: size,
+                        resolve: {
+                            items: function () {
+                                return {product_name: that.product.product_name,
+                                        product_id: that.product.product_id,
+                                        shipment_id: $stateParams.shipment_id};
+                            }
+                        }
+                    });
+                    modalInstance.result.then(function () {
+                        $scope.init();
+                    });
+                };
                 $scope.divideProduct = function () {
                     var product = new Array;
                     $('.warehouse_quantity').each(function () {
@@ -1407,7 +1434,37 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                                 console.log(data);
                             });
                 };
-            }])
+        }])
+        .controller('updateQuantityOrderController', function ($scope, $http, $modalInstance, items) {
+            $scope.init = function(){
+                $http.get(config.base + '/order/getProductOrder/' + items.shipment_id + '/' + items.product_id)
+                        .success(function(data){
+                            $scope.product_name = items.product_name
+                            $scope.orders = data.orders
+                        })
+            }
+            $scope.init();
+
+            $scope.ok = function () {
+                var order_quantity = new Array();
+                $('.quantity-order').each(function(){
+                    order_quantity.push({quantity: this.value,order_id: $(this).data('order-detail-id')})
+                })
+                
+                $http({method: 'POST', url: config.base + '/order/updateQuantityOrder', data: order_quantity, reponseType: 'json'}).
+                        success(function (data, status) {
+                            if(data.status == 'success')
+                                $modalInstance.close();
+                        }).
+                        error(function (data, status) {
+                            console.log(data);
+                        });
+            };
+
+            $scope.cancel = function () {
+                $modalInstance.dismiss('cancel');
+            };
+        })
         .controller('statusOrderController', ['$scope', '$http', '$location', 'renderSelect', function ($scope, $http, $location, renderSelect) {
                 $scope.init = function () {
                     $http({method: 'GET', url: config.base + '/order/statusOrder', reponseType: 'json'}).
@@ -1854,7 +1911,7 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                     console.log(this.item)
                 }
             }])
-        .controller('detailOrderController', ['$scope', '$http', '$location', '$stateParams', '$modal', function ($scope, $http, $location, $stateParams, $modal) {
+        .controller('detailOrderController', ['$scope', '$http', '$location', '$stateParams', '$modal','$filter', function ($scope, $http, $location, $stateParams, $modal,$filter) {
 
                 $scope.init = function () {
                     $http({method: 'POST', url: config.base + '/order/getOrder?id=' + $stateParams.order_id, reponseType: 'json'}).
@@ -1869,6 +1926,55 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 $scope.deleteProduct = function () {
                     if (confirm('Chắc chứ?'))
                         $scope.order.order_detail.splice(this.$index, 1);
+                }
+                $scope.printOrder = function(){
+                    var phone = '',
+                        name = '',
+                        debt = 0,
+                        phone_home = JSON.parse($scope.order.customer_detail.phone_home),
+                        phone_mobile = JSON.parse($scope.order.customer_detail.phone_mobile)
+                    if (phone_home.length > 0){
+                        phone += phone_home[0] + ' '
+                    }
+                    if (phone_mobile.lengh > 0)
+                        phone += phone_mobile[0]
+                    if ($scope.order.customer_detail.name)
+                        name = $scope.order.customer_detail.name;
+                    if ($scope.order.customer_detail.debit.debt)
+                        debt = $scope.order.customer_detail.debit.debt;
+                    var html = '';
+                    var i = 1;
+                    var table = $filter('filter')($scope.order.order_detail, function (item) {
+                        
+                        html += '<tr><td>' + i + '</td>';
+                        html += '<td>' + item.product_detail.name + '</td>';
+                        html += '<td>' + item.quantity + '</td>';
+                        html += '<td>' + numeral(item.total).format('0,0') + '</td>';
+                        html += '</tr>'
+                        i++
+                    })
+
+                    var popupWin = window.open('', '_blank', 'width=80');
+                    popupWin.document.open()
+                    popupWin.document.write('<html><head><link rel="stylesheet" type="text/css" href="style.css" />' +
+                            '<style>table tfoot{text-align: right;} table, th, td {border: 1px solid black; font-size: 11px} table{width: 100%;border-collapse: collapse;}</style>' +
+                            '</head>' +
+                            '<body onload="window.print(); window.close()">' +
+                            '<div style="text-align: center"><h1>TUẤN MAI</h1></div>' +
+                            '<div>Tên KH: ' + name + '</div>' +
+                            '<div>Địa chỉ: ' + $scope.order.customer_detail.address + '</div>' +
+                            '<div>Điện thoại: ' + phone + '</div>' +
+                            '<div>Mã HĐ: ' + $scope.order.order_code.replace(/"/ig, '') + '</div><br>' +
+                            '<div><table><thead><tr style="text-align: center"><td>&nbsp</td><td>Tên SP</td><td>SL</td><td>VNĐ</td></tr></thead>' +
+                            '<tbody>' + html + '</tbody>' +
+                            '<tfoot><tr><td colspan="2">Thành tiền: <br>Tổng nợ: <br> Tổng cộng' +
+                            '<td colspan="2">' +
+                            numeral($scope.order.total_price).format('0,0') + '<br>' +
+                            numeral(debt).format('0,0') + '<br>' +
+                            numeral((parseInt(debt) + parseInt($scope.order.total_price))).format('0,0') + 
+                            '</td></tr></tfoot></table></div>' +
+                            '</body></html>');
+                    popupWin.document.close();
                 }
                 $scope.calulationPrice = function ($event) {
                     var quantity = $($event.currentTarget).val(),

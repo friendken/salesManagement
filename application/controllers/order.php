@@ -14,6 +14,18 @@ class Order extends CI_Controller {
         $this->order->delete(array('id' => $order_id));
         $this->order_detail->delete(array('order_id' => $order_id));
     }
+    public function updateQuantityOrder(){
+        $data = $this->input->json();
+        $this->load->model('order_detail_model','order_detail');
+        foreach ($data as $key => $row){
+            $this->order_detail->update(array('quantity' => $row->quantity),array('id' => $row->order_id));
+        }
+        echo json_encode(array('status' => 'success'));
+    }
+    public function deleteProductInOrder($shipment_id,$product_id){
+        $this->load->model('order_detail_model','order_detail');
+        $this->order_detail->delete_by_shipment($shipment_id,$product_id);
+    }
     public function updateOrderDetail(){
         $data = $this->input->json();
         $orders = $data->order_detail;
@@ -83,10 +95,26 @@ class Order extends CI_Controller {
         $units = $this->sale_price->get_all();
         echo json_encode(array('products' => $products,'units' => $units));
     }
+    public function getProductOrder($shipment_id,$product_id){
+        $this->load->model('order_detail_model','order_detail');
+        $orders = $this->order->get_array(array('shipment_id' => $shipment_id));
+        $order_product = array();
+        foreach ($orders as $key => &$row){
+            $order_detail = $this->order_detail->get_array(array('order_id' => $row->id,'product_id' => $product_id));
+            if(count($order_detail) > 0){
+                $row->customer_detail = $this->customers->get_by_id($row->customer_id);
+                $row->order_detail = $order_detail[0];
+                array_push($order_product, $row);
+            }
+        }
+        echo json_encode(array('orders' => $order_product));die;
+    }
     public function getOrder(){
         $order_id = $this->input->get('id');
+        $this->load->model('bill_model','bill');
         $order = $this->order->get_by_id($order_id);
         $order->customer_detail = $this->customers->get_by_id($order->customer_id);
+        $order->customer_detail->debit = $this->bill->get_customer_debit($order_id);
         
         #get product detail
         $this->load->model('products_model','products');
@@ -179,29 +207,37 @@ class Order extends CI_Controller {
         $this->load->model('products_sale_price_model','sale_price');
         $this->load->library('convert_unit');
         $this->load->model('warehouse_retail_model','warehouse_retail');
+        $this->load->model('customers_model','customers');
 
         $shipment = $this->shipments_model->get_by_id($shipment_id);
         #get orders
         $orders = $this->order->get_array(array('shipment_id' => $shipment_id));
+        $orders_temp = $orders;
         $order_detail = array();
-        foreach($orders as $key => $row){
+        foreach($orders as $key => &$row){
+            $row->customer_detail =  $this->customers->get_by_id($row->customer_id);
+            $row->order_detail = $this->order_detail->get_array(array('order_id' => $row->id));
             if($row->status != 5)
                 array_push($order_detail,$row->id);
         }
         
         $order_detail = implode(',', $order_detail);
         $order_detail = $this->order_detail->get_order_detail($order_detail);
-        $arr = array();
         
+        $arr = array();
+//        echo json_encode($orders);die;
         foreach ($order_detail as $key => $row){
+            
             $unit_primary = $this->sale_price->get_by_product_id($row->product_id);
+            
             if(count($unit_primary) > 1 && !isset($unit_primary->parent_id)) {
                 if(isset($arr[$row->product_id]))
                     $arr[$row->product_id]['quantity'] += (int)$row->quantity;
                 else{
                     $arr[$row->product_id] = array('product_name' => $row->product_name,
-                        'quantity' => (int)$row->quantity,
-                        'warehouse' => $this->warehouses_detail->get_array(array('product_id' => $row->product_id)));
+                                                    'product_id' => $row->product_id,
+                                                    'quantity' => (int)$row->quantity,
+                                                    'warehouse' => $this->warehouses_detail->get_array(array('product_id' => $row->product_id)));
                     $wholse = $this->warehouse_wholesale->get_by_product_id($row->product_id);
                     if(count($wholse) > 0)
                         $arr[$row->product_id]['warehouse'][] = array('id' => 0,'warehouses_id' => 0,'warehouses_name' => 'kho sỉ','quantity' => $wholse->quantity);
@@ -216,7 +252,7 @@ class Order extends CI_Controller {
             }
         }
         
-        echo json_encode(array('orders' =>$orders,'products' => $arr,'shipment' => $shipment));
+        echo json_encode(array('orders' =>$orders_temp,'products' => $arr,'shipment' => $shipment));
     }
     public function updateWarehouse(){
         $warehouses = $this->input->json();

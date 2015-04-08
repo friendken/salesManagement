@@ -17,12 +17,13 @@ class Warehouses_detail_model extends MY_model {
                         ->result();
     }
     public function get_product_out_of_storge(){
-        return $this->db->query('select *, 
-                                (select `name` from products where id = wd.product_id) as product_name,
-                                (select `name` from warehouses where id = wd.product_id) as warehouse_name,
-                                (select `name` from products_type where id =(select product_type from products where id = wd.product_id)) as product_type_name
-                                from warehouses_detail as wd
-                                where quantity <= 5')
+        
+        return $this->db->query('select *,sum(quantity) as total_quantity,
+                                (select name from products where id = wd.product_id) as product_name,
+                                (select name from products_type where id in (select product_type from products as p where p.id = wd.product_id)) as product_type_name
+                                from `warehouses_detail` as wd 
+                                where quantity < 5
+                                group by product_id')
                         ->result();
     }
     public function count_product_all_warehouses($product_id){
@@ -36,6 +37,7 @@ class Warehouses_detail_model extends MY_model {
                                 (select `name` from products where wd.product_id = id) as product_name,
                                 (select `name` from products_sale_price where product_id = wd.product_id and parent_id is null) as unit_name
                                 from warehouses_detail as wd
+                                where wd.quantity > 0
                                 order by product_id')
                         ->result();
     }

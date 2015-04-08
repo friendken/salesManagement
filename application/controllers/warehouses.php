@@ -43,18 +43,36 @@ class Warehouses extends CI_Controller {
     }
     public function getProductOutOfStorge(){
         $this->load->model('warehouses_detail_model','warehouse_detail');
+        $this->load->model('warehouse_wholesale_model','wholesale_model');
         $products = $this->warehouse_detail->get_product_out_of_storge();
-        $i = 1;
-        foreach ($products as $key => $row){
-            $products[$key]->stt = $i;
-            $i++;
+        $whole = $this->wholesale_model->get_out_stock();
+        $quantity = array_merge($whole,$products);
+        $arrange = array();
+        foreach ($quantity as $key => $row){
+            if(isset($arrange[$row->product_id]))
+                $arrange[$row->product_id]['quantity'] += (int)$row->total_quantity;
+            else
+                $arrange[$row->product_id] = array('product_id' => $row->product_id,'quantity' => (int)$row->total_quantity);
         }
+        $products = array();
+        $this->load->model('products_model','products');
+        foreach ($arrange as $key => $row){
+            if($row['quantity'] < 5){
+                $product = $this->products->get_by_id($row['product_id']);
+                $product->total_quantity = $row['quantity'];
+                $products[] = $product;
+            }
+        }
+        
         echo json_encode(array('products' => $products));
     }
     public function getAllWarehouses(){
         $this->load->model('warehouses_detail_model','warehouse_detail');
+        $this->load->model('warehouse_wholesale_model','wholesale_model');
         $this->load->model('products_model','products');
         $warehouses = $this->warehouse_detail->get_warehouse_status();
+        $whole = $this->wholesale_model->get_all_for_warehouses();
+        $warehouses = array_merge($warehouses,$whole); 
         $products = $this->products->get_array(array('active' => 0));
         echo json_encode(array('warehouses' => $warehouses, 'products' => $products));
     }

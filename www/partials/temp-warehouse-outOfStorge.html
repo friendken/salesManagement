@@ -28,16 +28,14 @@
                                 <th><div class="th_wrapp">Tên sản phẩm</div></th>
                                 <th><div class="th_wrapp">Loại sản phẩm</div></th>
                                 <th><div class="th_wrapp">Số lượng</div></th>
-                                <th><div class="th_wrapp">Kho</div></th>
                             </tr>
                         </thead>
                         <tbody id="show_product">
-                            <tr ng-repeat="item in products | filter:searchProduct" class="odd gradeX" data-id="{{item.id}}">
-                                <td>{{item.stt}}</td>
-                                <td>{{item.product_name}}</td>
-                                <td>{{item.product_type_name}}</td>
-                                <td>{{item.quantity}}</td>
-                                <td>{{item.warehouse_name}}</td>
+                            <tr ng-repeat="(key,item) in products | filter:searchProduct" class="odd gradeX" data-id="{{item.id}}">
+                                <td>{{key + 1}}</td>
+                                <td>{{item.name}}</td>
+                                <td>{{item.product_type.name}}</td>
+                                <td>{{item.total_quantity}}</td>
                             </tr>
                         </tbody>
                     </table>

@@ -65,6 +65,7 @@
                 <span class="ico gray window"></span>
                 Chi tiết hóa đơn
             </span>
+            <a class="uibutton icon confirm" style="  float: right;margin-top: 7px;margin-right: 6px;" ng-click="printOrder()" title="In">In hoá đơn</a>
         </div>
         <div class="clear"></div>
         <div class="content">
@@ -74,7 +75,7 @@
                     <label>Tên khách hàng :</label>
                     <div>{{order.customer_detail.name}}</div>
                     <label>Mã hóa đơn :</label>
-                    <div>{{order.id}}</div>
+                    <div>{{order.order_code}}</div>
                     <label>Ngày tạo :</label>
                     <div>{{order.created}}</div>
                     <label>Tổng Hóa đơn :</label>
