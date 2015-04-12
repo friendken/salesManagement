@@ -18,9 +18,7 @@ class Warehouse_wholesale_model extends MY_model {
                         ->result();
     }
     public function get_out_stock(){
-        return $this->db->query('select *,quantity as total_quantity,
-                                (select name from products where id = ww.product_id) as product_name,
-                                (select name from products_type where id in (select product_type from products as p where p.id = ww.product_id)) as product_type_name
+        return $this->db->query('select *,quantity as total_quantity,0 as warehouses_id
                                 from warehouse_wholesale as ww
                                 where quantity < 5')
                         ->result();

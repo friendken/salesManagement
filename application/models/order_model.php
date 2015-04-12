@@ -26,6 +26,9 @@ class Order_model extends MY_model {
         }
         return $orders;
     }
+    public function updatePriceOfOrder($order_id){
+        $this->db->query("UPDATE `order` SET total_price = (SELECT sum(total) FROM order_detail WHERE order_id = $order_id) WHERE id = $order_id");
+    }
     public function get_by_id($id) {
         $order = parent::get_by_id($id);
         $this->load->model('order_detail_model','order_detail');

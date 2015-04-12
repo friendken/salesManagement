@@ -18,12 +18,7 @@ class Warehouses_detail_model extends MY_model {
     }
     public function get_product_out_of_storge(){
         
-        return $this->db->query('select *,sum(quantity) as total_quantity,
-                                (select name from products where id = wd.product_id) as product_name,
-                                (select name from products_type where id in (select product_type from products as p where p.id = wd.product_id)) as product_type_name
-                                from `warehouses_detail` as wd 
-                                where quantity < 5
-                                group by product_id')
+        return $this->db->query('SELECT *,sum(quantity) as total_quantity from `warehouses_detail` group by product_id')
                         ->result();
     }
     public function count_product_all_warehouses($product_id){

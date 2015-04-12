@@ -46,7 +46,9 @@ class Warehouses extends CI_Controller {
         $this->load->model('warehouse_wholesale_model','wholesale_model');
         $products = $this->warehouse_detail->get_product_out_of_storge();
         $whole = $this->wholesale_model->get_out_stock();
+        
         $quantity = array_merge($whole,$products);
+        
         $arrange = array();
         foreach ($quantity as $key => $row){
             if(isset($arrange[$row->product_id]))
@@ -54,6 +56,7 @@ class Warehouses extends CI_Controller {
             else
                 $arrange[$row->product_id] = array('product_id' => $row->product_id,'quantity' => (int)$row->total_quantity);
         }
+
         $products = array();
         $this->load->model('products_model','products');
         foreach ($arrange as $key => $row){

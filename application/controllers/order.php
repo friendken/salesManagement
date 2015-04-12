@@ -17,8 +17,11 @@ class Order extends CI_Controller {
     public function updateQuantityOrder(){
         $data = $this->input->json();
         $this->load->model('order_detail_model','order_detail');
+
         foreach ($data as $key => $row){
-            $this->order_detail->update(array('quantity' => $row->quantity),array('id' => $row->order_id));
+            $order_detail = $this->order_detail->get_by_id($row->order_id);
+            $this->order_detail->update(array('quantity' => $row->quantity,'total' => ((int)$order_detail->price * (int)$row->quantity)),array('id' => $row->order_id));
+            $this->order->updatePriceOfOrder($order_detail->order_id);
         }
         echo json_encode(array('status' => 'success'));
     }

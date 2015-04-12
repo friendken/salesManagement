@@ -1453,8 +1453,8 @@ angular.module('dashboard.controllers', ['ui.bootstrap'])
                 
                 $http({method: 'POST', url: config.base + '/order/updateQuantityOrder', data: order_quantity, reponseType: 'json'}).
                         success(function (data, status) {
-                            if(data.status == 'success')
-                                $modalInstance.close();
+//                            if(data.status == 'success')
+//                                $modalInstance.close();
                         }).
                         error(function (data, status) {
                             console.log(data);
